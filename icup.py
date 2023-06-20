@@ -11,14 +11,42 @@ root.title("Idiot Caleb's Uprating Project")
 root.geometry('300x200')
 root.configure(bg='#1e2129')
 
-# frame
-label1 = ttk.Label(root, text="Label 1")
-label1.pack()
+# create buttons and frames (forms the visual layout of the program)
+# grid layout is used to separate widgets into columns
+frame1 = ttk.Frame(root)
+frame1.grid(row=0, column=0)
 
-label2 = ttk.Label(root, text="Label 2")
-label2.pack()
+choose_file_button = ttk.Button(frame1, text='Choose File')
+choose_file_button.pack()
 
-label3 = ttk.Label(root, text="Label 3")
-label3.pack()
+difficulties_frame = ttk.Frame(frame1, height=100, width=50)
+difficulties_frame.pack()
+
+frame2 = ttk.Frame(root)
+frame2.grid(row=0, column=1)
+
+rates_frame = ttk.Frame(frame2, height=100, width=50)
+rates_frame.pack()
+
+rate_increment_frame = ttk.Frame(frame2, height=100, width=50)
+rate_increment_frame.pack()
+
+frame3 = ttk.Frame(root)
+frame3.grid(row=0, column=2)
+
+ar_options_frame = ttk.Frame(frame3, height=100, width=50)
+ar_options_frame.pack()
+
+other_frame = ttk.Frame(frame3, height=100, width=50)
+other_frame.pack()
+
+start_button = ttk.Button(frame3, text='Start!')
+start_button.pack()
+
+style = ttk.Style(root)
+style.configure('TFrame',
+                background='#2d2d39',
+                relief='groove',
+                borderwidth=2)
 
 root.mainloop()
