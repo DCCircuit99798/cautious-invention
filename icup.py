@@ -39,31 +39,25 @@ class App(tk.Tk):
 
         # create buttons and frames for layout of program
         choose_file_button = ttk.Button(frame0, text='Choose File')
-        choose_file_button.grid(row=0, column=0)
+        choose_file_button.pack()
         
         difficulties_frame = DifficultiesFrame(frame0)
-        difficulties_frame.grid(row=1, column=0)
+        difficulties_frame.pack()
 
         rates_frame = RatesFrame(frame1)
-        rates_frame.grid(row=0, column=0)
+        rates_frame.pack()
 
         rate_increment_frame = RateIncrementFrame(frame1)
-        rate_increment_frame.grid(row=1, column=0)
+        rate_increment_frame.pack()
 
         ar_options_frame = AROptionsFrame(frame2)
-        ar_options_frame.grid(row=0, column=0)
+        ar_options_frame.pack()
 
         other_frame = OtherFrame(frame2)
-        other_frame.grid(row=1, column=0)
+        other_frame.pack()
 
         start_button = ttk.Button(frame2, text='Start!')
-        start_button.grid(row=2, column=0)
-
-        
-
-        
-
-        
+        start_button.pack()
 
 
 class OuterFrame(ttk.Frame):
