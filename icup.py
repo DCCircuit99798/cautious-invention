@@ -11,7 +11,7 @@ class App(tk.Tk):
 
         # configure window
         self.title("Idiot Caleb's Uprating Project")
-        self.geometry('300x200')
+        self.geometry('600x400')
         self.configure(bg='#1e2129')
 
         # call method to create widgets
@@ -86,6 +86,43 @@ class DifficultiesFrame(ttk.Frame):
         # NOTE: this is temporary, just to make the frames visible
         self.configure(height=100, width=50)
 
+        # call method to create widgets
+        self.__create_widgets()
+
+    def __create_widgets(self):
+
+        # labels
+        difficulties_heading_label = ttk.Label(self, text='Difficulties')
+        difficulties_heading_label.grid(row=0, column=0)
+
+        difficulties_required_label = ttk.Label(self, text='*Required')
+        difficulties_required_label.grid(row=1, column=0)
+
+        # variables to store state of checkboxes
+        self.easy_var = tk.StringVar()
+        self.hard_var = tk.StringVar()
+        self.ex_var = tk.StringVar()
+
+        # set value of checkbox variables to 0 (off)
+        self.easy_var.set(0)
+        self.hard_var.set(0)
+        self.ex_var.set(0)
+
+        # checkboxes
+        difficulties_easy_checkbox = ttk.Checkbutton(self,
+                                                  text='Easy',
+                                                  variable=self.easy_var)
+        difficulties_easy_checkbox.grid(row=2, column=0)
+                                                  
+        difficulties_hard_checkbox = ttk.Checkbutton(self,
+                                                  text='Hard',
+                                                  variable=self.hard_var)
+        difficulties_hard_checkbox.grid(row=3, column=0)
+
+        difficulties_ex_checkbox = ttk.Checkbutton(self,
+                                                  text='Extreme',
+                                                  variable=self.ex_var)
+        difficulties_ex_checkbox.grid(row=4, column=0)
 
 class RatesFrame(ttk.Frame):
     '''Visible frame for difficulty selection checkboxes
@@ -98,6 +135,35 @@ class RatesFrame(ttk.Frame):
         # NOTE: this is temporary, just to make the frames visible
         self.configure(height=100, width=50)
 
+        # call method to create widgets
+        self.__create_widgets()
+
+    def __create_widgets(self):
+
+        # labels
+        rates_heading_label = ttk.Label(self, text='Rates')
+        rates_heading_label.grid(row=0, column=0, columnspan=2)
+
+        rates_required_label = ttk.Label(self, text='*Required')
+        rates_required_label.grid(row=1, column=0, columnspan=2)
+
+        rates_minimum_label = ttk.Label(self, text='Minimum')
+        rates_minimum_label.grid(row=2, column=0)
+
+        rates_maximum_label = ttk.Label(self, text='Maximum')
+        rates_maximum_label.grid(row=3, column=0)
+
+        # variables to store text in entry fields
+        self.minimum_var = tk.StringVar()
+        self.maximum_var = tk.StringVar()
+
+        # entry fields
+        rates_minimum_entry = ttk.Entry(self, textvariable=self.minimum_var)
+        rates_minimum_entry.grid(row=2, column=1)
+
+        rates_maximum_entry = ttk.Entry(self, textvariable=self.maximum_var)
+        rates_maximum_entry.grid(row=3, column=1)
+
 
 class RateIncrementFrame(ttk.Frame):
     '''Visible frame for difficulty selection checkboxes
@@ -109,6 +175,17 @@ class RateIncrementFrame(ttk.Frame):
         # configure height and width
         # NOTE: this is temporary, just to make the frames visible
         self.configure(height=100, width=50)
+
+        # call method to create widgets
+        self.__create_widgets()
+
+    def __create_widgets(self):
+
+        # labels
+        rate_increment_label = ttk.Label(self, text='Rate Increment')
+        rate_increment_label.grid(row=0, column=0, columnspan=3)
+
+        # TODO: radio buttons here
 
 
 class AROptionsFrame(ttk.Frame):
@@ -139,52 +216,3 @@ if __name__ == "__main__":
     app = App()
     app.mainloop()
 
-"""
-# create main window
-root = tk.Tk()
-
-# configure window
-root.title("Idiot Caleb's Uprating Project")
-root.geometry('300x200')
-root.configure(bg='#1e2129')
-
-# create buttons and frames (forms the visual layout of the program)
-# grid layout is used to separate widgets into columns
-frame1 = ttk.Frame(root)
-frame1.grid(row=0, column=0)
-
-choose_file_button = ttk.Button(frame1, text='Choose File')
-choose_file_button.pack()
-
-difficulties_frame = ttk.Frame(frame1, height=100, width=50)
-difficulties_frame.pack()
-
-frame2 = ttk.Frame(root)
-frame2.grid(row=0, column=1)
-
-rates_frame = ttk.Frame(frame2, height=100, width=50)
-rates_frame.pack()
-
-rate_increment_frame = ttk.Frame(frame2, height=100, width=50)
-rate_increment_frame.pack()
-
-frame3 = ttk.Frame(root)
-frame3.grid(row=0, column=2)
-
-ar_options_frame = ttk.Frame(frame3, height=100, width=50)
-ar_options_frame.pack()
-
-other_frame = ttk.Frame(frame3, height=100, width=50)
-other_frame.pack()
-
-start_button = ttk.Button(frame3, text='Start!')
-start_button.pack()
-
-style = ttk.Style(root)
-style.configure('TFrame',
-                background='#2d2d39',
-                relief='groove',
-                borderwidth=2)
-
-root.mainloop()
-"""
