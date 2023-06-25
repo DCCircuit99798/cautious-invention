@@ -183,9 +183,42 @@ class RateIncrementFrame(ttk.Frame):
 
         # labels
         rate_increment_label = ttk.Label(self, text='Rate Increment')
-        rate_increment_label.grid(row=0, column=0, columnspan=3)
+        rate_increment_label.grid(row=0, column=0, columnspan=2)
 
-        # TODO: radio buttons here
+        # variable to store selected rate increment
+        self.increment_var = tk.StringVar()
+
+        # variable to store custom rate increment in entry field
+        self.increment_custom_var = tk.StringVar()
+
+        # entry field for custom rate increment
+        rate_increment_entry = ttk.Entry(self,
+                                         textvariable=self.increment_custom_var)
+        rate_increment_entry.grid(row=3, column=1)
+
+        # radio buttons
+        rate_increment_radio1 = ttk.Radiobutton(self,
+                                                text='0.05',
+                                                value=0.05,
+                                                variable=self.increment_var)
+
+        rate_increment_radio2 = ttk.Radiobutton(self,
+                                                text='0.10',
+                                                value=0.10,
+                                                variable=self.increment_var)
+
+        rate_increment_radio3 = ttk.Radiobutton(self,
+                                        text='Custom:',
+                                        value=self.increment_custom_var.get(),
+                                        variable=self.increment_var)
+
+        rate_increment_radio1.grid(row=1, column=0)
+        rate_increment_radio2.grid(row=2, column=0)
+        rate_increment_radio3.grid(row=3, column=0)
+
+        # the custom value is selected by default from the .get() method,
+        # so deselect the radio button
+        self.increment_var.set(None)
 
 
 class AROptionsFrame(ttk.Frame):
