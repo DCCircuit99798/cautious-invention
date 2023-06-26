@@ -309,7 +309,22 @@ class OtherFrame(ttk.Frame):
         self.__create_widgets()
 
     def __create_widgets(self):
-        pass
+
+        # label
+        other_heading_label = ttk.Label(self, text='Other')
+        other_heading_label.grid(row=0, column=0)
+
+        # create variables to store state of "pitch rates" checkbox
+        self.pitch_rates_var = tk.StringVar()
+
+        # set default value of pitch rates variable to 1 (on)
+        self.pitch_rates_var.set(0)
+        
+        # checkbox
+        other_checkbox = ttk.Checkbutton(self,
+                                         text='Change pitch of audio files with rate',
+                                         variable=self.pitch_rates_var)
+        other_checkbox.grid(row=2, column=0)
 
 
 if __name__ == "__main__":
