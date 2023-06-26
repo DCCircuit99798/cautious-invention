@@ -1,4 +1,4 @@
-# import tkinter and required submodules
+# import required modules
 import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog
@@ -17,12 +17,8 @@ class App(tk.Tk):
         # call method to create widgets
         self.__create_widgets()
 
-        # configure styles
-        self.style = ttk.Style(self)
-        self.style.configure('TFrame',
-                        background='#2d2d39',
-                        relief='groove',
-                        borderwidth=2)
+        # call method to configure styles
+        self.__configure_styles()
 
     def __create_widgets(self):
         '''Adds labels, buttons, and frames to create the layout of
@@ -58,6 +54,21 @@ class App(tk.Tk):
 
         start_button = ttk.Button(frame2, text='Start!')
         start_button.pack()
+
+    def __configure_styles(self):
+        '''Configures the styles of all the widgets in the program.'''
+
+        # create style object for the program
+        self.style = ttk.Style(self)
+
+        # change font of all text in the program
+        # self.style.configure('.', font=('Courier New', 12))
+
+        # NOTE: temporary styling to make frames visible
+        self.style.configure('TFrame',
+                        background='#2d2d39',
+                        relief='groove',
+                        borderwidth=2)
 
 
 class OuterFrame(ttk.Frame):
