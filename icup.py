@@ -216,9 +216,8 @@ class RateIncrementFrame(ttk.Frame):
         rate_increment_radio2.grid(row=2, column=0)
         rate_increment_radio3.grid(row=3, column=0)
 
-        # the custom value is selected by default from the .get() method,
-        # so deselect the radio button
-        self.increment_var.set(None)
+        # set default value of rate increment to 0.05
+        self.increment_var.set(0.05)
 
 
 class AROptionsFrame(ttk.Frame):
@@ -318,7 +317,7 @@ class OtherFrame(ttk.Frame):
         self.pitch_rates_var = tk.StringVar()
 
         # set default value of pitch rates variable to 1 (on)
-        self.pitch_rates_var.set(0)
+        self.pitch_rates_var.set(1)
         
         # checkbox
         other_checkbox = ttk.Checkbutton(self,
