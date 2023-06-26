@@ -182,8 +182,8 @@ class RateIncrementFrame(ttk.Frame):
     def __create_widgets(self):
 
         # labels
-        rate_increment_label = ttk.Label(self, text='Rate Increment')
-        rate_increment_label.grid(row=0, column=0, columnspan=2)
+        rate_increment_heading_label = ttk.Label(self, text='Rate Increment')
+        rate_increment_heading_label.grid(row=0, column=0, columnspan=2)
 
         # variable to store selected rate increment
         self.increment_var = tk.StringVar()
@@ -236,7 +236,62 @@ class AROptionsFrame(ttk.Frame):
         self.__create_widgets()
 
     def __create_widgets(self):
-        pass
+
+        # labels
+        ar_options_heading_label = ttk.Label(self, text='AR Options')
+        ar_options_heading_label.grid(row=0, column=0, columnspan=2)
+        
+        ar_options_label1 = ttk.Label(self, text='AR Option #1:')
+        ar_options_label2 = ttk.Label(self, text='AR Option #2:')
+        ar_options_label3 = ttk.Label(self, text='AR Option #3:')
+
+        ar_options_label1.grid(row=1, column=0, columnspan=2)
+        ar_options_label2.grid(row=2, column=0, columnspan=2)
+        ar_options_label3.grid(row=3, column=0, columnspan=2)
+
+        # variables to store selected AR type and value
+        # for each of the three options
+        self.ar_options_type1 = tk.StringVar()
+        self.ar_options_type2 = tk.StringVar()
+        self.ar_options_type3 = tk.StringVar()
+
+        self.ar_options_value1 = tk.StringVar()
+        self.ar_options_value2 = tk.StringVar()
+        self.ar_options_value3 = tk.StringVar()
+
+        # comboboxes (dropdown menus)
+        ar_options_combobox1 = ttk.Combobox(self,
+                                            textvariable=self.ar_options_type1)
+        ar_options_combobox2 = ttk.Combobox(self,
+                                            textvariable=self.ar_options_type2)
+        ar_options_combobox3 = ttk.Combobox(self,
+                                            textvariable=self.ar_options_type3)
+
+        ar_options_combobox1.grid(row=1, column=2)
+        ar_options_combobox2.grid(row=2, column=2)
+        ar_options_combobox3.grid(row=3, column=2)
+
+        # define possible values for comboboxes
+        ar_options_combobox1['values'] = ('x', 'c', 'C')
+        ar_options_combobox2['values'] = ('x', 'c', 'C')
+        ar_options_combobox3['values'] = ('x', 'c', 'C')
+
+        # prevent user from entering a custom value in the comboboxes
+        ar_options_combobox1['state'] = 'readonly'
+        ar_options_combobox2['state'] = 'readonly'
+        ar_options_combobox3['state'] = 'readonly'
+
+        # entry fields
+        ar_options_entry1 = ttk.Entry(self,
+                                      textvariable=self.ar_options_value1)
+        ar_options_entry2 = ttk.Entry(self,
+                                      textvariable=self.ar_options_value2)
+        ar_options_entry3 = ttk.Entry(self,
+                                      textvariable=self.ar_options_value3)
+
+        ar_options_entry1.grid(row=1, column=3)
+        ar_options_entry2.grid(row=2, column=3)
+        ar_options_entry3.grid(row=3, column=3)
 
 
 class OtherFrame(ttk.Frame):
