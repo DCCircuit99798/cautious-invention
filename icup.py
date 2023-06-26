@@ -232,6 +232,12 @@ class AROptionsFrame(ttk.Frame):
         # NOTE: this is temporary, just to make the frames visible
         self.configure(height=100, width=50)
 
+        # call method to create widgets
+        self.__create_widgets()
+
+    def __create_widgets(self):
+        pass
+
 
 class OtherFrame(ttk.Frame):
     '''Visible frame for difficulty selection checkboxes
@@ -243,6 +249,12 @@ class OtherFrame(ttk.Frame):
         # configure height and width
         # NOTE: this is temporary, just to make the frames visible
         self.configure(height=100, width=50)
+
+        # call method to create widgets
+        self.__create_widgets()
+
+    def __create_widgets(self):
+        pass
 
 
 if __name__ == "__main__":
