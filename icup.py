@@ -2,6 +2,18 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog
+import os
+from pathlib import Path
+import sys
+
+# get path of modules that aren't built-in
+pyglet_path = Path(os.getcwd()) / 'pyglet' # current path/'pyglet'
+
+# append path to system
+sys.path.append(pyglet_path)
+
+# import required modules
+import pyglet
 
 class App(tk.Tk):
     '''This class creates the main window of the program.'''
@@ -11,7 +23,7 @@ class App(tk.Tk):
 
         # configure window
         self.title("Idiot Caleb's Uprating Project")
-        self.geometry('600x400')
+        self.geometry('800x400')
         self.configure(bg='#1e2129')
 
         # call method to create widgets
@@ -57,12 +69,18 @@ class App(tk.Tk):
 
     def __configure_styles(self):
         '''Configures the styles of all the widgets in the program.'''
-
+        
         # create style object for the program
         self.style = ttk.Style(self)
 
-        # change font of all text in the program
-        # self.style.configure('.', font=('Courier New', 12))
+        # add font file to pyglet for use in the program
+        pyglet.font.add_file('fonts/Nunito-Regular.ttf')
+        pyglet.font.add_file('fonts/Nunito-Bold.ttf')
+
+        nunito_font = pyglet.font.load('Nunito', 11)
+
+        # change font of all text in the program to Nunito
+        self.style.configure('TButton', font=('Nunito', 11))
 
         # NOTE: temporary styling to make frames visible
         self.style.configure('TFrame',
