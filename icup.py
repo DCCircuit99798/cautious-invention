@@ -11,7 +11,7 @@ class App(tk.Tk):
 
         # configure window
         self.title("Idiot Caleb's Uprating Project")
-        self.geometry('600x400')
+        self.geometry('800x400')
         self.configure(bg='#1e2129')
 
         # call method to create widgets
@@ -25,7 +25,9 @@ class App(tk.Tk):
         the program.'''
         
         # add label for program title
-        title_label = ttk.Label(self, text="Idiot Caleb's Uprating Project")
+        title_label = ttk.Label(self,
+                                text="Idiot Caleb's Uprating Project",
+                                style='Title.TLabel')
         title_label.grid(row=0, column=0, columnspan=3)
 
         # create instances of OuterFrame for other widgets to be placed in
@@ -62,7 +64,25 @@ class App(tk.Tk):
         self.style = ttk.Style(self)
 
         # change font of all text in the program
-        # self.style.configure('.', font=('Courier New', 12))
+        self.style.configure('.', font=('Tahoma', 12))
+
+        # change background colour of all labels to
+        # same colour as outer frames
+        self.style.configure('TLabel',
+                             background='#2d2d39',
+                             foreground='#ffffff')
+
+        # title label
+        self.style.configure('Title.TLabel',
+                             font=('Tahoma', 24),
+                             background='#1e2129')
+
+        # heading labels
+        self.style.configure('Heading.TLabel', font=('Tahoma', 8, 'bold'))
+
+        # "required" labels
+        self.style.configure('Required.Heading.TLabel',
+                             foreground='#aeb9ef')
 
         # NOTE: temporary styling to make frames visible
         self.style.configure('TFrame',
@@ -103,10 +123,14 @@ class DifficultiesFrame(ttk.Frame):
     def __create_widgets(self):
 
         # labels
-        difficulties_heading_label = ttk.Label(self, text='Difficulties')
+        difficulties_heading_label = ttk.Label(self,
+                                               text='DIFFICULTIES',
+                                               style='Heading.TLabel')
         difficulties_heading_label.grid(row=0, column=0)
 
-        difficulties_required_label = ttk.Label(self, text='*Required')
+        difficulties_required_label = ttk.Label(self,
+                                                text='*Required',
+                                                style='Required.Heading.TLabel')
         difficulties_required_label.grid(row=1, column=0)
 
         # variables to store state of checkboxes
@@ -152,10 +176,14 @@ class RatesFrame(ttk.Frame):
     def __create_widgets(self):
 
         # labels
-        rates_heading_label = ttk.Label(self, text='Rates')
+        rates_heading_label = ttk.Label(self,
+                                        text='RATES',
+                                        style='Heading.TLabel')
         rates_heading_label.grid(row=0, column=0, columnspan=2)
 
-        rates_required_label = ttk.Label(self, text='*Required')
+        rates_required_label = ttk.Label(self,
+                                         text='*Required',
+                                         style='Required.Heading.TLabel')
         rates_required_label.grid(row=1, column=0, columnspan=2)
 
         rates_minimum_label = ttk.Label(self, text='Minimum')
@@ -193,7 +221,9 @@ class RateIncrementFrame(ttk.Frame):
     def __create_widgets(self):
 
         # labels
-        rate_increment_heading_label = ttk.Label(self, text='Rate Increment')
+        rate_increment_heading_label = ttk.Label(self,
+                                                 text='RATE INCREMENT',
+                                                 style='Heading.TLabel')
         rate_increment_heading_label.grid(row=0, column=0, columnspan=2)
 
         # variable to store selected rate increment
@@ -248,7 +278,9 @@ class AROptionsFrame(ttk.Frame):
     def __create_widgets(self):
 
         # labels
-        ar_options_heading_label = ttk.Label(self, text='AR Options')
+        ar_options_heading_label = ttk.Label(self,
+                                             text='AR OPTIONS',
+                                             style='Heading.TLabel')
         ar_options_heading_label.grid(row=0, column=0, columnspan=2)
         
         ar_options_label1 = ttk.Label(self, text='AR Option #1:')
@@ -321,7 +353,9 @@ class OtherFrame(ttk.Frame):
     def __create_widgets(self):
 
         # label
-        other_heading_label = ttk.Label(self, text='Other')
+        other_heading_label = ttk.Label(self,
+                                        text='OTHER',
+                                        style='Heading.TLabel')
         other_heading_label.grid(row=0, column=0)
 
         # create variables to store state of "pitch rates" checkbox
