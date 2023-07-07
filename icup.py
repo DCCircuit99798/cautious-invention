@@ -23,11 +23,11 @@ class App(tk.Tk):
         self.geometry('800x400')
         self.configure(bg='#1e2129')
 
-        # call method to create widgets
-        self.__create_widgets()
-
         # call method to configure styles
         self.__configure_styles()
+
+        # call method to create widgets
+        self.__create_widgets()
 
     def __create_widgets(self):
         '''Adds labels, buttons, and frames to create the layout of
@@ -44,27 +44,79 @@ class App(tk.Tk):
         frame1 = OuterFrame(self, 1)
         frame2 = OuterFrame(self, 2)
 
+        # create border frames to contain widgets and visible frames
+        choose_file_border = BorderFrame(frame0)
+        choose_file_border.configure(style='ButtonBorder.TFrame')
+        choose_file_border.pack()
+
+        difficulties_border = BorderFrame(frame0)
+        difficulties_border.configure(style='NormalBorder.TFrame')
+        difficulties_border.pack()
+
+        rates_border = BorderFrame(frame1)
+        rates_border.configure(style='NormalBorder.TFrame')
+        rates_border.pack()
+
+        rate_increment_border = BorderFrame(frame1)
+        rate_increment_border.configure(style='NormalBorder.TFrame')
+        rate_increment_border.pack()
+
+        ar_options_border = BorderFrame(frame2)
+        ar_options_border.configure(style='NormalBorder.TFrame')
+        ar_options_border.pack()
+
+        other_border = BorderFrame(frame2)
+        other_border.configure(style='NormalBorder.TFrame')
+        other_border.pack()
+
+        start_border = BorderFrame(frame2)
+        start_border.configure(style='ButtonBorder.TFrame')
+        start_border.pack()
+
         # create buttons and frames for layout of program
-        choose_file_button = ttk.Button(frame0, text='Choose File')
-        choose_file_button.pack()
+        choose_file_button = tk.Button(
+            choose_file_border,
+            text='Choose File')
+
+        choose_file_button.configure(
+            font=tk_button_font,
+            background=tk_button_bg,
+            activebackground=tk_button_activebg,
+            foreground=tk_button_fg,
+            activeforeground=tk_button_activefg,
+            borderwidth=tk_button_borderwidth)
         
-        difficulties_frame = DifficultiesFrame(frame0)
-        difficulties_frame.pack()
+        choose_file_button.pack(padx=1, pady=1)
+        
+        difficulties_frame = DifficultiesFrame(difficulties_border)
+        difficulties_frame.configure(style='Normal.TFrame')
+        difficulties_frame.pack(padx=1, pady=1)
 
-        rates_frame = RatesFrame(frame1)
-        rates_frame.pack()
+        rates_frame = RatesFrame(rates_border)
+        rates_frame.configure(style='Normal.TFrame')
+        rates_frame.pack(padx=1, pady=1)
 
-        rate_increment_frame = RateIncrementFrame(frame1)
-        rate_increment_frame.pack()
+        rate_increment_frame = RateIncrementFrame(rate_increment_border)
+        rate_increment_frame.configure(style='Normal.TFrame')
+        rate_increment_frame.pack(padx=1, pady=1)
 
-        ar_options_frame = AROptionsFrame(frame2)
-        ar_options_frame.pack()
+        ar_options_frame = AROptionsFrame(ar_options_border)
+        ar_options_frame.configure(style='Normal.TFrame')
+        ar_options_frame.pack(padx=1, pady=1)
 
-        other_frame = OtherFrame(frame2)
-        other_frame.pack()
+        other_frame = OtherFrame(other_border)
+        other_frame.configure(style='Normal.TFrame')
+        other_frame.pack(padx=1, pady=1)
 
-        start_button = ttk.Button(frame2, text='Start!')
-        start_button.pack()
+        start_button = tk.Button(start_border, text='Start!')
+        start_button.configure(
+            font=tk_button_font,
+            background=tk_button_bg,
+            activebackground=tk_button_activebg,
+            foreground=tk_button_fg,
+            activeforeground=tk_button_activefg,
+            borderwidth=tk_button_borderwidth)
+        start_button.pack(padx=1, pady=1)
 
     def __configure_styles(self):
         '''Configures the styles of all the widgets in the program.'''
@@ -81,23 +133,68 @@ class App(tk.Tk):
                              background='#2d2d39',
                              foreground='#ffffff')
 
-        # title label
+        # title ttk label
         self.style.configure('Title.TLabel',
                              font=('Tahoma', 24),
                              background='#1e2129')
 
-        # heading labels
+        # heading ttk labels
         self.style.configure('Heading.TLabel', font=('Tahoma', 8, 'bold'))
 
-        # "required" labels
+        # "required" ttk labels
         self.style.configure('Required.Heading.TLabel',
                              foreground='#aeb9ef')
 
-        # NOTE: temporary styling to make frames visible
+        # tk buttons
+        global tk_button_font, tk_button_bg, tk_button_activebg, \
+        tk_button_fg, tk_button_activefg, tk_button_borderwidth
+        
+        tk_button_font = ('Tahoma', 12)
+
+        tk_button_bg = '#536cde'
+        tk_button_activebg = '#6c81d9'
+
+        tk_button_fg = '#ffffff'
+        tk_button_activefg = '#ffffff'
+        
+        tk_button_borderwidth = 0
+
+        # tk checkbuttons
+        global tk_checkbutton_font, tk_checkbutton_bg, \
+        tk_checkbutton_activebg, tk_checkbutton_fg, tk_checkbutton_activefg, \
+        tk_checkbutton_selectcolor, tk_checkbutton_relief
+        
+        tk_checkbutton_font = ('Tahoma', 12)
+        
+        tk_checkbutton_bg = '#2d2d39'
+        tk_checkbutton_activebg = '#2d2d39'
+
+        tk_checkbutton_fg = '#ffffff'
+        tk_checkbutton_activefg = '#ffffff'
+
+        tk_checkbutton_selectcolor = '#2d2d39'
+        tk_checkbutton_relief = 'flat'
+
+        # tk entry fields
+        global tk_entry_font
+
+        tk_entry_font = ('Tahoma', 12)
+
+        # border frames
+        self.style.configure('ButtonBorder.TFrame',
+                             background='#ffffff',
+                             relief='flat')
+
+        self.style.configure('NormalBorder.TFrame',
+                             background='#aeb9ef')
+
+        # visible frames (that contain widgets)
+        self.style.configure('Normal.TFrame',
+                             background='#2d2d39')
+
+        # outer invisible frames
         self.style.configure('TFrame',
-                        background='#2d2d39',
-                        relief='groove',
-                        borderwidth=2)
+                             background='#1e2129')
 
 
 class OuterFrame(ttk.Frame):
@@ -110,9 +207,12 @@ class OuterFrame(ttk.Frame):
         # place frame on grid according to frame_number argument
         self.grid(row=1, column=frame_number)
 
-        # configure height and width
-        # NOTE: this is temporary, just to make the frames visible
-        self.configure(height=200, width=100)
+
+class BorderFrame(ttk.Frame):
+    '''This class creates frames to act as borders for widgets.'''
+
+    def __init__(self, container):
+        super().__init__(container)
 
 
 class DifficultiesFrame(ttk.Frame):
@@ -122,13 +222,9 @@ class DifficultiesFrame(ttk.Frame):
     def __init__(self, container):
         super().__init__(container)
 
-        # configure height and width
-        # NOTE: this is temporary, just to make the frames visible
-        self.configure(height=100, width=50)
-
         # call method to create widgets
         self.__create_widgets()
-
+        
     def __create_widgets(self):
 
         # labels
@@ -153,20 +249,45 @@ class DifficultiesFrame(ttk.Frame):
         self.ex_var.set(0)
 
         # checkboxes
-        difficulties_easy_checkbox = ttk.Checkbutton(self,
-                                                  text='Easy',
-                                                  variable=self.easy_var)
+        difficulties_easy_checkbox = tk.Checkbutton(self,
+                                                    text='Easy',
+                                                    variable=self.easy_var)
+        difficulties_easy_checkbox.configure(
+            font=tk_checkbutton_font,
+            background=tk_checkbutton_bg,
+            activebackground=tk_checkbutton_activebg,
+            foreground=tk_checkbutton_fg,
+            activeforeground=tk_checkbutton_activefg,
+            selectcolor=tk_checkbutton_selectcolor,
+            relief=tk_checkbutton_relief)
         difficulties_easy_checkbox.grid(row=2, column=0)
                                                   
-        difficulties_hard_checkbox = ttk.Checkbutton(self,
+        difficulties_hard_checkbox = tk.Checkbutton(self,
                                                   text='Hard',
                                                   variable=self.hard_var)
+        difficulties_hard_checkbox.configure(
+            font=tk_checkbutton_font,
+            background=tk_checkbutton_bg,
+            activebackground=tk_checkbutton_activebg,
+            foreground=tk_checkbutton_fg,
+            activeforeground=tk_checkbutton_activefg,
+            selectcolor=tk_checkbutton_selectcolor,
+            relief=tk_checkbutton_relief)
         difficulties_hard_checkbox.grid(row=3, column=0)
 
-        difficulties_ex_checkbox = ttk.Checkbutton(self,
+        difficulties_ex_checkbox = tk.Checkbutton(self,
                                                   text='Extreme',
                                                   variable=self.ex_var)
+        difficulties_ex_checkbox.configure(
+            font=tk_checkbutton_font,
+            background=tk_checkbutton_bg,
+            activebackground=tk_checkbutton_activebg,
+            foreground=tk_checkbutton_fg,
+            activeforeground=tk_checkbutton_activefg,
+            selectcolor=tk_checkbutton_selectcolor,
+            relief=tk_checkbutton_relief)
         difficulties_ex_checkbox.grid(row=4, column=0)
+
 
 class RatesFrame(ttk.Frame):
     '''Visible frame for difficulty selection checkboxes
@@ -174,10 +295,6 @@ class RatesFrame(ttk.Frame):
 
     def __init__(self, container):
         super().__init__(container)
-
-        # configure height and width
-        # NOTE: this is temporary, just to make the frames visible
-        self.configure(height=100, width=50)
 
         # call method to create widgets
         self.__create_widgets()
@@ -206,7 +323,9 @@ class RatesFrame(ttk.Frame):
         self.maximum_var = tk.StringVar()
 
         # entry fields
-        rates_minimum_entry = ttk.Entry(self, textvariable=self.minimum_var)
+        rates_minimum_entry = tk.Entry(self, textvariable=self.minimum_var)
+        rates_minimum_entry.configure(
+            font=tk_entry_font)
         rates_minimum_entry.grid(row=2, column=1)
 
         rates_maximum_entry = ttk.Entry(self, textvariable=self.maximum_var)
@@ -219,10 +338,6 @@ class RateIncrementFrame(ttk.Frame):
 
     def __init__(self, container):
         super().__init__(container)
-
-        # configure height and width
-        # NOTE: this is temporary, just to make the frames visible
-        self.configure(height=100, width=50)
 
         # call method to create widgets
         self.__create_widgets()
@@ -276,10 +391,6 @@ class AROptionsFrame(ttk.Frame):
 
     def __init__(self, container):
         super().__init__(container)
-
-        # configure height and width
-        # NOTE: this is temporary, just to make the frames visible
-        self.configure(height=100, width=50)
 
         # call method to create widgets
         self.__create_widgets()
@@ -352,10 +463,6 @@ class OtherFrame(ttk.Frame):
     def __init__(self, container):
         super().__init__(container)
 
-        # configure height and width
-        # NOTE: this is temporary, just to make the frames visible
-        self.configure(height=100, width=50)
-
         # call method to create widgets
         self.__create_widgets()
 
@@ -374,9 +481,17 @@ class OtherFrame(ttk.Frame):
         self.pitch_rates_var.set(1)
         
         # checkbox
-        other_checkbox = ttk.Checkbutton(self,
+        other_checkbox = tk.Checkbutton(self,
                                          text='Change pitch of audio files with rate',
                                          variable=self.pitch_rates_var)
+        other_checkbox.configure(
+            font=tk_checkbutton_font,
+            background=tk_checkbutton_bg,
+            activebackground=tk_checkbutton_activebg,
+            foreground=tk_checkbutton_fg,
+            activeforeground=tk_checkbutton_activefg,
+            selectcolor=tk_checkbutton_selectcolor,
+            relief=tk_checkbutton_relief)
         other_checkbox.grid(row=2, column=0)
 
 
