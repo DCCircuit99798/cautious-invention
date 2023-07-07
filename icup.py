@@ -7,13 +7,10 @@ from pathlib import Path
 import sys
 
 # get path of modules that aren't built-in
-pyglet_path = Path(os.getcwd()) / 'pyglet' # current path/'pyglet'
 
 # append path to system
-sys.path.append(pyglet_path)
 
 # import required modules
-import pyglet
 
 class App(tk.Tk):
     '''This class creates the main window of the program.'''
