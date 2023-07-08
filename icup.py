@@ -46,7 +46,7 @@ class App(tk.Tk):
 
         # create border frames to contain widgets and visible frames
         choose_file_border = BorderFrame(frame0)
-        choose_file_border.configure(style='ButtonBorder.TFrame')
+        choose_file_border.configure(style='WidgetBorder.TFrame')
         choose_file_border.pack()
 
         difficulties_border = BorderFrame(frame0)
@@ -70,14 +70,13 @@ class App(tk.Tk):
         other_border.pack()
 
         start_border = BorderFrame(frame2)
-        start_border.configure(style='ButtonBorder.TFrame')
+        start_border.configure(style='WidgetBorder.TFrame')
         start_border.pack()
 
         # create buttons and frames for layout of program
         choose_file_button = tk.Button(
             choose_file_border,
             text='Choose File')
-
         choose_file_button.configure(
             font=tk_button_font,
             background=tk_button_bg,
@@ -85,7 +84,6 @@ class App(tk.Tk):
             foreground=tk_button_fg,
             activeforeground=tk_button_activefg,
             borderwidth=tk_button_borderwidth)
-        
         choose_file_button.pack(padx=1, pady=1)
         
         difficulties_frame = DifficultiesFrame(difficulties_border)
@@ -176,12 +174,26 @@ class App(tk.Tk):
         tk_checkbutton_relief = 'flat'
 
         # tk entry fields
-        global tk_entry_font
+        global tk_entry_font, tk_entry_bg, tk_entry_fg, \
+        tk_entry_borderwidth, tk_entry_insertbackground, \
+        tk_rates_entry_width, tk_rate_increment_entry_width, \
+        tk_ar_options_entry_width
 
         tk_entry_font = ('Tahoma', 12)
 
+        tk_entry_bg = '#2d2d39'
+        tk_entry_fg = '#ffffff'
+
+        tk_entry_borderwidth = 0
+
+        tk_entry_insertbackground = '#ffffff' # text "cursor" colour
+
+        tk_rates_entry_width = 5
+        tk_rate_increment_entry_width = 5
+        tk_ar_options_entry_width = 5
+
         # border frames
-        self.style.configure('ButtonBorder.TFrame',
+        self.style.configure('WidgetBorder.TFrame',
                              background='#ffffff',
                              relief='flat')
 
@@ -322,14 +334,37 @@ class RatesFrame(ttk.Frame):
         self.minimum_var = tk.StringVar()
         self.maximum_var = tk.StringVar()
 
-        # entry fields
-        rates_minimum_entry = tk.Entry(self, textvariable=self.minimum_var)
-        rates_minimum_entry.configure(
-            font=tk_entry_font)
-        rates_minimum_entry.grid(row=2, column=1)
+        # borders for entry fields
+        rates_minimum_border = BorderFrame(self)
+        rates_minimum_border.configure(style='WidgetBorder.TFrame')
+        rates_minimum_border.grid(row=2, column=1)
 
-        rates_maximum_entry = ttk.Entry(self, textvariable=self.maximum_var)
-        rates_maximum_entry.grid(row=3, column=1)
+        rates_maximum_border = BorderFrame(self)
+        rates_maximum_border.configure(style='WidgetBorder.TFrame')
+        rates_maximum_border.grid(row=3, column=1)
+
+        # entry fields
+        rates_minimum_entry = tk.Entry(rates_minimum_border,
+                                       textvariable=self.minimum_var)
+        rates_minimum_entry.configure(
+            font=tk_entry_font,
+            background=tk_entry_bg,
+            foreground=tk_entry_fg,
+            borderwidth=tk_entry_borderwidth,
+            insertbackground=tk_entry_insertbackground,
+            width=tk_rates_entry_width)
+        rates_minimum_entry.pack(padx=1, pady=1)
+
+        rates_maximum_entry = tk.Entry(rates_maximum_border,
+                                        textvariable=self.maximum_var)
+        rates_maximum_entry.configure(
+            font=tk_entry_font,
+            background=tk_entry_bg,
+            foreground=tk_entry_fg,
+            borderwidth=tk_entry_borderwidth,
+            insertbackground=tk_entry_insertbackground,
+            width=tk_rates_entry_width)
+        rates_maximum_entry.pack(padx=1, pady=1)
 
 
 class RateIncrementFrame(ttk.Frame):
@@ -356,10 +391,22 @@ class RateIncrementFrame(ttk.Frame):
         # variable to store custom rate increment in entry field
         self.increment_custom_var = tk.StringVar()
 
+        # border for custom entry field
+        rate_increment_entry_border = BorderFrame(self)
+        rate_increment_entry_border.configure(style='WidgetBorder.TFrame')
+        rate_increment_entry_border.grid(row=3, column=1)
+
         # entry field for custom rate increment
-        rate_increment_entry = ttk.Entry(self,
+        rate_increment_entry = tk.Entry(rate_increment_entry_border,
                                          textvariable=self.increment_custom_var)
-        rate_increment_entry.grid(row=3, column=1)
+        rate_increment_entry.configure(
+            font=tk_entry_font,
+            background=tk_entry_bg,
+            foreground=tk_entry_fg,
+            borderwidth=tk_entry_borderwidth,
+            insertbackground=tk_entry_insertbackground,
+            width=tk_rate_increment_entry_width)
+        rate_increment_entry.pack(padx=1, pady=1)
 
         # radio buttons
         rate_increment_radio1 = ttk.Radiobutton(self,
@@ -443,17 +490,52 @@ class AROptionsFrame(ttk.Frame):
         ar_options_combobox2['state'] = 'readonly'
         ar_options_combobox3['state'] = 'readonly'
 
-        # entry fields
-        ar_options_entry1 = ttk.Entry(self,
-                                      textvariable=self.ar_options_value1)
-        ar_options_entry2 = ttk.Entry(self,
-                                      textvariable=self.ar_options_value2)
-        ar_options_entry3 = ttk.Entry(self,
-                                      textvariable=self.ar_options_value3)
+        # borders for entry fields
+        ar_options_border1 = ttk.Entry(self)
+        ar_options_border2 = ttk.Entry(self)
+        ar_options_border3 = ttk.Entry(self)
 
-        ar_options_entry1.grid(row=1, column=3)
-        ar_options_entry2.grid(row=2, column=3)
-        ar_options_entry3.grid(row=3, column=3)
+        ar_options_border1.configure(style='WidgetBorder.TFrame')
+        ar_options_border2.configure(style='WidgetBorder.TFrame')
+        ar_options_border3.configure(style='WidgetBorder.TFrame')
+
+        ar_options_border1.grid(row=1, column=3)
+        ar_options_border2.grid(row=2, column=3)
+        ar_options_border3.grid(row=3, column=3)
+
+        # entry fields
+        ar_options_entry1 = tk.Entry(ar_options_border1,
+                                     textvariable=self.ar_options_value1)
+        ar_options_entry2 = tk.Entry(ar_options_border2,
+                                     textvariable=self.ar_options_value2)
+        ar_options_entry3 = tk.Entry(ar_options_border3,
+                                     textvariable=self.ar_options_value3)
+
+        ar_options_entry1.configure(
+            font=tk_entry_font,
+            background=tk_entry_bg,
+            foreground=tk_entry_fg,
+            borderwidth=tk_entry_borderwidth,
+            insertbackground=tk_entry_insertbackground,
+            width=tk_ar_options_entry_width)
+        ar_options_entry2.configure(
+            font=tk_entry_font,
+            background=tk_entry_bg,
+            foreground=tk_entry_fg,
+            borderwidth=tk_entry_borderwidth,
+            insertbackground=tk_entry_insertbackground,
+            width=tk_ar_options_entry_width)
+        ar_options_entry3.configure(
+            font=tk_entry_font,
+            background=tk_entry_bg,
+            foreground=tk_entry_fg,
+            borderwidth=tk_entry_borderwidth,
+            insertbackground=tk_entry_insertbackground,
+            width=tk_ar_options_entry_width)
+
+        ar_options_entry1.pack(padx=1, pady=1)
+        ar_options_entry2.pack(padx=1, pady=1)
+        ar_options_entry3.pack(padx=1, pady=1)
 
 
 class OtherFrame(ttk.Frame):
