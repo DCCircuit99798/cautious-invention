@@ -74,16 +74,9 @@ class App(tk.Tk):
         start_border.pack()
 
         # create buttons and frames for layout of program
-        choose_file_button = tk.Button(
+        choose_file_button = ttk.Button(
             choose_file_border,
             text='Choose File')
-        choose_file_button.configure(
-            font=tk_button_font,
-            background=tk_button_bg,
-            activebackground=tk_button_activebg,
-            foreground=tk_button_fg,
-            activeforeground=tk_button_activefg,
-            borderwidth=tk_button_borderwidth)
         choose_file_button.pack(padx=1, pady=1)
         
         difficulties_frame = DifficultiesFrame(difficulties_border)
@@ -106,14 +99,7 @@ class App(tk.Tk):
         other_frame.configure(style='Normal.TFrame')
         other_frame.pack(padx=1, pady=1)
 
-        start_button = tk.Button(start_border, text='Start!')
-        start_button.configure(
-            font=tk_button_font,
-            background=tk_button_bg,
-            activebackground=tk_button_activebg,
-            foreground=tk_button_fg,
-            activeforeground=tk_button_activefg,
-            borderwidth=tk_button_borderwidth)
+        start_button = ttk.Button(start_border, text='Start!')
         start_button.pack(padx=1, pady=1)
 
     def __configure_styles(self):
@@ -122,14 +108,19 @@ class App(tk.Tk):
         # create style object for the program
         self.style = ttk.Style(self)
 
-        # change font of all text in the program
-        self.style.configure('.', font=('Tahoma', 12))
+        # use ttk theme that allows widget background colours
+        # to be changed
+        self.style.theme_use('alt')
+
+        # configure all text in the program
+        self.style.configure('.',
+                             font=('Tahoma', 12),
+                             foreground='#ffffff')
 
         # change background colour of all labels to
         # same colour as outer frames
         self.style.configure('TLabel',
-                             background='#2d2d39',
-                             foreground='#ffffff')
+                             background='#2d2d39')
 
         # title ttk label
         self.style.configure('Title.TLabel',
@@ -143,36 +134,48 @@ class App(tk.Tk):
         self.style.configure('Required.Heading.TLabel',
                              foreground='#aeb9ef')
 
-        # tk buttons
-        global tk_button_font, tk_button_bg, tk_button_activebg, \
-        tk_button_fg, tk_button_activefg, tk_button_borderwidth
+        # ttk buttons
+        self.style.configure('TButton',
+                             background='#536cde',
+                             borderwidth=0)
+        self.style.map('TButton',
+                       background = [('pressed', '#536cde'),
+                                     ('active', '#6c81d9')],
+                       foreground = [('pressed', '#ffffff'),
+                                     ('active', '#ffffff')]
+                       )
+
+        # ttk checkbuttons
+        self.style.configure('TCheckbutton',
+                             background='#2d2d39',
+                             indicatorbackground='#2d2d39',
+                             indicatorforeground='#ffffff',
+                             borderwidth=0)
+        self.style.map('TCheckbutton',
+                       background = [('pressed', '#2d2d39'),
+                                     ('active', '#2d2d39')],
+                       foreground = [('pressed', '#ffffff'),
+                                     ('active', '#ffffff')],
+                       indicatorbackground = [('pressed', '#2d2d39'),
+                                              ('active', '#2d2d39')],
+                       indicatorforeground = [('pressed', '#ffffff'),
+                                              ('active', '#ffffff')]
+                       )
+
+        # ttk radiobuttons
+        self.style.configure('TRadiobutton',
+                             background='#2d2d39',
+                             indicatorcolor='#2d2d39')
+        self.style.map('TRadiobutton',
+                       background = [('pressed', '#2d2d39'),
+                                     ('active', '#2d2d39')],
+                       foreground = [('pressed', '#ffffff'),
+                                     ('active', '#ffffff')],
+                       indicatorcolor = [('selected', '#2d2d39'),
+                                         ('pressed', '#2d2d39')]
+                       )
+
         
-        tk_button_font = ('Tahoma', 12)
-
-        tk_button_bg = '#536cde'
-        tk_button_activebg = '#6c81d9'
-
-        tk_button_fg = '#ffffff'
-        tk_button_activefg = '#ffffff'
-        
-        tk_button_borderwidth = 0
-
-        # tk checkbuttons
-        global tk_checkbutton_font, tk_checkbutton_bg, \
-        tk_checkbutton_activebg, tk_checkbutton_fg, tk_checkbutton_activefg, \
-        tk_checkbutton_selectcolor, tk_checkbutton_relief
-        
-        tk_checkbutton_font = ('Tahoma', 12)
-        
-        tk_checkbutton_bg = '#2d2d39'
-        tk_checkbutton_activebg = '#2d2d39'
-
-        tk_checkbutton_fg = '#ffffff'
-        tk_checkbutton_activefg = '#ffffff'
-
-        tk_checkbutton_selectcolor = '#2d2d39'
-        tk_checkbutton_relief = 'flat'
-
         # tk entry fields
         global tk_entry_font, tk_entry_bg, tk_entry_fg, \
         tk_entry_borderwidth, tk_entry_insertbackground, \
@@ -261,43 +264,19 @@ class DifficultiesFrame(ttk.Frame):
         self.ex_var.set(0)
 
         # checkboxes
-        difficulties_easy_checkbox = tk.Checkbutton(self,
+        difficulties_easy_checkbox = ttk.Checkbutton(self,
                                                     text='Easy',
                                                     variable=self.easy_var)
-        difficulties_easy_checkbox.configure(
-            font=tk_checkbutton_font,
-            background=tk_checkbutton_bg,
-            activebackground=tk_checkbutton_activebg,
-            foreground=tk_checkbutton_fg,
-            activeforeground=tk_checkbutton_activefg,
-            selectcolor=tk_checkbutton_selectcolor,
-            relief=tk_checkbutton_relief)
         difficulties_easy_checkbox.grid(row=2, column=0)
                                                   
-        difficulties_hard_checkbox = tk.Checkbutton(self,
+        difficulties_hard_checkbox = ttk.Checkbutton(self,
                                                   text='Hard',
                                                   variable=self.hard_var)
-        difficulties_hard_checkbox.configure(
-            font=tk_checkbutton_font,
-            background=tk_checkbutton_bg,
-            activebackground=tk_checkbutton_activebg,
-            foreground=tk_checkbutton_fg,
-            activeforeground=tk_checkbutton_activefg,
-            selectcolor=tk_checkbutton_selectcolor,
-            relief=tk_checkbutton_relief)
         difficulties_hard_checkbox.grid(row=3, column=0)
 
-        difficulties_ex_checkbox = tk.Checkbutton(self,
+        difficulties_ex_checkbox = ttk.Checkbutton(self,
                                                   text='Extreme',
                                                   variable=self.ex_var)
-        difficulties_ex_checkbox.configure(
-            font=tk_checkbutton_font,
-            background=tk_checkbutton_bg,
-            activebackground=tk_checkbutton_activebg,
-            foreground=tk_checkbutton_fg,
-            activeforeground=tk_checkbutton_activefg,
-            selectcolor=tk_checkbutton_selectcolor,
-            relief=tk_checkbutton_relief)
         difficulties_ex_checkbox.grid(row=4, column=0)
 
 
@@ -397,8 +376,9 @@ class RateIncrementFrame(ttk.Frame):
         rate_increment_entry_border.grid(row=3, column=1)
 
         # entry field for custom rate increment
-        rate_increment_entry = tk.Entry(rate_increment_entry_border,
-                                         textvariable=self.increment_custom_var)
+        rate_increment_entry = tk.Entry(
+            rate_increment_entry_border,
+            textvariable=self.increment_custom_var)
         rate_increment_entry.configure(
             font=tk_entry_font,
             background=tk_entry_bg,
@@ -563,17 +543,9 @@ class OtherFrame(ttk.Frame):
         self.pitch_rates_var.set(1)
         
         # checkbox
-        other_checkbox = tk.Checkbutton(self,
+        other_checkbox = ttk.Checkbutton(self,
                                          text='Change pitch of audio files with rate',
                                          variable=self.pitch_rates_var)
-        other_checkbox.configure(
-            font=tk_checkbutton_font,
-            background=tk_checkbutton_bg,
-            activebackground=tk_checkbutton_activebg,
-            foreground=tk_checkbutton_fg,
-            activeforeground=tk_checkbutton_activefg,
-            selectcolor=tk_checkbutton_selectcolor,
-            relief=tk_checkbutton_relief)
         other_checkbox.grid(row=2, column=0)
 
 
