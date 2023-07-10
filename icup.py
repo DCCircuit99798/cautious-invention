@@ -175,6 +175,20 @@ class App(tk.Tk):
                                          ('pressed', '#2d2d39')]
                        )
 
+        # tk checkbuttons
+        global tk_checkbutton_font, tk_checkbutton_bg, \
+        tk_checkbutton_activebg, tk_checkbutton_fg, tk_checkbutton_activefg, \
+        tk_checkbutton_selectcolor
+
+        tk_checkbutton_font = ('Tahoma', 12)
+
+        tk_checkbutton_bg = '#2d2d39'
+        tk_checkbutton_activebg = '#2d2d39'
+
+        tk_checkbutton_fg = '#ffffff'
+        tk_checkbutton_activefg = '#ffffff'
+
+        tk_checkbutton_selectcolor = '#2d2d39'
         
         # tk entry fields
         global tk_entry_font, tk_entry_bg, tk_entry_fg, \
@@ -264,19 +278,40 @@ class DifficultiesFrame(ttk.Frame):
         self.ex_var.set(0)
 
         # checkboxes
-        difficulties_easy_checkbox = ttk.Checkbutton(self,
+        difficulties_easy_checkbox = tk.Checkbutton(self,
                                                     text='Easy',
                                                     variable=self.easy_var)
+        difficulties_easy_checkbox.configure(
+            font=tk_checkbutton_font,
+            background=tk_checkbutton_bg,
+            activebackground=tk_checkbutton_activebg,
+            foreground=tk_checkbutton_fg,
+            activeforeground=tk_checkbutton_activefg,
+            selectcolor=tk_checkbutton_selectcolor)
         difficulties_easy_checkbox.grid(row=2, column=0)
                                                   
-        difficulties_hard_checkbox = ttk.Checkbutton(self,
+        difficulties_hard_checkbox = tk.Checkbutton(self,
                                                   text='Hard',
                                                   variable=self.hard_var)
+        difficulties_hard_checkbox.configure(
+            font=tk_checkbutton_font,
+            background=tk_checkbutton_bg,
+            activebackground=tk_checkbutton_activebg,
+            foreground=tk_checkbutton_fg,
+            activeforeground=tk_checkbutton_activefg,
+            selectcolor=tk_checkbutton_selectcolor)
         difficulties_hard_checkbox.grid(row=3, column=0)
 
-        difficulties_ex_checkbox = ttk.Checkbutton(self,
+        difficulties_ex_checkbox = tk.Checkbutton(self,
                                                   text='Extreme',
                                                   variable=self.ex_var)
+        difficulties_ex_checkbox.configure(
+            font=tk_checkbutton_font,
+            background=tk_checkbutton_bg,
+            activebackground=tk_checkbutton_activebg,
+            foreground=tk_checkbutton_fg,
+            activeforeground=tk_checkbutton_activefg,
+            selectcolor=tk_checkbutton_selectcolor)
         difficulties_ex_checkbox.grid(row=4, column=0)
 
 
@@ -543,9 +578,16 @@ class OtherFrame(ttk.Frame):
         self.pitch_rates_var.set(1)
         
         # checkbox
-        other_checkbox = ttk.Checkbutton(self,
+        other_checkbox = tk.Checkbutton(self,
                                          text='Change pitch of audio files with rate',
                                          variable=self.pitch_rates_var)
+        other_checkbox.configure(
+            font=tk_checkbutton_font,
+            background=tk_checkbutton_bg,
+            activebackground=tk_checkbutton_activebg,
+            foreground=tk_checkbutton_fg,
+            activeforeground=tk_checkbutton_activefg,
+            selectcolor=tk_checkbutton_selectcolor)
         other_checkbox.grid(row=2, column=0)
 
 
