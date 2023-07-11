@@ -145,6 +145,7 @@ class App(tk.Tk):
                                      ('active', '#ffffff')]
                        )
 
+        '''
         # ttk checkbuttons
         self.style.configure('TCheckbutton',
                              background='#2d2d39',
@@ -161,6 +162,7 @@ class App(tk.Tk):
                        indicatorforeground = [('pressed', '#ffffff'),
                                               ('active', '#ffffff')]
                        )
+        '''
 
         # ttk radiobuttons
         self.style.configure('TRadiobutton',
@@ -174,6 +176,28 @@ class App(tk.Tk):
                        indicatorcolor = [('selected', '#2d2d39'),
                                          ('pressed', '#2d2d39')]
                        )
+
+        # ttk comboboxes
+        self.style.configure(
+            'TCombobox',
+            fieldbackground='#2d2d39', # bg of entry field
+            selectbackground='#2d2d39', # bg of entry text when selected
+            selectforeground='#ffffff', # colour of "entry" text
+            background='#bac5f5' # the down button
+            )
+        self.style.map('TCombobox',
+                       fieldbackground = [('pressed', '#2d2d39'),
+                                          ('active', '#2d2d39')],
+                       selectbackground = [('pressed', '#2d2d39'),
+                                           ('active', '#2d2d39')],
+                       selectforeground = [('pressed', '#ffffff'),
+                                           ('active', '#ffffff')],
+                       background = [('pressed', '#d5dbf2'),
+                                     ('active', '#bac5f5')]
+                       )
+
+        global ttk_ar_options_combobox_width
+        ttk_ar_options_combobox_width = 2
 
         # tk checkbuttons
         global tk_checkbutton_font, tk_checkbutton_bg, \
@@ -483,17 +507,36 @@ class AROptionsFrame(ttk.Frame):
         self.ar_options_value2 = tk.StringVar()
         self.ar_options_value3 = tk.StringVar()
 
-        # comboboxes (dropdown menus)
-        ar_options_combobox1 = ttk.Combobox(self,
-                                            textvariable=self.ar_options_type1)
-        ar_options_combobox2 = ttk.Combobox(self,
-                                            textvariable=self.ar_options_type2)
-        ar_options_combobox3 = ttk.Combobox(self,
-                                            textvariable=self.ar_options_type3)
+        # borders for comboboxes (dropdown menus)
+        ar_options_cbborder1 = BorderFrame(self)
+        ar_options_cbborder2 = BorderFrame(self)
+        ar_options_cbborder3 = BorderFrame(self)
 
-        ar_options_combobox1.grid(row=1, column=2)
-        ar_options_combobox2.grid(row=2, column=2)
-        ar_options_combobox3.grid(row=3, column=2)
+        ar_options_cbborder1.configure(style='WidgetBorder.TFrame')
+        ar_options_cbborder2.configure(style='WidgetBorder.TFrame')
+        ar_options_cbborder3.configure(style='WidgetBorder.TFrame')
+
+        ar_options_cbborder1.grid(row=1, column=2)
+        ar_options_cbborder2.grid(row=2, column=2)
+        ar_options_cbborder3.grid(row=3, column=2)
+
+        # comboboxes (dropdown menus)
+        ar_options_combobox1 = ttk.Combobox(
+            ar_options_cbborder1,
+            textvariable=self.ar_options_type1,
+            width=ttk_ar_options_combobox_width)
+        ar_options_combobox2 = ttk.Combobox(
+            ar_options_cbborder2,
+            textvariable=self.ar_options_type2,
+            width=ttk_ar_options_combobox_width)
+        ar_options_combobox3 = ttk.Combobox(
+            ar_options_cbborder3,
+            textvariable=self.ar_options_type3,
+            width=ttk_ar_options_combobox_width)
+
+        ar_options_combobox1.pack(padx=1, pady=1)
+        ar_options_combobox2.pack(padx=1, pady=1)
+        ar_options_combobox3.pack(padx=1, pady=1)
 
         # define possible values for comboboxes
         ar_options_combobox1['values'] = ('x', 'c', 'C')
@@ -506,24 +549,24 @@ class AROptionsFrame(ttk.Frame):
         ar_options_combobox3['state'] = 'readonly'
 
         # borders for entry fields
-        ar_options_border1 = ttk.Entry(self)
-        ar_options_border2 = ttk.Entry(self)
-        ar_options_border3 = ttk.Entry(self)
+        ar_options_eborder1 = BorderFrame(self)
+        ar_options_eborder2 = BorderFrame(self)
+        ar_options_eborder3 = BorderFrame(self)
 
-        ar_options_border1.configure(style='WidgetBorder.TFrame')
-        ar_options_border2.configure(style='WidgetBorder.TFrame')
-        ar_options_border3.configure(style='WidgetBorder.TFrame')
+        ar_options_eborder1.configure(style='WidgetBorder.TFrame')
+        ar_options_eborder2.configure(style='WidgetBorder.TFrame')
+        ar_options_eborder3.configure(style='WidgetBorder.TFrame')
 
-        ar_options_border1.grid(row=1, column=3)
-        ar_options_border2.grid(row=2, column=3)
-        ar_options_border3.grid(row=3, column=3)
+        ar_options_eborder1.grid(row=1, column=3)
+        ar_options_eborder2.grid(row=2, column=3)
+        ar_options_eborder3.grid(row=3, column=3)
 
         # entry fields
-        ar_options_entry1 = tk.Entry(ar_options_border1,
+        ar_options_entry1 = tk.Entry(ar_options_eborder1,
                                      textvariable=self.ar_options_value1)
-        ar_options_entry2 = tk.Entry(ar_options_border2,
+        ar_options_entry2 = tk.Entry(ar_options_eborder2,
                                      textvariable=self.ar_options_value2)
-        ar_options_entry3 = tk.Entry(ar_options_border3,
+        ar_options_entry3 = tk.Entry(ar_options_eborder3,
                                      textvariable=self.ar_options_value3)
 
         ar_options_entry1.configure(
