@@ -47,31 +47,48 @@ class App(tk.Tk):
         # create border frames to contain widgets and visible frames
         choose_file_border = BorderFrame(frame0)
         choose_file_border.configure(style='WidgetBorder.TFrame')
-        choose_file_border.pack()
+        choose_file_border.pack(padx=(4,0), # left padding
+                                pady=(0,4)) # bottom padding
 
         difficulties_border = BorderFrame(frame0)
         difficulties_border.configure(style='NormalBorder.TFrame')
-        difficulties_border.pack()
+        difficulties_border.pack(padx=(4,0), # left padding
+                                 pady=(0,4), # bottom padding
+                                 fill=tk.BOTH,
+                                 expand=True) # take up rest of vert and horz space
 
         rates_border = BorderFrame(frame1)
         rates_border.configure(style='NormalBorder.TFrame')
-        rates_border.pack()
+        rates_border.pack(padx=(4,0), # left padding
+                          pady=(0,4), # bottom padding
+                          fill=tk.BOTH,
+                          expand=True) # take up all horz space
 
         rate_increment_border = BorderFrame(frame1)
         rate_increment_border.configure(style='NormalBorder.TFrame')
-        rate_increment_border.pack()
+        rate_increment_border.pack(padx=(4,0), # left padding
+                                   pady=(0,4), # bottom padding
+                                   fill=tk.X, # take up rest of vert and horz space
+                                   expand=True) # space in frame1 is shared between rates and rate inc
 
         ar_options_border = BorderFrame(frame2)
         ar_options_border.configure(style='NormalBorder.TFrame')
-        ar_options_border.pack()
+        ar_options_border.pack(padx=(4,0), # left padding
+                               pady=(0,4), # bottom padding
+                               fill=tk.BOTH, # take up rest of vert and horz space
+                               expand=True) # space in frame1 is shared between rates and rate inc
 
         other_border = BorderFrame(frame2)
         other_border.configure(style='NormalBorder.TFrame')
-        other_border.pack()
+        other_border.pack(padx=(4,0), # left padding
+                          pady=(0,4), # bottom padding
+                          fill=tk.X) # take up all horz space
 
         start_border = BorderFrame(frame2)
         start_border.configure(style='WidgetBorder.TFrame')
-        start_border.pack()
+        start_border.pack(padx=(4,0), # left padding
+                          pady=(0,4), # bottom padding
+                          fill=tk.X) # take up all horz space
 
         # create buttons and frames for layout of program
         choose_file_button = ttk.Button(
@@ -81,26 +98,42 @@ class App(tk.Tk):
         
         difficulties_frame = DifficultiesFrame(difficulties_border)
         difficulties_frame.configure(style='Normal.TFrame')
-        difficulties_frame.pack(padx=1, pady=1)
+        difficulties_frame.pack(padx=1, # between border frame and visible frame
+                                pady=1,
+                                fill=tk.BOTH,
+                                expand=True) # take up rest of vert and horz space
 
         rates_frame = RatesFrame(rates_border)
         rates_frame.configure(style='Normal.TFrame')
-        rates_frame.pack(padx=1, pady=1)
+        rates_frame.pack(padx=1,
+                         pady=1,
+                         fill=tk.X,
+                         expand=True) # take up rest of vert and horz space
 
         rate_increment_frame = RateIncrementFrame(rate_increment_border)
         rate_increment_frame.configure(style='Normal.TFrame')
-        rate_increment_frame.pack(padx=1, pady=1)
+        rate_increment_frame.pack(padx=1,
+                                  pady=1,
+                                  fill=tk.X,
+                                  expand=True) # take up rest of vert and horz space
 
         ar_options_frame = AROptionsFrame(ar_options_border)
         ar_options_frame.configure(style='Normal.TFrame')
-        ar_options_frame.pack(padx=1, pady=1)
+        ar_options_frame.pack(padx=1,
+                              pady=1,
+                              fill=tk.BOTH,
+                              expand=True) # take up rest of vert and horz space
 
         other_frame = OtherFrame(other_border)
         other_frame.configure(style='Normal.TFrame')
-        other_frame.pack(padx=1, pady=1)
+        other_frame.pack(padx=1,
+                         pady=1,
+                         fill=tk.X) # take up all horz space
 
         start_button = ttk.Button(start_border, text='Start!')
-        start_button.pack(padx=1, pady=1)
+        start_button.pack(padx=1,
+                          pady=1,
+                          fill=tk.X) # take up all horz space
 
     def __configure_styles(self):
         '''Configures the styles of all the widgets in the program.'''
@@ -258,7 +291,9 @@ class OuterFrame(ttk.Frame):
         super().__init__(container)
 
         # place frame on grid according to frame_number argument
-        self.grid(row=1, column=frame_number)
+        self.grid(row=1,
+                  column=frame_number,
+                  sticky=tk.NS) # stretch to fill up all vertical space
 
 
 class BorderFrame(ttk.Frame):
@@ -622,7 +657,7 @@ class OtherFrame(ttk.Frame):
         
         # checkbox
         other_checkbox = tk.Checkbutton(self,
-                                         text='Change pitch of audio files with rate',
+                                         text='Change audio pitch with rate',
                                          variable=self.pitch_rates_var)
         other_checkbox.configure(
             font=tk_checkbutton_font,
