@@ -13,15 +13,16 @@ import sys
 # import required modules
 
 class App(tk.Tk):
-    '''This class creates the main window of the program.'''
+    '''Create the main window of the program'''
 
     def __init__(self):
         super().__init__()
 
         # configure window
         self.title("Idiot Caleb's Uprating Project")
-        self.geometry('800x400')
+        self.geometry('525x255')
         self.configure(bg='#1e2129')
+        self.resizable(False, False)
 
         # call method to configure styles
         self.__configure_styles()
@@ -30,7 +31,7 @@ class App(tk.Tk):
         self.__create_widgets()
 
     def __create_widgets(self):
-        '''Adds labels, buttons, and frames to create the layout of
+        '''Creates labels, buttons, and frames to form the layout of
         the program.'''
         
         # add label for program title
@@ -47,12 +48,12 @@ class App(tk.Tk):
         # create border frames to contain widgets and visible frames
         choose_file_border = BorderFrame(frame0)
         choose_file_border.configure(style='WidgetBorder.TFrame')
-        choose_file_border.pack(padx=(4,0), # left padding
+        choose_file_border.pack(padx=(8,0), # left padding
                                 pady=(0,4)) # bottom padding
 
         difficulties_border = BorderFrame(frame0)
         difficulties_border.configure(style='NormalBorder.TFrame')
-        difficulties_border.pack(padx=(4,0), # left padding
+        difficulties_border.pack(padx=(8,0), # left padding
                                  pady=(0,4), # bottom padding
                                  fill=tk.BOTH,
                                  expand=True) # take up rest of vert and horz space
@@ -61,14 +62,14 @@ class App(tk.Tk):
         rates_border.configure(style='NormalBorder.TFrame')
         rates_border.pack(padx=(4,0), # left padding
                           pady=(0,4), # bottom padding
-                          fill=tk.BOTH,
-                          expand=True) # take up all horz space
+                          fill=tk.BOTH, # take up rest of vert and horz space
+                          expand=True) # space in frame1 is shared between rates and rate inc
 
         rate_increment_border = BorderFrame(frame1)
         rate_increment_border.configure(style='NormalBorder.TFrame')
         rate_increment_border.pack(padx=(4,0), # left padding
                                    pady=(0,4), # bottom padding
-                                   fill=tk.X, # take up rest of vert and horz space
+                                   fill=tk.BOTH, # take up rest of vert and horz space
                                    expand=True) # space in frame1 is shared between rates and rate inc
 
         ar_options_border = BorderFrame(frame2)
@@ -94,7 +95,9 @@ class App(tk.Tk):
         choose_file_button = ttk.Button(
             choose_file_border,
             text='Choose File')
-        choose_file_button.pack(padx=1, pady=1)
+        choose_file_button.pack(padx=1,
+                                pady=1,
+                                fill=tk.X) # take up all horz space
         
         difficulties_frame = DifficultiesFrame(difficulties_border)
         difficulties_frame.configure(style='Normal.TFrame')
@@ -107,14 +110,14 @@ class App(tk.Tk):
         rates_frame.configure(style='Normal.TFrame')
         rates_frame.pack(padx=1,
                          pady=1,
-                         fill=tk.X,
+                         fill=tk.BOTH,
                          expand=True) # take up rest of vert and horz space
 
         rate_increment_frame = RateIncrementFrame(rate_increment_border)
         rate_increment_frame.configure(style='Normal.TFrame')
         rate_increment_frame.pack(padx=1,
                                   pady=1,
-                                  fill=tk.X,
+                                  fill=tk.BOTH,
                                   expand=True) # take up rest of vert and horz space
 
         ar_options_frame = AROptionsFrame(ar_options_border)
@@ -304,8 +307,7 @@ class BorderFrame(ttk.Frame):
 
 
 class DifficultiesFrame(ttk.Frame):
-    '''Visible frame for difficulty selection checkboxes
-    to be displayed.'''
+    '''Visible "difficulties" frame'''
 
     def __init__(self, container):
         super().__init__(container)
@@ -314,17 +316,26 @@ class DifficultiesFrame(ttk.Frame):
         self.__create_widgets()
         
     def __create_widgets(self):
+        '''Create necessary widgets within frame'''
 
         # labels
         difficulties_heading_label = ttk.Label(self,
                                                text='DIFFICULTIES',
                                                style='Heading.TLabel')
-        difficulties_heading_label.grid(row=0, column=0)
+        difficulties_heading_label.grid(row=0,
+                                        column=0,
+                                        padx=(5,0), # left padding
+                                        pady=(5,0), # top padding
+                                        sticky=tk.W)
 
         difficulties_required_label = ttk.Label(self,
                                                 text='*Required',
                                                 style='Required.Heading.TLabel')
-        difficulties_required_label.grid(row=1, column=0)
+        difficulties_required_label.grid(row=1,
+                                         column=0,
+                                         padx=(5,0), # left padding
+                                         pady=(0,5), # bottom padding
+                                         sticky=tk.W)
 
         # variables to store state of checkboxes
         self.easy_var = tk.StringVar()
@@ -347,7 +358,11 @@ class DifficultiesFrame(ttk.Frame):
             foreground=tk_checkbutton_fg,
             activeforeground=tk_checkbutton_activefg,
             selectcolor=tk_checkbutton_selectcolor)
-        difficulties_easy_checkbox.grid(row=2, column=0)
+        difficulties_easy_checkbox.grid(row=2,
+                                        column=0,
+                                        padx=(5,0), # left padding
+                                        sticky=tk.W
+                                        )
                                                   
         difficulties_hard_checkbox = tk.Checkbutton(self,
                                                   text='Hard',
@@ -359,7 +374,11 @@ class DifficultiesFrame(ttk.Frame):
             foreground=tk_checkbutton_fg,
             activeforeground=tk_checkbutton_activefg,
             selectcolor=tk_checkbutton_selectcolor)
-        difficulties_hard_checkbox.grid(row=3, column=0)
+        difficulties_hard_checkbox.grid(row=3,
+                                        column=0,
+                                        padx=(5,0), # left padding
+                                        sticky=tk.W
+                                        )
 
         difficulties_ex_checkbox = tk.Checkbutton(self,
                                                   text='Extreme',
@@ -371,7 +390,11 @@ class DifficultiesFrame(ttk.Frame):
             foreground=tk_checkbutton_fg,
             activeforeground=tk_checkbutton_activefg,
             selectcolor=tk_checkbutton_selectcolor)
-        difficulties_ex_checkbox.grid(row=4, column=0)
+        difficulties_ex_checkbox.grid(row=4,
+                                      column=0,
+                                      padx=(5,0), # left padding
+                                      sticky=tk.W
+                                      )
 
 
 class RatesFrame(ttk.Frame):
@@ -385,23 +408,42 @@ class RatesFrame(ttk.Frame):
         self.__create_widgets()
 
     def __create_widgets(self):
+        '''Create necessary widgets within frame'''
 
         # labels
         rates_heading_label = ttk.Label(self,
                                         text='RATES',
                                         style='Heading.TLabel')
-        rates_heading_label.grid(row=0, column=0, columnspan=2)
+        rates_heading_label.grid(row=0,
+                                 column=0,
+                                 columnspan=2,
+                                 padx=(5,0), # left padding
+                                 pady=(5,0), # top padding
+                                 sticky=tk.W)
 
         rates_required_label = ttk.Label(self,
                                          text='*Required',
                                          style='Required.Heading.TLabel')
-        rates_required_label.grid(row=1, column=0, columnspan=2)
+        rates_required_label.grid(row=1,
+                                  column=0,
+                                  columnspan=2,
+                                  padx=(5,0), # left padding
+                                  pady=(0,3), # bottom padding
+                                  sticky=tk.W)
 
         rates_minimum_label = ttk.Label(self, text='Minimum')
-        rates_minimum_label.grid(row=2, column=0)
+        rates_minimum_label.grid(row=2,
+                                 column=0,
+                                 padx=(5,0), # left padding
+                                 pady=(1,1), # top/bottom padding
+                                 sticky=tk.W)
 
         rates_maximum_label = ttk.Label(self, text='Maximum')
-        rates_maximum_label.grid(row=3, column=0)
+        rates_maximum_label.grid(row=3,
+                                 column=0,
+                                 padx=(5,0), # left padding
+                                 pady=(1,6), # top/bottom padding
+                                 sticky=tk.W)
 
         # variables to store text in entry fields
         self.minimum_var = tk.StringVar()
@@ -410,11 +452,17 @@ class RatesFrame(ttk.Frame):
         # borders for entry fields
         rates_minimum_border = BorderFrame(self)
         rates_minimum_border.configure(style='WidgetBorder.TFrame')
-        rates_minimum_border.grid(row=2, column=1)
+        rates_minimum_border.grid(row=2,
+                                  column=1,
+                                  pady=(1,1) # top/bottom padding
+                                  )
 
         rates_maximum_border = BorderFrame(self)
         rates_maximum_border.configure(style='WidgetBorder.TFrame')
-        rates_maximum_border.grid(row=3, column=1)
+        rates_maximum_border.grid(row=3,
+                                  column=1,
+                                  pady=(1,6) # top/bottom padding
+                                  )
 
         # entry fields
         rates_minimum_entry = tk.Entry(rates_minimum_border,
@@ -451,6 +499,7 @@ class RateIncrementFrame(ttk.Frame):
         self.__create_widgets()
 
     def __create_widgets(self):
+        '''Create necessary widgets within frame'''
 
         # labels
         rate_increment_heading_label = ttk.Label(self,
@@ -517,6 +566,7 @@ class AROptionsFrame(ttk.Frame):
         self.__create_widgets()
 
     def __create_widgets(self):
+        '''Create necessary widgets within frame'''
 
         # labels
         ar_options_heading_label = ttk.Label(self,
@@ -642,6 +692,7 @@ class OtherFrame(ttk.Frame):
         self.__create_widgets()
 
     def __create_widgets(self):
+        '''Create necessary widgets within frame'''
 
         # label
         other_heading_label = ttk.Label(self,
