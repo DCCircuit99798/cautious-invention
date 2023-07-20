@@ -20,7 +20,7 @@ class App(tk.Tk):
 
         # configure window
         self.title("Idiot Caleb's Uprating Project")
-        self.geometry('525x255')
+        self.geometry('520x260')
         self.configure(bg='#1e2129')
         self.resizable(False, False)
 
@@ -77,8 +77,8 @@ class App(tk.Tk):
         ar_options_border.configure(style='NormalBorder.TFrame')
         ar_options_border.pack(padx=(4,0), # left padding
                                pady=(0,4), # bottom padding
-                               fill=tk.BOTH, # take up rest of vert and horz space
-                               expand=True) # space in frame1 is shared between rates and rate inc
+                               fill=tk.BOTH,
+                               expand=True) # take up rest of vert and horz space
 
         other_border = BorderFrame(frame2)
         other_border.configure(style='NormalBorder.TFrame')
@@ -266,7 +266,7 @@ class App(tk.Tk):
 
         tk_entry_insertbackground = '#ffffff' # text "cursor" colour
 
-        tk_rates_entry_width = 5
+        tk_rates_entry_width = 5 # not being used - depends on width of entry in rate inc
         tk_rate_increment_entry_width = 5
         tk_ar_options_entry_width = 5
 
@@ -411,6 +411,9 @@ class RatesFrame(ttk.Frame):
     def __create_widgets(self):
         '''Create necessary widgets within frame'''
 
+        # makes column 1 fill up available horizontal space
+        self.columnconfigure(1, weight=1)
+
         # labels
         rates_heading_label = ttk.Label(self,
                                         text='RATES',
@@ -456,7 +459,8 @@ class RatesFrame(ttk.Frame):
         rates_minimum_border.grid(row=2,
                                   column=1,
                                   padx=(0,5), # right padding
-                                  pady=(1,1) # top/bottom padding
+                                  pady=(1,1), # top/bottom padding
+                                  sticky=tk.EW
                                   )
 
         rates_maximum_border = BorderFrame(self)
@@ -464,7 +468,8 @@ class RatesFrame(ttk.Frame):
         rates_maximum_border.grid(row=3,
                                   column=1,
                                   padx=(0,5), # right padding
-                                  pady=(1,5) # top/bottom padding
+                                  pady=(1,5), # top/bottom padding
+                                  sticky=tk.EW
                                   )
 
         # entry fields
@@ -475,7 +480,9 @@ class RatesFrame(ttk.Frame):
             background=tk_entry_bg,
             foreground=tk_entry_fg,
             borderwidth=tk_entry_borderwidth,
-            insertbackground=tk_entry_insertbackground)
+            insertbackground=tk_entry_insertbackground,
+            width=1 # width depends on length of rate inc frame (fill=tk.X)
+            )
         rates_minimum_entry.pack(padx=1, pady=1, fill=tk.X)
 
         rates_maximum_entry = tk.Entry(rates_maximum_border,
@@ -485,7 +492,9 @@ class RatesFrame(ttk.Frame):
             background=tk_entry_bg,
             foreground=tk_entry_fg,
             borderwidth=tk_entry_borderwidth,
-            insertbackground=tk_entry_insertbackground)
+            insertbackground=tk_entry_insertbackground,
+            width=1 # width depends on length of rate inc frame (fill=tk.X)
+            )
         rates_maximum_entry.pack(padx=1, pady=1, fill=tk.X)
 
 
@@ -510,7 +519,7 @@ class RateIncrementFrame(ttk.Frame):
                                           column=0,
                                           columnspan=2,
                                           padx=(5,0), # left padding
-                                          pady=(5,0), # top padding
+                                          pady=(5,5), # top padding
                                           sticky=tk.W)
 
         # variable to store selected rate increment
@@ -525,7 +534,7 @@ class RateIncrementFrame(ttk.Frame):
         rate_increment_entry_border.grid(row=3,
                                          column=1,
                                          padx=(0,5), # right padding
-                                         pady=(0,5), # bottom padding
+                                         pady=(0,5) # bottom padding
                                          )
 
         # entry field for custom rate increment
@@ -587,19 +596,48 @@ class AROptionsFrame(ttk.Frame):
     def __create_widgets(self):
         '''Create necessary widgets within frame'''
 
+        # makes column 3 fill up available horizontal space
+        self.columnconfigure(3, weight=1)
+
         # labels
         ar_options_heading_label = ttk.Label(self,
                                              text='AR OPTIONS',
                                              style='Heading.TLabel')
-        ar_options_heading_label.grid(row=0, column=0, columnspan=2)
+        ar_options_heading_label.grid(row=0,
+                                      column=0,
+                                      columnspan=2,
+                                      padx=(5,0), # left padding
+                                      pady=(5,5), # top/bottom padding
+                                      sticky=tk.W
+                                      )
         
         ar_options_label1 = ttk.Label(self, text='AR Option #1:')
         ar_options_label2 = ttk.Label(self, text='AR Option #2:')
         ar_options_label3 = ttk.Label(self, text='AR Option #3:')
 
-        ar_options_label1.grid(row=1, column=0, columnspan=2)
-        ar_options_label2.grid(row=2, column=0, columnspan=2)
-        ar_options_label3.grid(row=3, column=0, columnspan=2)
+        ar_options_label1.grid(row=1,
+                               column=0,
+                               columnspan=2,
+                               padx=(5,0), # left padding
+                               pady=(1,1), # top/bottom padding
+                               sticky=tk.W
+                               )
+        
+        ar_options_label2.grid(row=2,
+                               column=0,
+                               columnspan=2,
+                               padx=(5,0), # left padding
+                               pady=(1,1), # top/bottom padding
+                               sticky=tk.W
+                               )
+        
+        ar_options_label3.grid(row=3,
+                               column=0,
+                               columnspan=2,
+                               padx=(5,0), # left padding
+                               pady=(1,1), # top/bottom padding
+                               sticky=tk.W
+                               )
 
         # variables to store selected AR type and value
         # for each of the three options
@@ -620,9 +658,23 @@ class AROptionsFrame(ttk.Frame):
         ar_options_cbborder2.configure(style='WidgetBorder.TFrame')
         ar_options_cbborder3.configure(style='WidgetBorder.TFrame')
 
-        ar_options_cbborder1.grid(row=1, column=2)
-        ar_options_cbborder2.grid(row=2, column=2)
-        ar_options_cbborder3.grid(row=3, column=2)
+        ar_options_cbborder1.grid(row=1,
+                                  column=2,
+                                  padx=(2,0), # left padding
+                                  pady=(1,1), # top/bottom padding
+                                  )
+        
+        ar_options_cbborder2.grid(row=2,
+                                  column=2,
+                                  padx=(2,0), # left padding
+                                  pady=(1,1), # top/bottom padding
+                                  )
+        
+        ar_options_cbborder3.grid(row=3,
+                                  column=2,
+                                  padx=(2,0), # left padding
+                                  pady=(1,1), # top/bottom padding
+                                  )
 
         # comboboxes (dropdown menus)
         ar_options_combobox1 = ttk.Combobox(
@@ -661,9 +713,26 @@ class AROptionsFrame(ttk.Frame):
         ar_options_eborder2.configure(style='WidgetBorder.TFrame')
         ar_options_eborder3.configure(style='WidgetBorder.TFrame')
 
-        ar_options_eborder1.grid(row=1, column=3)
-        ar_options_eborder2.grid(row=2, column=3)
-        ar_options_eborder3.grid(row=3, column=3)
+        ar_options_eborder1.grid(row=1,
+                                 column=3,
+                                 padx=(2,5), # left/right padding
+                                 pady=(1,1), # top/bottom padding
+                                 sticky=tk.EW
+                                 )
+        
+        ar_options_eborder2.grid(row=2,
+                                 column=3,
+                                 padx=(2,5), # left/right padding
+                                 pady=(1,1), # top/bottom padding
+                                 sticky=tk.EW
+                                 )
+        
+        ar_options_eborder3.grid(row=3,
+                                 column=3,
+                                 padx=(2,5), # left/right padding
+                                 pady=(1,1), # top/bottom padding
+                                 sticky=tk.EW
+                                 )
 
         # entry fields
         ar_options_entry1 = tk.Entry(ar_options_eborder1,
@@ -695,9 +764,9 @@ class AROptionsFrame(ttk.Frame):
             insertbackground=tk_entry_insertbackground,
             width=tk_ar_options_entry_width)
 
-        ar_options_entry1.pack(padx=1, pady=1)
-        ar_options_entry2.pack(padx=1, pady=1)
-        ar_options_entry3.pack(padx=1, pady=1)
+        ar_options_entry1.pack(padx=1, pady=1, fill=tk.X)
+        ar_options_entry2.pack(padx=1, pady=1, fill=tk.X)
+        ar_options_entry3.pack(padx=1, pady=1, fill=tk.X)
 
 
 class OtherFrame(ttk.Frame):
@@ -717,7 +786,12 @@ class OtherFrame(ttk.Frame):
         other_heading_label = ttk.Label(self,
                                         text='OTHER',
                                         style='Heading.TLabel')
-        other_heading_label.grid(row=0, column=0)
+        other_heading_label.grid(row=0,
+                                 column=0,
+                                 padx=(5,0), # left padding
+                                 pady=(5,0), # top padding
+                                 sticky=tk.W
+                                 )
 
         # create variables to store state of "pitch rates" checkbox
         self.pitch_rates_var = tk.StringVar()
@@ -736,7 +810,10 @@ class OtherFrame(ttk.Frame):
             foreground=tk_checkbutton_fg,
             activeforeground=tk_checkbutton_activefg,
             selectcolor=tk_checkbutton_selectcolor)
-        other_checkbox.grid(row=2, column=0)
+        other_checkbox.grid(row=2,
+                            column=0,
+                            padx=(5,5), # left/right padding
+                            )
 
 
 if __name__ == "__main__":
