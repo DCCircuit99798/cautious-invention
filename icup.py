@@ -65,6 +65,7 @@ class App(tk.Tk):
                           fill=tk.BOTH, # take up rest of vert and horz space
                           expand=True) # space in frame1 is shared between rates and rate inc
 
+        
         rate_increment_border = BorderFrame(frame1)
         rate_increment_border.configure(style='NormalBorder.TFrame')
         rate_increment_border.pack(padx=(4,0), # left padding
@@ -112,7 +113,7 @@ class App(tk.Tk):
                          pady=1,
                          fill=tk.BOTH,
                          expand=True) # take up rest of vert and horz space
-
+        
         rate_increment_frame = RateIncrementFrame(rate_increment_border)
         rate_increment_frame.configure(style='Normal.TFrame')
         rate_increment_frame.pack(padx=1,
@@ -442,7 +443,7 @@ class RatesFrame(ttk.Frame):
         rates_maximum_label.grid(row=3,
                                  column=0,
                                  padx=(5,0), # left padding
-                                 pady=(1,6), # top/bottom padding
+                                 pady=(1,5), # top/bottom padding
                                  sticky=tk.W)
 
         # variables to store text in entry fields
@@ -454,6 +455,7 @@ class RatesFrame(ttk.Frame):
         rates_minimum_border.configure(style='WidgetBorder.TFrame')
         rates_minimum_border.grid(row=2,
                                   column=1,
+                                  padx=(0,5), # right padding
                                   pady=(1,1) # top/bottom padding
                                   )
 
@@ -461,7 +463,8 @@ class RatesFrame(ttk.Frame):
         rates_maximum_border.configure(style='WidgetBorder.TFrame')
         rates_maximum_border.grid(row=3,
                                   column=1,
-                                  pady=(1,6) # top/bottom padding
+                                  padx=(0,5), # right padding
+                                  pady=(1,5) # top/bottom padding
                                   )
 
         # entry fields
@@ -472,9 +475,8 @@ class RatesFrame(ttk.Frame):
             background=tk_entry_bg,
             foreground=tk_entry_fg,
             borderwidth=tk_entry_borderwidth,
-            insertbackground=tk_entry_insertbackground,
-            width=tk_rates_entry_width)
-        rates_minimum_entry.pack(padx=1, pady=1)
+            insertbackground=tk_entry_insertbackground)
+        rates_minimum_entry.pack(padx=1, pady=1, fill=tk.X)
 
         rates_maximum_entry = tk.Entry(rates_maximum_border,
                                         textvariable=self.maximum_var)
@@ -483,9 +485,8 @@ class RatesFrame(ttk.Frame):
             background=tk_entry_bg,
             foreground=tk_entry_fg,
             borderwidth=tk_entry_borderwidth,
-            insertbackground=tk_entry_insertbackground,
-            width=tk_rates_entry_width)
-        rates_maximum_entry.pack(padx=1, pady=1)
+            insertbackground=tk_entry_insertbackground)
+        rates_maximum_entry.pack(padx=1, pady=1, fill=tk.X)
 
 
 class RateIncrementFrame(ttk.Frame):
@@ -505,7 +506,12 @@ class RateIncrementFrame(ttk.Frame):
         rate_increment_heading_label = ttk.Label(self,
                                                  text='RATE INCREMENT',
                                                  style='Heading.TLabel')
-        rate_increment_heading_label.grid(row=0, column=0, columnspan=2)
+        rate_increment_heading_label.grid(row=0,
+                                          column=0,
+                                          columnspan=2,
+                                          padx=(5,0), # left padding
+                                          pady=(5,0), # top padding
+                                          sticky=tk.W)
 
         # variable to store selected rate increment
         self.increment_var = tk.StringVar()
@@ -516,7 +522,11 @@ class RateIncrementFrame(ttk.Frame):
         # border for custom entry field
         rate_increment_entry_border = BorderFrame(self)
         rate_increment_entry_border.configure(style='WidgetBorder.TFrame')
-        rate_increment_entry_border.grid(row=3, column=1)
+        rate_increment_entry_border.grid(row=3,
+                                         column=1,
+                                         padx=(0,5), # right padding
+                                         pady=(0,5), # bottom padding
+                                         )
 
         # entry field for custom rate increment
         rate_increment_entry = tk.Entry(
@@ -547,9 +557,18 @@ class RateIncrementFrame(ttk.Frame):
                                         value=self.increment_custom_var.get(),
                                         variable=self.increment_var)
 
-        rate_increment_radio1.grid(row=1, column=0)
-        rate_increment_radio2.grid(row=2, column=0)
-        rate_increment_radio3.grid(row=3, column=0)
+        rate_increment_radio1.grid(row=1,
+                                   column=0,
+                                   padx=(5,0), # left padding
+                                   sticky=tk.W)
+        rate_increment_radio2.grid(row=2,
+                                   column=0,
+                                   padx=(5,0), # left padding
+                                   sticky=tk.W)
+        rate_increment_radio3.grid(row=3,
+                                   column=0,
+                                   padx=(5,0), # left padding
+                                   sticky=tk.W)
 
         # set default value of rate increment to 0.05
         self.increment_var.set(0.05)
