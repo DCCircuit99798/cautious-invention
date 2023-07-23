@@ -1,5 +1,6 @@
 # import the required modules
 from pydub import AudioSegment
+import ffmpeg
 
 # ask for user info
 title = input("Enter file title: ")
@@ -16,12 +17,18 @@ except FileNotFoundError:
     input()
     exit()
 
-# create a version of the audio file with a different playback speed
-audio_rate = audio.speedup(playback_speed=rate)
+# manually override samplerate
+# (how many samples to play per second)
+audio_framerate = audio._spawn(audio.raw_data, overrides={
+    'frame_rate': int(audio.frame_rate * rate)
+    })
+
+# convert altered samplerate to the original standard samplerate
+# (allows the audio to be played properly on other programs)
+audio_rate = audio_framerate.set_frame_rate(audio.frame_rate)
 
 # export the file
 # (filename comes from file "title" and the chosen rate)
 audio_rate.export(title + ".audio_" + str(rate) + "x.ogg", format="ogg")
-
 
 
