@@ -29,6 +29,7 @@ class App(tk.Tk):
 
         # call method to create widgets
         self.__create_widgets()
+        
 
     def __create_widgets(self):
         '''Creates labels, buttons, and frames to form the layout of
@@ -100,30 +101,30 @@ class App(tk.Tk):
                                 pady=1,
                                 fill=tk.X) # take up all horz space
         
-        difficulties_frame = DifficultiesFrame(difficulties_border)
-        difficulties_frame.configure(style='Normal.TFrame')
-        difficulties_frame.pack(padx=1, # between border frame and visible frame
+        self.difficulties_frame = DifficultiesFrame(difficulties_border)
+        self.difficulties_frame.configure(style='Normal.TFrame')
+        self.difficulties_frame.pack(padx=1, # between border frame and visible frame
                                 pady=1,
                                 fill=tk.BOTH,
                                 expand=True) # take up rest of vert and horz space
 
-        rates_frame = RatesFrame(rates_border)
-        rates_frame.configure(style='Normal.TFrame')
-        rates_frame.pack(padx=1,
+        self.rates_frame = RatesFrame(rates_border)
+        self.rates_frame.configure(style='Normal.TFrame')
+        self.rates_frame.pack(padx=1,
                          pady=1,
                          fill=tk.BOTH,
                          expand=True) # take up rest of vert and horz space
         
-        rate_increment_frame = RateIncrementFrame(rate_increment_border)
-        rate_increment_frame.configure(style='Normal.TFrame')
-        rate_increment_frame.pack(padx=1,
+        self.rate_increment_frame = RateIncrementFrame(rate_increment_border)
+        self.rate_increment_frame.configure(style='Normal.TFrame')
+        self.rate_increment_frame.pack(padx=1,
                                   pady=1,
                                   fill=tk.BOTH,
                                   expand=True) # take up rest of vert and horz space
 
-        ar_options_frame = AROptionsFrame(ar_options_border)
-        ar_options_frame.configure(style='Normal.TFrame')
-        ar_options_frame.pack(padx=1,
+        self.ar_options_frame = AROptionsFrame(ar_options_border)
+        self.ar_options_frame.configure(style='Normal.TFrame')
+        self.ar_options_frame.pack(padx=1,
                               pady=1,
                               fill=tk.BOTH,
                               expand=True) # take up rest of vert and horz space
@@ -134,7 +135,9 @@ class App(tk.Tk):
                          pady=1,
                          fill=tk.X) # take up all horz space
 
-        start_button = ttk.Button(start_border, text='Start!')
+        start_button = ttk.Button(start_border,
+                                  text='Start!',
+                                  command=self.start)
         start_button.pack(padx=1,
                           pady=1,
                           fill=tk.X) # take up all horz space
@@ -287,6 +290,58 @@ class App(tk.Tk):
                              background='#1e2129')
 
 
+    def start(self):
+        '''Start working with files and creating new levels.
+           NOTE: Only prints information in terminal as of now.'''
+
+        # create variables to keep track of user info
+        self.user_difficulties = []
+        self.user_rates_minimum = None
+        self.user_rates_maximum = None
+        self.user_rate_increment = None
+        self.user_ar_option_1 = None
+        self.user_ar_option_2 = None
+        self.user_ar_options_3 = None
+        self.user_pitch_rates = 1
+        
+        # check status of difficulty checkboxes and add
+        # difficulties to the list if they are selected
+        if self.difficulties_frame.easy_var.get() == 1:
+            self.user_difficulties.append('easy')
+
+        if self.difficulties_frame.hard_var.get() == 1:
+            self.user_difficulties.append('hard')
+
+        if self.difficulties_frame.ex_var.get() == 1:
+            self.user_difficulties.append('extreme')
+            
+        print(self.user_difficulties)
+
+        # get value of minimum and maximum rates
+        # TODO: add validity checks later
+        self.user_rates_minimum = float(self.rates_frame.minimum_var.get())
+        self.user_rates_maximum = float(self.rates_frame.maximum_var.get())
+
+        print(self.user_rates_minimum)
+        print(self.user_rates_maximum)
+
+        # if custom increment is selected, get value from entry field
+        if self.rate_increment_frame.increment_var.get() == 'Custom':
+            self.user_rate_increment = float(self.rate_increment_frame.increment_custom_var.get())
+
+        # otherwise get rate increment from radio buttons
+        else:
+            self.user_rate_increment = self.rate_increment_frame.increment_var.get()
+
+        print(self.user_rate_increment)
+
+        # get vau
+
+
+
+        print()
+        
+
 class OuterFrame(ttk.Frame):
     '''This class creates invisible frames for the buttons and visible
     frames to be placed in.'''
@@ -339,9 +394,9 @@ class DifficultiesFrame(ttk.Frame):
                                          sticky=tk.W)
 
         # variables to store state of checkboxes
-        self.easy_var = tk.StringVar()
-        self.hard_var = tk.StringVar()
-        self.ex_var = tk.StringVar()
+        self.easy_var = tk.IntVar()
+        self.hard_var = tk.IntVar()
+        self.ex_var = tk.IntVar()
 
         # set value of checkbox variables to 0 (off)
         self.easy_var.set(0)
@@ -537,19 +592,6 @@ class RateIncrementFrame(ttk.Frame):
                                          pady=(0,5) # bottom padding
                                          )
 
-        # entry field for custom rate increment
-        rate_increment_entry = tk.Entry(
-            rate_increment_entry_border,
-            textvariable=self.increment_custom_var)
-        rate_increment_entry.configure(
-            font=tk_entry_font,
-            background=tk_entry_bg,
-            foreground=tk_entry_fg,
-            borderwidth=tk_entry_borderwidth,
-            insertbackground=tk_entry_insertbackground,
-            width=tk_rate_increment_entry_width)
-        rate_increment_entry.pack(padx=1, pady=1)
-
         # radio buttons
         rate_increment_radio1 = ttk.Radiobutton(self,
                                                 text='0.05',
@@ -563,7 +605,7 @@ class RateIncrementFrame(ttk.Frame):
 
         rate_increment_radio3 = ttk.Radiobutton(self,
                                         text='Custom:',
-                                        value=self.increment_custom_var.get(),
+                                        value='Custom',
                                         variable=self.increment_var)
 
         rate_increment_radio1.grid(row=1,
@@ -581,6 +623,19 @@ class RateIncrementFrame(ttk.Frame):
 
         # set default value of rate increment to 0.05
         self.increment_var.set(0.05)
+
+        # entry field for custom rate increment
+        rate_increment_entry = tk.Entry(
+            rate_increment_entry_border,
+            textvariable=self.increment_custom_var)
+        rate_increment_entry.configure(
+            font=tk_entry_font,
+            background=tk_entry_bg,
+            foreground=tk_entry_fg,
+            borderwidth=tk_entry_borderwidth,
+            insertbackground=tk_entry_insertbackground,
+            width=tk_rate_increment_entry_width)
+        rate_increment_entry.pack(padx=1, pady=1)
 
 
 class AROptionsFrame(ttk.Frame):
