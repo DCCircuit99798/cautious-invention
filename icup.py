@@ -129,9 +129,9 @@ class App(tk.Tk):
                               fill=tk.BOTH,
                               expand=True) # take up rest of vert and horz space
 
-        other_frame = OtherFrame(other_border)
-        other_frame.configure(style='Normal.TFrame')
-        other_frame.pack(padx=1,
+        self.other_frame = OtherFrame(other_border)
+        self.other_frame.configure(style='Normal.TFrame')
+        self.other_frame.pack(padx=1,
                          pady=1,
                          fill=tk.X) # take up all horz space
 
@@ -299,10 +299,13 @@ class App(tk.Tk):
         self.user_rates_minimum = None
         self.user_rates_maximum = None
         self.user_rate_increment = None
-        self.user_ar_option_1 = None
-        self.user_ar_option_2 = None
-        self.user_ar_options_3 = None
+        self.user_ar_option_1 = []
+        self.user_ar_option_2 = []
+        self.user_ar_option_3 = []
         self.user_pitch_rates = 1
+
+        # variable to keep track of validity of user input
+        self.user_validity = True
         
         # check status of difficulty checkboxes and add
         # difficulties to the list if they are selected
@@ -314,33 +317,91 @@ class App(tk.Tk):
 
         if self.difficulties_frame.ex_var.get() == 1:
             self.user_difficulties.append('extreme')
-            
-        print(self.user_difficulties)
+
+        # if no difficulties are selected,
+        # print error message and set validity variable to False
+        if self.user_difficulties == []:
+            print('At least one difficulty must be selected')
+            self.user_validity = False
 
         # get value of minimum and maximum rates
-        # TODO: add validity checks later
-        self.user_rates_minimum = float(self.rates_frame.minimum_var.get())
-        self.user_rates_maximum = float(self.rates_frame.maximum_var.get())
+        try:
+            self.user_rates_minimum = float(self.rates_frame.minimum_var.get())
+            self.user_rates_maximum = float(self.rates_frame.maximum_var.get())
 
-        print(self.user_rates_minimum)
-        print(self.user_rates_maximum)
+            # minimum rate cannot be zero or negative
+            if self.user_rates_minimum <= 0:
+                print('Rates cannot be zero or negative')
+                self.user_validity = False
+
+            # maximum rate cannot be less than minimum rate
+            elif self.user_rates_maximum < self.user_rates_minimum:
+                print('Maximum rate cannot be less than minimum')
+                self.user_validity = False
+
+        # if entry fields are empty,
+        # except error and print error message
+        except ValueError:
+            print('Minimum and maximum rates must be valid numbers')
+            self.user_validity = False
+
+        
 
         # if custom increment is selected, get value from entry field
         if self.rate_increment_frame.increment_var.get() == 'Custom':
-            self.user_rate_increment = float(self.rate_increment_frame.increment_custom_var.get())
+            try:
+                self.user_rate_increment = float(self.rate_increment_frame.increment_custom_var.get())
+
+                # rate increment cannot be zero or negative
+                if self.user_rate_increment <= 0:
+                    print('Rate increment cannot be zero or negative')
+                    self.user_validity = False
+            
+            except ValueError:
+                print('Custom rate increment must be a valid number')
+                self.user_validity = False
 
         # otherwise get rate increment from radio buttons
         else:
             self.user_rate_increment = self.rate_increment_frame.increment_var.get()
 
+        # append AR modes and values to lists
+        self.user_ar_options_type1 = self.ar_options_frame.ar_options_type1.get()
+        self.user_ar_options_value1 = float(self.ar_options_frame.ar_options_value1.get())
+        self.user_ar_option_1.append(self.user_ar_options_type1)
+        self.user_ar_option_1.append(self.user_ar_options_value1)
+
+        self.user_ar_options_type2 = self.ar_options_frame.ar_options_type2.get()
+        self.user_ar_options_value2 = float(self.ar_options_frame.ar_options_value2.get())
+        self.user_ar_option_2.append(self.user_ar_options_type2)
+        self.user_ar_option_2.append(self.user_ar_options_value2)
+
+        self.user_ar_options_type3 = self.ar_options_frame.ar_options_type3.get()
+        self.user_ar_options_value3 = float(self.ar_options_frame.ar_options_value3.get())
+        self.user_ar_option_3.append(self.user_ar_options_type3)
+        self.user_ar_option_3.append(self.user_ar_options_value3)
+
+        # get status of "pitch rates"
+        self.user_pitch_rates = self.other_frame.pitch_rates_var.get()
+
+        # print collected user info
+        # NOTE: only for debugging purposes, remove in final program
+        '''
+        print(self.user_difficulties)
+        print(self.user_rates_minimum)
+        print(self.user_rates_maximum)
         print(self.user_rate_increment)
-
-        # get vau
-
-
-
+        print(self.user_ar_option_1)
+        print(self.user_ar_option_2)
+        print(self.user_ar_option_3)
+        print(self.user_pitch_rates)
         print()
-        
+        '''
+
+        # print self.user_validity
+        # NOTE: only for debugging purpose, remove in final program
+        print()
+        print(self.user_validity)
 
 class OuterFrame(ttk.Frame):
     '''This class creates invisible frames for the buttons and visible
@@ -869,7 +930,6 @@ class OtherFrame(ttk.Frame):
                             column=0,
                             padx=(5,5), # left/right padding
                             )
-
 
 if __name__ == "__main__":
     app = App()
