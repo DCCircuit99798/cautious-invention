@@ -365,21 +365,64 @@ class App(tk.Tk):
         else:
             self.user_rate_increment = self.rate_increment_frame.increment_var.get()
 
-        # append AR modes and values to lists
+
+        # AR Option #1:
+        # get AR type
         self.user_ar_options_type1 = self.ar_options_frame.ar_options_type1.get()
-        self.user_ar_options_value1 = float(self.ar_options_frame.ar_options_value1.get())
-        self.user_ar_option_1.append(self.user_ar_options_type1)
-        self.user_ar_option_1.append(self.user_ar_options_value1)
 
+        # if type is chosen, get AR value
+        if self.user_ar_options_type1 != None:
+            
+            try:
+                # get AR value
+                self.user_ar_options_value1 = float(self.ar_options_frame.ar_options_value1.get())
+
+                # append type and value to list if value is valid
+                self.user_ar_option_1.append(self.user_ar_options_type1)
+                self.user_ar_option_1.append(self.user_ar_options_value1)
+
+            # otherwise, check next AR option
+            except ValueError:
+                pass
+                
+        # AR Option #2:
+        # get AR type
         self.user_ar_options_type2 = self.ar_options_frame.ar_options_type2.get()
-        self.user_ar_options_value2 = float(self.ar_options_frame.ar_options_value2.get())
-        self.user_ar_option_2.append(self.user_ar_options_type2)
-        self.user_ar_option_2.append(self.user_ar_options_value2)
 
+        # if type is chosen, get AR value
+        if self.user_ar_options_type2 != None:
+            
+            try:
+                # get AR value
+                self.user_ar_options_value2 = float(self.ar_options_frame.ar_options_value2.get())
+
+                # append type and value to list if value is valid
+                self.user_ar_option_2.append(self.user_ar_options_type2)
+                self.user_ar_option_2.append(self.user_ar_options_value2)
+
+            # otherwise, check next AR option
+            except ValueError:
+                pass
+
+        # AR Option #3:
+        # get AR type
         self.user_ar_options_type3 = self.ar_options_frame.ar_options_type3.get()
-        self.user_ar_options_value3 = float(self.ar_options_frame.ar_options_value3.get())
-        self.user_ar_option_3.append(self.user_ar_options_type3)
-        self.user_ar_option_3.append(self.user_ar_options_value3)
+
+        # if type is chosen, get AR value
+        if self.user_ar_options_type3 != None:
+            
+            try:
+                # get AR value
+                self.user_ar_options_value3 = float(self.ar_options_frame.ar_options_value3.get())
+
+                # append type and value to list if value is valid
+                self.user_ar_option_3.append(self.user_ar_options_type3)
+                self.user_ar_option_3.append(self.user_ar_options_value3)
+
+            # otherwise, check next AR option
+            except ValueError:
+                pass
+
 
         # get status of "pitch rates"
         self.user_pitch_rates = self.other_frame.pitch_rates_var.get()
