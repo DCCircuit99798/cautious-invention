@@ -22,7 +22,7 @@ class App(tk.Tk):
         self.title("Idiot Caleb's Uprating Project")
         self.geometry('520x260')
         self.configure(bg='#1e2129')
-        self.resizable(False, False)
+        #self.resizable(False, False)
 
         # call method to configure styles
         self.__configure_styles()
@@ -273,6 +273,24 @@ class App(tk.Tk):
         tk_rate_increment_entry_width = 5
         tk_ar_options_entry_width = 5
 
+
+        # tk text widgets (error messages)
+        global tk_error_font, tk_error_bg, tk_error_fg, tk_error_borderwidth, \
+               tk_error_state, tk_error_wrap, tk_error_height, tk_error_width
+
+        tk_error_font = ('Tahoma', 8)
+
+        tk_error_bg = '#2d2d39'
+        tk_error_fg = '#ffffff'
+
+        tk_error_borderwidth = 0
+
+        tk_error_wrap = tk.WORD
+
+        tk_error_height = 5
+        tk_error_width = 1 # width controlled by sticky=tk.EW within frame
+
+
         # border frames
         self.style.configure('WidgetBorder.TFrame',
                              background='#ffffff',
@@ -478,6 +496,9 @@ class DifficultiesFrame(ttk.Frame):
     def __create_widgets(self):
         '''Create necessary widgets within frame'''
 
+        # makes column 0 fill up available horizontal space
+        self.columnconfigure(0, weight=1)
+
         # labels
         difficulties_heading_label = ttk.Label(self,
                                                text='DIFFICULTIES',
@@ -556,6 +577,27 @@ class DifficultiesFrame(ttk.Frame):
                                       sticky=tk.W
                                       )
 
+        # text box to display error messages
+        difficulties_error_text = tk.Text(
+            self,
+            font=tk_error_font,
+            background=tk_error_bg,
+            foreground=tk_error_fg,
+            borderwidth=tk_error_borderwidth,
+            state='normal',
+            wrap=tk_error_wrap,
+            height=tk_error_height,
+            width=tk_error_width
+            )
+        difficulties_error_text.grid(row=5,
+                                     column=0,
+                                     padx=(5,5), # left/right padding
+                                     pady=(0,5), # bottom padding
+                                     sticky=tk.EW)
+
+        # insert error message into text widget (line 1, character 0)
+        difficulties_error_text.insert('1.0', 'At least one difficulty must be selected')
+        difficulties_error_text.configure(state='disabled')
 
 class RatesFrame(ttk.Frame):
     '''Visible frame for difficulty selection checkboxes
