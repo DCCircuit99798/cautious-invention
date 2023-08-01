@@ -36,111 +36,127 @@ class App(tk.Tk):
         the program.'''
         
         # add label for program title
-        title_label = ttk.Label(self,
-                                text="Idiot Caleb's Uprating Project",
-                                style='Title.TLabel')
+        title_label = ttk.Label(
+            self,
+            text="Idiot Caleb's Uprating Project",
+            style='Title.TLabel')
         title_label.grid(row=0, column=0, columnspan=3)
 
         # create instances of OuterFrame for other widgets to be placed in
-        frame0 = OuterFrame(self, 0)
-        frame1 = OuterFrame(self, 1)
-        frame2 = OuterFrame(self, 2)
+        self.frame0 = OuterFrame(self, 0)
+        self.frame1 = OuterFrame(self, 1)
+        self.frame2 = OuterFrame(self, 2)
 
         # create border frames to contain widgets and visible frames
-        choose_file_border = BorderFrame(frame0)
-        choose_file_border.configure(style='WidgetBorder.TFrame')
-        choose_file_border.pack(padx=(8,0), # left padding
-                                pady=(0,4)) # bottom padding
+        self.choose_file_border = BorderFrame(self.frame0)
+        self.choose_file_border.configure(style='WidgetBorder.TFrame')
+        self.choose_file_border.pack(
+            padx=(8,0), # left padding
+            pady=(0,4)) # bottom padding
 
-        difficulties_border = BorderFrame(frame0)
-        difficulties_border.configure(style='NormalBorder.TFrame')
-        difficulties_border.pack(padx=(8,0), # left padding
-                                 pady=(0,4), # bottom padding
-                                 fill=tk.BOTH,
-                                 expand=True) # take up rest of vert and horz space
+        self.diffs_border = BorderFrame(self.frame0)
+        self.diffs_border.configure(style='NormalBorder.TFrame')
+        self.diffs_border.pack(
+            padx=(8,0), # left padding
+            pady=(0,4), # bottom padding
+            fill=tk.BOTH,
+            expand=True) # take up rest of vert and horz space
 
-        rates_border = BorderFrame(frame1)
-        rates_border.configure(style='NormalBorder.TFrame')
-        rates_border.pack(padx=(4,0), # left padding
-                          pady=(0,4), # bottom padding
-                          fill=tk.BOTH, # take up rest of vert and horz space
-                          expand=True) # space in frame1 is shared between rates and rate inc
+        self.rates_border = BorderFrame(self.frame1)
+        self.rates_border.configure(style='NormalBorder.TFrame')
+        self.rates_border.pack(
+            padx=(4,0), # left padding
+            pady=(0,4), # bottom padding
+            fill=tk.BOTH, # take up rest of vert and horz space
+            expand=True) # space in frame1 is shared between rates and rate inc
 
         
-        rate_increment_border = BorderFrame(frame1)
-        rate_increment_border.configure(style='NormalBorder.TFrame')
-        rate_increment_border.pack(padx=(4,0), # left padding
-                                   pady=(0,4), # bottom padding
-                                   fill=tk.BOTH, # take up rest of vert and horz space
-                                   expand=True) # space in frame1 is shared between rates and rate inc
+        self.rate_inc_border = BorderFrame(self.frame1)
+        self.rate_inc_border.configure(style='NormalBorder.TFrame')
+        self.rate_inc_border.pack(
+            padx=(4,0), # left padding
+            pady=(0,4), # bottom padding
+            fill=tk.BOTH, # take up rest of vert and horz space
+            expand=True) # space in frame1 is shared between rates and rate inc
 
-        ar_options_border = BorderFrame(frame2)
-        ar_options_border.configure(style='NormalBorder.TFrame')
-        ar_options_border.pack(padx=(4,0), # left padding
-                               pady=(0,4), # bottom padding
-                               fill=tk.BOTH,
-                               expand=True) # take up rest of vert and horz space
+        self.ar_border = BorderFrame(self.frame2)
+        self.ar_border.configure(style='NormalBorder.TFrame')
+        self.ar_border.pack(
+            padx=(4,0), # left padding
+            pady=(0,4), # bottom padding
+            fill=tk.BOTH,
+            expand=True) # take up rest of vert and horz space
 
-        other_border = BorderFrame(frame2)
-        other_border.configure(style='NormalBorder.TFrame')
-        other_border.pack(padx=(4,0), # left padding
-                          pady=(0,4), # bottom padding
-                          fill=tk.X) # take up all horz space
+        self.other_border = BorderFrame(self.frame2)
+        self.other_border.configure(style='NormalBorder.TFrame')
+        self.other_border.pack(
+            padx=(4,0), # left padding
+            pady=(0,4), # bottom padding
+            fill=tk.X) # take up all horz space
 
-        start_border = BorderFrame(frame2)
-        start_border.configure(style='WidgetBorder.TFrame')
-        start_border.pack(padx=(4,0), # left padding
-                          pady=(0,4), # bottom padding
-                          fill=tk.X) # take up all horz space
+        self.start_border = BorderFrame(self.frame2)
+        self.start_border.configure(style='WidgetBorder.TFrame')
+        self.start_border.pack(
+            padx=(4,0), # left padding
+            pady=(0,4), # bottom padding
+            fill=tk.X) # take up all horz space
 
         # create buttons and frames for layout of program
-        choose_file_button = ttk.Button(
-            choose_file_border,
+        self.choose_file_button = ttk.Button(
+            self.choose_file_border,
             text='Choose File')
-        choose_file_button.pack(padx=1,
-                                pady=1,
-                                fill=tk.X) # take up all horz space
+        self.choose_file_button.pack(
+            padx=1,
+            pady=1,
+            fill=tk.X) # take up all horz space
         
-        self.difficulties_frame = DifficultiesFrame(difficulties_border)
-        self.difficulties_frame.configure(style='Normal.TFrame')
-        self.difficulties_frame.pack(padx=1, # between border frame and visible frame
-                                pady=1,
-                                fill=tk.BOTH,
-                                expand=True) # take up rest of vert and horz space
+        self.diffs_frame = DifficultiesFrame(self.diffs_border)
+        self.diffs_frame.configure(style='Normal.TFrame')
+        self.diffs_frame.pack(
+            padx=1, # between border frame and visible frame
+            pady=1,
+            fill=tk.BOTH,
+            expand=True) # take up rest of vert and horz space
 
-        self.rates_frame = RatesFrame(rates_border)
+        self.rates_frame = RatesFrame(self.rates_border)
         self.rates_frame.configure(style='Normal.TFrame')
-        self.rates_frame.pack(padx=1,
-                         pady=1,
-                         fill=tk.BOTH,
-                         expand=True) # take up rest of vert and horz space
+        self.rates_frame.pack(
+            padx=1,
+            pady=1,
+            fill=tk.BOTH,
+            expand=True) # take up rest of vert and horz space
         
-        self.rate_increment_frame = RateIncrementFrame(rate_increment_border)
-        self.rate_increment_frame.configure(style='Normal.TFrame')
-        self.rate_increment_frame.pack(padx=1,
-                                  pady=1,
-                                  fill=tk.BOTH,
-                                  expand=True) # take up rest of vert and horz space
+        self.rate_inc_frame = RateIncrementFrame(self.rate_inc_border)
+        self.rate_inc_frame.configure(style='Normal.TFrame')
+        self.rate_inc_frame.pack(
+            padx=1,
+            pady=1,
+            fill=tk.BOTH,
+            expand=True) # take up rest of vert and horz space
 
-        self.ar_options_frame = AROptionsFrame(ar_options_border)
-        self.ar_options_frame.configure(style='Normal.TFrame')
-        self.ar_options_frame.pack(padx=1,
-                              pady=1,
-                              fill=tk.BOTH,
-                              expand=True) # take up rest of vert and horz space
+        self.ar_frame = AROptionsFrame(self.ar_border)
+        self.ar_frame.configure(style='Normal.TFrame')
+        self.ar_frame.pack(
+            padx=1,
+            pady=1,
+            fill=tk.BOTH,
+            expand=True) # take up rest of vert and horz space
 
-        self.other_frame = OtherFrame(other_border)
+        self.other_frame = OtherFrame(self.other_border)
         self.other_frame.configure(style='Normal.TFrame')
-        self.other_frame.pack(padx=1,
-                         pady=1,
-                         fill=tk.X) # take up all horz space
+        self.other_frame.pack(
+            padx=1,
+            pady=1,
+            fill=tk.X) # take up all horz space
 
-        start_button = ttk.Button(start_border,
-                                  text='Start!',
-                                  command=self.start)
-        start_button.pack(padx=1,
-                          pady=1,
-                          fill=tk.X) # take up all horz space
+        self.start_button = ttk.Button(
+            self.start_border,
+            text='Start!',
+            command=self.start)
+        self.start_button.pack(
+            padx=1,
+            pady=1,
+            fill=tk.X) # take up all horz space
 
     def __configure_styles(self):
         '''Configures the styles of all the widgets in the program.'''
@@ -153,69 +169,82 @@ class App(tk.Tk):
         self.style.theme_use('alt')
 
         # configure all text in the program
-        self.style.configure('.',
-                             font=('Tahoma', 12),
-                             foreground='#ffffff')
+        self.style.configure(
+            '.',
+            font=('Tahoma', 12),
+            foreground='#ffffff')
 
         # change background colour of all labels to
         # same colour as outer frames
-        self.style.configure('TLabel',
-                             background='#2d2d39')
+        self.style.configure(
+            'TLabel',
+            background='#2d2d39')
 
         # title ttk label
-        self.style.configure('Title.TLabel',
-                             font=('Tahoma', 24),
-                             background='#1e2129')
+        self.style.configure(
+            'Title.TLabel',
+            font=('Tahoma', 24),
+            background='#1e2129')
 
         # heading ttk labels
-        self.style.configure('Heading.TLabel', font=('Tahoma', 8, 'bold'))
+        self.style.configure(
+            'Heading.TLabel',
+            font=('Tahoma', 8, 'bold'))
 
         # "required" ttk labels
-        self.style.configure('Required.Heading.TLabel',
-                             foreground='#aeb9ef')
+        self.style.configure(
+            'Required.Heading.TLabel',
+            foreground='#aeb9ef')
 
         # ttk buttons
-        self.style.configure('TButton',
-                             background='#536cde',
-                             borderwidth=0)
-        self.style.map('TButton',
-                       background = [('pressed', '#536cde'),
-                                     ('active', '#6c81d9')],
-                       foreground = [('pressed', '#ffffff'),
-                                     ('active', '#ffffff')]
-                       )
-
+        self.style.configure(
+            'TButton',
+            background='#536cde',
+            borderwidth=0)
+        self.style.map(
+            'TButton',
+            background = [('pressed', '#536cde'),
+                          ('active', '#6c81d9')],
+            foreground = [('pressed', '#ffffff'),
+                          ('active', '#ffffff')]
+            )
+        
         '''
         # ttk checkbuttons
-        self.style.configure('TCheckbutton',
-                             background='#2d2d39',
-                             indicatorbackground='#2d2d39',
-                             indicatorforeground='#ffffff',
-                             borderwidth=0)
-        self.style.map('TCheckbutton',
-                       background = [('pressed', '#2d2d39'),
-                                     ('active', '#2d2d39')],
-                       foreground = [('pressed', '#ffffff'),
-                                     ('active', '#ffffff')],
-                       indicatorbackground = [('pressed', '#2d2d39'),
-                                              ('active', '#2d2d39')],
-                       indicatorforeground = [('pressed', '#ffffff'),
-                                              ('active', '#ffffff')]
-                       )
+        self.style.configure(
+            'TCheckbutton',
+            background='#2d2d39',
+            indicatorbackground='#2d2d39',
+            indicatorforeground='#ffffff',
+            borderwidth=0)
+        self.style.map(
+            'TCheckbutton',
+            background = [('pressed', '#2d2d39'),
+                         ('active', '#2d2d39')],
+            foreground = [('pressed', '#ffffff'),
+                         ('active', '#ffffff')],
+            indicatorbackground = [('pressed', '#2d2d39'),
+                                  ('active', '#2d2d39')],
+            indicatorforeground = [('pressed', '#ffffff'),
+                                  ('active', '#ffffff')]
+            )
         '''
+        
 
         # ttk radiobuttons
-        self.style.configure('TRadiobutton',
-                             background='#2d2d39',
-                             indicatorcolor='#2d2d39')
-        self.style.map('TRadiobutton',
-                       background = [('pressed', '#2d2d39'),
-                                     ('active', '#2d2d39')],
-                       foreground = [('pressed', '#ffffff'),
-                                     ('active', '#ffffff')],
-                       indicatorcolor = [('selected', '#2d2d39'),
-                                         ('pressed', '#2d2d39')]
-                       )
+        self.style.configure(
+            'TRadiobutton',
+            background='#2d2d39',
+            indicatorcolor='#2d2d39')
+        self.style.map(
+            'TRadiobutton',
+            background = [('pressed', '#2d2d39'),
+                          ('active', '#2d2d39')],
+            foreground = [('pressed', '#ffffff'),
+                          ('active', '#ffffff')],
+            indicatorcolor = [('selected', '#2d2d39'),
+                              ('pressed', '#2d2d39')]
+            )
 
         # ttk comboboxes
         self.style.configure(
@@ -225,40 +254,40 @@ class App(tk.Tk):
             selectforeground='#ffffff', # colour of "entry" text
             background='#bac5f5' # the down button
             )
-        self.style.map('TCombobox',
-                       fieldbackground = [('pressed', '#2d2d39'),
-                                          ('active', '#2d2d39')],
-                       selectbackground = [('pressed', '#2d2d39'),
-                                           ('active', '#2d2d39')],
-                       selectforeground = [('pressed', '#ffffff'),
-                                           ('active', '#ffffff')],
-                       background = [('pressed', '#d5dbf2'),
-                                     ('active', '#bac5f5')]
-                       )
+        self.style.map(
+            'TCombobox',
+            fieldbackground = [('pressed', '#2d2d39'),
+                               ('active', '#2d2d39')],
+            selectbackground = [('pressed', '#2d2d39'),
+                                ('active', '#2d2d39')],
+            selectforeground = [('pressed', '#ffffff'),
+                                ('active', '#ffffff')],
+            background = [('pressed', '#d5dbf2'),
+                          ('active', '#bac5f5')]
+            )
 
-        global ttk_ar_options_combobox_width
-        ttk_ar_options_combobox_width = 2
+        global ttk_ar_options_combo_width
+        ttk_ar_options_combo_width = 2
 
         # tk checkbuttons
-        global tk_checkbutton_font, tk_checkbutton_bg, \
-        tk_checkbutton_activebg, tk_checkbutton_fg, tk_checkbutton_activefg, \
-        tk_checkbutton_selectcolor
+        global tk_check_font, tk_check_bg, tk_check_activebg, tk_check_fg, \
+               tk_check_activefg, tk_check_selectcolor
 
-        tk_checkbutton_font = ('Tahoma', 12)
+        tk_check_font = ('Tahoma', 12)
 
-        tk_checkbutton_bg = '#2d2d39'
-        tk_checkbutton_activebg = '#2d2d39'
+        tk_check_bg = '#2d2d39'
+        tk_check_activebg = '#2d2d39'
 
-        tk_checkbutton_fg = '#ffffff'
-        tk_checkbutton_activefg = '#ffffff'
+        tk_check_fg = '#ffffff'
+        tk_check_activefg = '#ffffff'
 
-        tk_checkbutton_selectcolor = '#2d2d39'
+        tk_check_selectcolor = '#2d2d39'
         
         # tk entry fields
         global tk_entry_font, tk_entry_bg, tk_entry_fg, \
-        tk_entry_borderwidth, tk_entry_insertbackground, \
-        tk_rates_entry_width, tk_rate_increment_entry_width, \
-        tk_ar_options_entry_width
+               tk_entry_borderwidth, tk_entry_insertbackground, \
+               tk_rates_entry_width, tk_rate_increment_entry_width, \
+               tk_ar_options_entry_width
 
         tk_entry_font = ('Tahoma', 12)
 
@@ -292,20 +321,24 @@ class App(tk.Tk):
 
 
         # border frames
-        self.style.configure('WidgetBorder.TFrame',
-                             background='#ffffff',
-                             relief='flat')
+        self.style.configure(
+            'WidgetBorder.TFrame',
+            background='#ffffff',
+            relief='flat')
 
-        self.style.configure('NormalBorder.TFrame',
-                             background='#aeb9ef')
+        self.style.configure(
+            'NormalBorder.TFrame',
+            background='#aeb9ef')
 
         # visible frames (that contain widgets)
-        self.style.configure('Normal.TFrame',
-                             background='#2d2d39')
+        self.style.configure(
+            'Normal.TFrame',
+            background='#2d2d39')
 
         # outer invisible frames
-        self.style.configure('TFrame',
-                             background='#1e2129')
+        self.style.configure(
+            'TFrame',
+            background='#1e2129')
 
 
     def start(self):
@@ -313,13 +346,13 @@ class App(tk.Tk):
            NOTE: Only prints information in terminal as of now.'''
 
         # create variables to keep track of user info
-        self.user_difficulties = []
-        self.user_rates_minimum = None
-        self.user_rates_maximum = None
-        self.user_rate_increment = None
-        self.user_ar_option_1 = []
-        self.user_ar_option_2 = []
-        self.user_ar_option_3 = []
+        self.user_diffs = []
+        self.user_min = None
+        self.user_max = None
+        self.user_rate_inc = None
+        self.user_ar_option1 = []
+        self.user_ar_option2 = []
+        self.user_ar_option3 = []
         self.user_pitch_rates = 1
 
         # variable to keep track of validity of user input
@@ -327,33 +360,33 @@ class App(tk.Tk):
         
         # check status of difficulty checkboxes and add
         # difficulties to the list if they are selected
-        if self.difficulties_frame.easy_var.get() == 1:
-            self.user_difficulties.append('easy')
+        if self.diffs_frame.easy_var.get() == 1:
+            self.user_diffs.append('easy')
 
-        if self.difficulties_frame.hard_var.get() == 1:
-            self.user_difficulties.append('hard')
+        if self.diffs_frame.hard_var.get() == 1:
+            self.user_diffs.append('hard')
 
-        if self.difficulties_frame.ex_var.get() == 1:
-            self.user_difficulties.append('extreme')
+        if self.diffs_frame.ex_var.get() == 1:
+            self.user_diffs.append('extreme')
 
         # if no difficulties are selected,
         # print error message and set validity variable to False
-        if self.user_difficulties == []:
+        if self.user_diffs == []:
             print('At least one difficulty must be selected')
             self.user_validity = False
 
         # get value of minimum and maximum rates
         try:
-            self.user_rates_minimum = float(self.rates_frame.minimum_var.get())
-            self.user_rates_maximum = float(self.rates_frame.maximum_var.get())
+            self.user_min = float(self.rates_frame.min_var.get())
+            self.user_max = float(self.rates_frame.max_var.get())
 
             # minimum rate cannot be zero or negative
-            if self.user_rates_minimum <= 0:
+            if self.user_min <= 0:
                 print('Rates cannot be zero or negative')
                 self.user_validity = False
 
             # maximum rate cannot be less than minimum rate
-            elif self.user_rates_maximum < self.user_rates_minimum:
+            elif self.user_max < self.user_min:
                 print('Maximum rate cannot be less than minimum')
                 self.user_validity = False
 
@@ -366,12 +399,12 @@ class App(tk.Tk):
         
 
         # if custom increment is selected, get value from entry field
-        if self.rate_increment_frame.increment_var.get() == 'Custom':
+        if self.rate_inc_frame.var.get() == 'Custom':
             try:
-                self.user_rate_increment = float(self.rate_increment_frame.increment_custom_var.get())
+                self.user_rate_inc = float(self.rate_inc_frame.custom_var.get())
 
                 # rate increment cannot be zero or negative
-                if self.user_rate_increment <= 0:
+                if self.user_rate_inc <= 0:
                     print('Rate increment cannot be zero or negative')
                     self.user_validity = False
             
@@ -381,23 +414,23 @@ class App(tk.Tk):
 
         # otherwise get rate increment from radio buttons
         else:
-            self.user_rate_increment = self.rate_increment_frame.increment_var.get()
+            self.user_rate_inc = self.rate_inc_frame.var.get()
 
 
         # AR Option #1:
         # get AR type
-        self.user_ar_options_type1 = self.ar_options_frame.ar_options_type1.get()
+        self.user_ar_type1 = self.ar_frame.type1.get()
 
         # if type is chosen, get AR value
-        if self.user_ar_options_type1 != None:
+        if self.user_ar_type1 != None:
             
             try:
                 # get AR value
-                self.user_ar_options_value1 = float(self.ar_options_frame.ar_options_value1.get())
+                self.user_ar_value1 = float(self.ar_frame.value1.get())
 
                 # append type and value to list if value is valid
-                self.user_ar_option_1.append(self.user_ar_options_type1)
-                self.user_ar_option_1.append(self.user_ar_options_value1)
+                self.user_ar_option1.append(self.user_ar_type1)
+                self.user_ar_option1.append(self.user_ar_value1)
 
             # otherwise, check next AR option
             except ValueError:
@@ -405,18 +438,18 @@ class App(tk.Tk):
                 
         # AR Option #2:
         # get AR type
-        self.user_ar_options_type2 = self.ar_options_frame.ar_options_type2.get()
+        self.user_ar_type2 = self.ar_frame.type2.get()
 
         # if type is chosen, get AR value
-        if self.user_ar_options_type2 != None:
+        if self.user_ar_type2 != None:
             
             try:
                 # get AR value
-                self.user_ar_options_value2 = float(self.ar_options_frame.ar_options_value2.get())
+                self.user_ar_value2 = float(self.ar_frame.value2.get())
 
                 # append type and value to list if value is valid
-                self.user_ar_option_2.append(self.user_ar_options_type2)
-                self.user_ar_option_2.append(self.user_ar_options_value2)
+                self.user_ar_option2.append(self.user_ar_type2)
+                self.user_ar_option2.append(self.user_ar_value2)
 
             # otherwise, check next AR option
             except ValueError:
@@ -424,18 +457,18 @@ class App(tk.Tk):
 
         # AR Option #3:
         # get AR type
-        self.user_ar_options_type3 = self.ar_options_frame.ar_options_type3.get()
+        self.user_ar_type3 = self.ar_frame.type3.get()
 
         # if type is chosen, get AR value
-        if self.user_ar_options_type3 != None:
+        if self.user_ar_type3 != None:
             
             try:
                 # get AR value
-                self.user_ar_options_value3 = float(self.ar_options_frame.ar_options_value3.get())
+                self.user_ar_value3 = float(self.ar_frame.value3.get())
 
                 # append type and value to list if value is valid
-                self.user_ar_option_3.append(self.user_ar_options_type3)
-                self.user_ar_option_3.append(self.user_ar_options_value3)
+                self.user_ar_option3.append(self.user_ar_type3)
+                self.user_ar_option3.append(self.user_ar_value3)
 
             # otherwise, check next AR option
             except ValueError:
@@ -447,17 +480,14 @@ class App(tk.Tk):
 
         # print collected user info
         # NOTE: only for debugging purposes, remove in final program
-        '''
-        print(self.user_difficulties)
-        print(self.user_rates_minimum)
-        print(self.user_rates_maximum)
-        print(self.user_rate_increment)
-        print(self.user_ar_option_1)
-        print(self.user_ar_option_2)
-        print(self.user_ar_option_3)
+        print(self.user_diffs)
+        print(self.user_min)
+        print(self.user_max)
+        print(self.user_rate_inc)
+        print(self.user_ar_option1)
+        print(self.user_ar_option2)
+        print(self.user_ar_option3)
         print(self.user_pitch_rates)
-        print()
-        '''
 
         # print self.user_validity
         # NOTE: only for debugging purpose, remove in final program
@@ -500,23 +530,27 @@ class DifficultiesFrame(ttk.Frame):
         self.columnconfigure(0, weight=1)
 
         # labels
-        difficulties_heading_label = ttk.Label(self,
-                                               text='DIFFICULTIES',
-                                               style='Heading.TLabel')
-        difficulties_heading_label.grid(row=0,
-                                        column=0,
-                                        padx=(5,0), # left padding
-                                        pady=(5,0), # top padding
-                                        sticky=tk.W)
+        self.heading_label = ttk.Label(
+            self,
+            text='DIFFICULTIES',
+            style='Heading.TLabel')
+        self.heading_label.grid(
+            row=0,
+            column=0,
+            padx=(5,0), # left padding
+            pady=(5,0), # top padding
+            sticky=tk.W)
 
-        difficulties_required_label = ttk.Label(self,
-                                                text='*Required',
-                                                style='Required.Heading.TLabel')
-        difficulties_required_label.grid(row=1,
-                                         column=0,
-                                         padx=(5,0), # left padding
-                                         pady=(0,5), # bottom padding
-                                         sticky=tk.W)
+        self.required_label = ttk.Label(
+            self,
+            text='*Required',
+            style='Required.Heading.TLabel')
+        self.required_label.grid(
+            row=1,
+            column=0,
+            padx=(5,0), # left padding
+            pady=(0,5), # bottom padding
+            sticky=tk.W)
 
         # variables to store state of checkboxes
         self.easy_var = tk.IntVar()
@@ -529,75 +563,79 @@ class DifficultiesFrame(ttk.Frame):
         self.ex_var.set(0)
 
         # checkboxes
-        difficulties_easy_checkbox = tk.Checkbutton(self,
-                                                    text='Easy',
-                                                    variable=self.easy_var)
-        difficulties_easy_checkbox.configure(
-            font=tk_checkbutton_font,
-            background=tk_checkbutton_bg,
-            activebackground=tk_checkbutton_activebg,
-            foreground=tk_checkbutton_fg,
-            activeforeground=tk_checkbutton_activefg,
-            selectcolor=tk_checkbutton_selectcolor)
-        difficulties_easy_checkbox.grid(row=2,
-                                        column=0,
-                                        padx=(5,0), # left padding
-                                        sticky=tk.W
-                                        )
+        self.easy_check = tk.Checkbutton(
+            self,
+            text='Easy',
+            variable=self.easy_var)
+        self.easy_check.configure(
+            font=tk_check_font,
+            background=tk_check_bg,
+            activebackground=tk_check_activebg,
+            foreground=tk_check_fg,
+            activeforeground=tk_check_activefg,
+            selectcolor=tk_check_selectcolor)
+        self.easy_check.grid(
+            row=2,
+            column=0,
+            padx=(5,0), # left padding
+            sticky=tk.W
+            )
                                                   
-        difficulties_hard_checkbox = tk.Checkbutton(self,
-                                                  text='Hard',
-                                                  variable=self.hard_var)
-        difficulties_hard_checkbox.configure(
-            font=tk_checkbutton_font,
-            background=tk_checkbutton_bg,
-            activebackground=tk_checkbutton_activebg,
-            foreground=tk_checkbutton_fg,
-            activeforeground=tk_checkbutton_activefg,
-            selectcolor=tk_checkbutton_selectcolor)
-        difficulties_hard_checkbox.grid(row=3,
-                                        column=0,
-                                        padx=(5,0), # left padding
-                                        sticky=tk.W
-                                        )
+        self.hard_check = tk.Checkbutton(
+            self,
+            text='Hard',
+            variable=self.hard_var)
+        self.hard_check.configure(
+            font=tk_check_font,
+            background=tk_check_bg,
+            activebackground=tk_check_activebg,
+            foreground=tk_check_fg,
+            activeforeground=tk_check_activefg,
+            selectcolor=tk_check_selectcolor)
+        self.hard_check.grid(
+            row=3,
+            column=0,
+            padx=(5,0), # left padding
+            sticky=tk.W
+            )
 
-        difficulties_ex_checkbox = tk.Checkbutton(self,
-                                                  text='Extreme',
-                                                  variable=self.ex_var)
-        difficulties_ex_checkbox.configure(
-            font=tk_checkbutton_font,
-            background=tk_checkbutton_bg,
-            activebackground=tk_checkbutton_activebg,
-            foreground=tk_checkbutton_fg,
-            activeforeground=tk_checkbutton_activefg,
-            selectcolor=tk_checkbutton_selectcolor)
-        difficulties_ex_checkbox.grid(row=4,
-                                      column=0,
-                                      padx=(5,0), # left padding
-                                      sticky=tk.W
-                                      )
+        self.ex_check = tk.Checkbutton(
+            self,
+            text='Extreme',
+            variable=self.ex_var)
+        self.ex_check.configure(
+            font=tk_check_font,
+            background=tk_check_bg,
+            activebackground=tk_check_activebg,
+            foreground=tk_check_fg,
+            activeforeground=tk_check_activefg,
+            selectcolor=tk_check_selectcolor)
+        self.ex_check.grid(
+            row=4,
+            column=0,
+            padx=(5,0), # left padding
+            sticky=tk.W
+            )
 
         # text box to display error messages
-        difficulties_error_text = tk.Text(
+        self.error_text = tk.Text(
             self,
             font=tk_error_font,
             background=tk_error_bg,
             foreground=tk_error_fg,
             borderwidth=tk_error_borderwidth,
-            state='normal',
+            state='disabled',
             wrap=tk_error_wrap,
             height=tk_error_height,
             width=tk_error_width
             )
-        difficulties_error_text.grid(row=5,
-                                     column=0,
-                                     padx=(5,5), # left/right padding
-                                     pady=(0,5), # bottom padding
-                                     sticky=tk.EW)
-
-        # insert error message into text widget (line 1, character 0)
-        difficulties_error_text.insert('1.0', 'At least one difficulty must be selected')
-        difficulties_error_text.configure(state='disabled')
+        self.error_text.grid(
+            row=5,
+            column=0,
+            padx=(5,5), # left/right padding
+            pady=(0,5), # bottom padding
+            sticky=tk.EW
+            )
 
 class RatesFrame(ttk.Frame):
     '''Visible frame for difficulty selection checkboxes
@@ -616,67 +654,76 @@ class RatesFrame(ttk.Frame):
         self.columnconfigure(1, weight=1)
 
         # labels
-        rates_heading_label = ttk.Label(self,
-                                        text='RATES',
-                                        style='Heading.TLabel')
-        rates_heading_label.grid(row=0,
-                                 column=0,
-                                 columnspan=2,
-                                 padx=(5,0), # left padding
-                                 pady=(5,0), # top padding
-                                 sticky=tk.W)
+        self.heading_label = ttk.Label(
+            self,
+            text='RATES',
+            style='Heading.TLabel')
+        self.heading_label.grid(
+            row=0,
+            column=0,
+            columnspan=2,
+            padx=(5,0), # left padding
+            pady=(5,0), # top padding
+            sticky=tk.W)
 
-        rates_required_label = ttk.Label(self,
-                                         text='*Required',
-                                         style='Required.Heading.TLabel')
-        rates_required_label.grid(row=1,
-                                  column=0,
-                                  columnspan=2,
-                                  padx=(5,0), # left padding
-                                  pady=(0,3), # bottom padding
-                                  sticky=tk.W)
+        self.required_label = ttk.Label(
+            self,
+            text='*Required',
+            style='Required.Heading.TLabel')
+        self.required_label.grid(
+            row=1,
+            column=0,
+            columnspan=2,
+            padx=(5,0), # left padding
+            pady=(0,3), # bottom padding
+            sticky=tk.W)
 
-        rates_minimum_label = ttk.Label(self, text='Minimum')
-        rates_minimum_label.grid(row=2,
-                                 column=0,
-                                 padx=(5,0), # left padding
-                                 pady=(1,1), # top/bottom padding
-                                 sticky=tk.W)
+        self.min_label = ttk.Label(self, text='Minimum')
+        self.min_label.grid(
+            row=2,
+            column=0,
+            padx=(5,0), # left padding
+            pady=(1,1), # top/bottom padding
+            sticky=tk.W)
 
-        rates_maximum_label = ttk.Label(self, text='Maximum')
-        rates_maximum_label.grid(row=3,
-                                 column=0,
-                                 padx=(5,0), # left padding
-                                 pady=(1,5), # top/bottom padding
-                                 sticky=tk.W)
+        self.max_label = ttk.Label(self, text='Maximum')
+        self.max_label.grid(
+            row=3,
+            column=0,
+            padx=(5,0), # left padding
+            pady=(1,5), # top/bottom padding
+            sticky=tk.W)
 
         # variables to store text in entry fields
-        self.minimum_var = tk.StringVar()
-        self.maximum_var = tk.StringVar()
+        self.min_var = tk.StringVar()
+        self.max_var = tk.StringVar()
 
         # borders for entry fields
-        rates_minimum_border = BorderFrame(self)
-        rates_minimum_border.configure(style='WidgetBorder.TFrame')
-        rates_minimum_border.grid(row=2,
-                                  column=1,
-                                  padx=(0,5), # right padding
-                                  pady=(1,1), # top/bottom padding
-                                  sticky=tk.EW
-                                  )
+        self.min_border = BorderFrame(self)
+        self.min_border.configure(style='WidgetBorder.TFrame')
+        self.min_border.grid(
+            row=2,
+            column=1,
+            padx=(0,5), # right padding
+            pady=(1,1), # top/bottom padding
+            sticky=tk.EW
+            )
 
-        rates_maximum_border = BorderFrame(self)
-        rates_maximum_border.configure(style='WidgetBorder.TFrame')
-        rates_maximum_border.grid(row=3,
-                                  column=1,
-                                  padx=(0,5), # right padding
-                                  pady=(1,5), # top/bottom padding
-                                  sticky=tk.EW
-                                  )
+        self.max_border = BorderFrame(self)
+        self.max_border.configure(style='WidgetBorder.TFrame')
+        self.max_border.grid(
+            row=3,
+            column=1,
+            padx=(0,5), # right padding
+            pady=(1,5), # top/bottom padding
+            sticky=tk.EW
+            )
 
         # entry fields
-        rates_minimum_entry = tk.Entry(rates_minimum_border,
-                                       textvariable=self.minimum_var)
-        rates_minimum_entry.configure(
+        self.min_entry = tk.Entry(
+            self.min_border,
+            textvariable=self.min_var)
+        self.min_entry.configure(
             font=tk_entry_font,
             background=tk_entry_bg,
             foreground=tk_entry_fg,
@@ -684,11 +731,12 @@ class RatesFrame(ttk.Frame):
             insertbackground=tk_entry_insertbackground,
             width=1 # width depends on length of rate inc frame (fill=tk.X)
             )
-        rates_minimum_entry.pack(padx=1, pady=1, fill=tk.X)
+        self.min_entry.pack(padx=1, pady=1, fill=tk.X)
 
-        rates_maximum_entry = tk.Entry(rates_maximum_border,
-                                        textvariable=self.maximum_var)
-        rates_maximum_entry.configure(
+        self.max_entry = tk.Entry(
+            self.max_border,
+            textvariable=self.max_var)
+        self.max_entry.configure(
             font=tk_entry_font,
             background=tk_entry_bg,
             foreground=tk_entry_fg,
@@ -696,7 +744,7 @@ class RatesFrame(ttk.Frame):
             insertbackground=tk_entry_insertbackground,
             width=1 # width depends on length of rate inc frame (fill=tk.X)
             )
-        rates_maximum_entry.pack(padx=1, pady=1, fill=tk.X)
+        self.max_entry.pack(padx=1, pady=1, fill=tk.X)
 
 
 class RateIncrementFrame(ttk.Frame):
@@ -713,75 +761,84 @@ class RateIncrementFrame(ttk.Frame):
         '''Create necessary widgets within frame'''
 
         # labels
-        rate_increment_heading_label = ttk.Label(self,
-                                                 text='RATE INCREMENT',
-                                                 style='Heading.TLabel')
-        rate_increment_heading_label.grid(row=0,
-                                          column=0,
-                                          columnspan=2,
-                                          padx=(5,0), # left padding
-                                          pady=(5,5), # top padding
-                                          sticky=tk.W)
+        self.heading_label = ttk.Label(
+            self,
+            text='RATE INCREMENT',
+            style='Heading.TLabel')
+        self.heading_label.grid(
+            row=0,
+            column=0,
+            columnspan=2,
+            padx=(5,0), # left padding
+            pady=(5,5), # top padding
+            sticky=tk.W)
 
         # variable to store selected rate increment
-        self.increment_var = tk.StringVar()
+        self.var = tk.StringVar()
 
         # variable to store custom rate increment in entry field
-        self.increment_custom_var = tk.StringVar()
+        self.custom_var = tk.StringVar()
 
         # border for custom entry field
-        rate_increment_entry_border = BorderFrame(self)
-        rate_increment_entry_border.configure(style='WidgetBorder.TFrame')
-        rate_increment_entry_border.grid(row=3,
-                                         column=1,
-                                         padx=(0,5), # right padding
-                                         pady=(0,5) # bottom padding
-                                         )
+        self.entry_border = BorderFrame(self)
+        self.entry_border.configure(style='WidgetBorder.TFrame')
+        self.entry_border.grid(
+            row=3,
+            column=1,
+            padx=(0,5), # right padding
+            pady=(0,5) # bottom padding
+            )
 
         # radio buttons
-        rate_increment_radio1 = ttk.Radiobutton(self,
-                                                text='0.05',
-                                                value=0.05,
-                                                variable=self.increment_var)
+        self.radio1 = ttk.Radiobutton(
+            self,
+            text='0.05',
+            value=0.05,
+            variable=self.var)
 
-        rate_increment_radio2 = ttk.Radiobutton(self,
-                                                text='0.10',
-                                                value=0.10,
-                                                variable=self.increment_var)
+        self.radio2 = ttk.Radiobutton(
+            self,
+            text='0.10',
+            value=0.10,
+            variable=self.var)
 
-        rate_increment_radio3 = ttk.Radiobutton(self,
-                                        text='Custom:',
-                                        value='Custom',
-                                        variable=self.increment_var)
+        self.radio3 = ttk.Radiobutton(
+            self,
+            text='Custom:',
+            value='Custom',
+            variable=self.var)
 
-        rate_increment_radio1.grid(row=1,
-                                   column=0,
-                                   padx=(5,0), # left padding
-                                   sticky=tk.W)
-        rate_increment_radio2.grid(row=2,
-                                   column=0,
-                                   padx=(5,0), # left padding
-                                   sticky=tk.W)
-        rate_increment_radio3.grid(row=3,
-                                   column=0,
-                                   padx=(5,0), # left padding
-                                   sticky=tk.W)
+        self.radio1.grid(
+            row=1,
+            column=0,
+            padx=(5,0), # left padding
+            sticky=tk.W)
+        self.radio2.grid(
+            row=2,
+            column=0,
+            padx=(5,0), # left padding
+            sticky=tk.W)
+        self.radio3.grid(
+            row=3,
+            column=0,
+            padx=(5,0), # left padding
+            sticky=tk.W)
 
         # set default value of rate increment to 0.05
-        self.increment_var.set(0.05)
+        self.var.set(0.05)
 
         # entry field for custom rate increment
-        rate_increment_entry = tk.Entry(
-            rate_increment_entry_border,
-            textvariable=self.increment_custom_var)
-        rate_increment_entry.configure(
+        self.custom_entry = tk.Entry(
+            self.entry_border,
+            textvariable=self.custom_var)
+        self.custom_entry.configure(
             font=tk_entry_font,
             background=tk_entry_bg,
             foreground=tk_entry_fg,
             borderwidth=tk_entry_borderwidth,
             insertbackground=tk_entry_insertbackground,
             width=tk_rate_increment_entry_width)
-        rate_increment_entry.pack(padx=1, pady=1)
+        self.custom_entry.pack(padx=1, pady=1)
 
 
 class AROptionsFrame(ttk.Frame):
@@ -801,163 +858,177 @@ class AROptionsFrame(ttk.Frame):
         self.columnconfigure(3, weight=1)
 
         # labels
-        ar_options_heading_label = ttk.Label(self,
-                                             text='AR OPTIONS',
-                                             style='Heading.TLabel')
-        ar_options_heading_label.grid(row=0,
-                                      column=0,
-                                      columnspan=2,
-                                      padx=(5,0), # left padding
-                                      pady=(5,5), # top/bottom padding
-                                      sticky=tk.W
-                                      )
+        self.heading_label = ttk.Label(
+            self,
+            text='AR OPTIONS',
+            style='Heading.TLabel')
+        self.heading_label.grid(
+            row=0,
+            column=0,
+            columnspan=2,
+            padx=(5,0), # left padding
+            pady=(5,5), # top/bottom padding
+            sticky=tk.W
+            )
         
-        ar_options_label1 = ttk.Label(self, text='AR Option #1:')
-        ar_options_label2 = ttk.Label(self, text='AR Option #2:')
-        ar_options_label3 = ttk.Label(self, text='AR Option #3:')
+        self.label1 = ttk.Label(self, text='AR Option #1:')
+        self.label2 = ttk.Label(self, text='AR Option #2:')
+        self.label3 = ttk.Label(self, text='AR Option #3:')
 
-        ar_options_label1.grid(row=1,
-                               column=0,
-                               columnspan=2,
-                               padx=(5,0), # left padding
-                               pady=(1,1), # top/bottom padding
-                               sticky=tk.W
-                               )
+        self.label1.grid(
+            row=1,
+            column=0,
+            columnspan=2,
+            padx=(5,0), # left padding
+            pady=(1,1), # top/bottom padding
+            sticky=tk.W
+            )
         
-        ar_options_label2.grid(row=2,
-                               column=0,
-                               columnspan=2,
-                               padx=(5,0), # left padding
-                               pady=(1,1), # top/bottom padding
-                               sticky=tk.W
-                               )
+        self.label2.grid(
+            row=2,
+            column=0,
+            columnspan=2,
+            padx=(5,0), # left padding
+            pady=(1,1), # top/bottom padding
+            sticky=tk.W
+            )
         
-        ar_options_label3.grid(row=3,
-                               column=0,
-                               columnspan=2,
-                               padx=(5,0), # left padding
-                               pady=(1,1), # top/bottom padding
-                               sticky=tk.W
-                               )
+        self.label3.grid(
+            row=3,
+            column=0,
+            columnspan=2,
+            padx=(5,0), # left padding
+            pady=(1,1), # top/bottom padding
+            sticky=tk.W
+            )
 
         # variables to store selected AR type and value
         # for each of the three options
-        self.ar_options_type1 = tk.StringVar()
-        self.ar_options_type2 = tk.StringVar()
-        self.ar_options_type3 = tk.StringVar()
+        self.type1 = tk.StringVar()
+        self.type2 = tk.StringVar()
+        self.type3 = tk.StringVar()
 
-        self.ar_options_value1 = tk.StringVar()
-        self.ar_options_value2 = tk.StringVar()
-        self.ar_options_value3 = tk.StringVar()
+        self.value1 = tk.StringVar()
+        self.value2 = tk.StringVar()
+        self.value3 = tk.StringVar()
 
         # borders for comboboxes (dropdown menus)
-        ar_options_cbborder1 = BorderFrame(self)
-        ar_options_cbborder2 = BorderFrame(self)
-        ar_options_cbborder3 = BorderFrame(self)
+        self.checkborder1 = BorderFrame(self)
+        self.checkborder2 = BorderFrame(self)
+        self.checkborder3 = BorderFrame(self)
 
-        ar_options_cbborder1.configure(style='WidgetBorder.TFrame')
-        ar_options_cbborder2.configure(style='WidgetBorder.TFrame')
-        ar_options_cbborder3.configure(style='WidgetBorder.TFrame')
+        self.checkborder1.configure(style='WidgetBorder.TFrame')
+        self.checkborder2.configure(style='WidgetBorder.TFrame')
+        self.checkborder3.configure(style='WidgetBorder.TFrame')
 
-        ar_options_cbborder1.grid(row=1,
-                                  column=2,
-                                  padx=(2,0), # left padding
-                                  pady=(1,1), # top/bottom padding
-                                  )
+        self.checkborder1.grid(
+            row=1,
+            column=2,
+            padx=(2,0), # left padding
+            pady=(1,1), # top/bottom padding
+            )
         
-        ar_options_cbborder2.grid(row=2,
-                                  column=2,
-                                  padx=(2,0), # left padding
-                                  pady=(1,1), # top/bottom padding
-                                  )
+        self.checkborder2.grid(
+            row=2,
+            column=2,
+            padx=(2,0), # left padding
+            pady=(1,1), # top/bottom padding
+            )
         
-        ar_options_cbborder3.grid(row=3,
-                                  column=2,
-                                  padx=(2,0), # left padding
-                                  pady=(1,1), # top/bottom padding
-                                  )
+        self.checkborder3.grid(
+            row=3,
+            column=2,
+            padx=(2,0), # left padding
+            pady=(1,1), # top/bottom padding
+            )
 
         # comboboxes (dropdown menus)
-        ar_options_combobox1 = ttk.Combobox(
-            ar_options_cbborder1,
-            textvariable=self.ar_options_type1,
-            width=ttk_ar_options_combobox_width)
-        ar_options_combobox2 = ttk.Combobox(
-            ar_options_cbborder2,
-            textvariable=self.ar_options_type2,
-            width=ttk_ar_options_combobox_width)
-        ar_options_combobox3 = ttk.Combobox(
-            ar_options_cbborder3,
-            textvariable=self.ar_options_type3,
-            width=ttk_ar_options_combobox_width)
+        self.combo1 = ttk.Combobox(
+            self.checkborder1,
+            textvariable=self.type1,
+            width=ttk_ar_options_combo_width)
+        self.combo2 = ttk.Combobox(
+            self.checkborder2,
+            textvariable=self.type2,
+            width=ttk_ar_options_combo_width)
+        self.combo3 = ttk.Combobox(
+            self.checkborder3,
+            textvariable=self.type3,
+            width=ttk_ar_options_combo_width)
 
-        ar_options_combobox1.pack(padx=1, pady=1)
-        ar_options_combobox2.pack(padx=1, pady=1)
-        ar_options_combobox3.pack(padx=1, pady=1)
+        self.combo1.pack(padx=1, pady=1)
+        self.combo2.pack(padx=1, pady=1)
+        self.combo3.pack(padx=1, pady=1)
 
         # define possible values for comboboxes
-        ar_options_combobox1['values'] = ('x', 'c', 'C')
-        ar_options_combobox2['values'] = ('x', 'c', 'C')
-        ar_options_combobox3['values'] = ('x', 'c', 'C')
+        self.combo1['values'] = ('x', 'c', 'C')
+        self.combo2['values'] = ('x', 'c', 'C')
+        self.combo3['values'] = ('x', 'c', 'C')
 
         # prevent user from entering a custom value in the comboboxes
-        ar_options_combobox1['state'] = 'readonly'
-        ar_options_combobox2['state'] = 'readonly'
-        ar_options_combobox3['state'] = 'readonly'
+        self.combo1['state'] = 'readonly'
+        self.combo2['state'] = 'readonly'
+        self.combo3['state'] = 'readonly'
 
         # borders for entry fields
-        ar_options_eborder1 = BorderFrame(self)
-        ar_options_eborder2 = BorderFrame(self)
-        ar_options_eborder3 = BorderFrame(self)
+        self.entryborder1 = BorderFrame(self)
+        self.entryborder2 = BorderFrame(self)
+        self.entryborder3 = BorderFrame(self)
 
-        ar_options_eborder1.configure(style='WidgetBorder.TFrame')
-        ar_options_eborder2.configure(style='WidgetBorder.TFrame')
-        ar_options_eborder3.configure(style='WidgetBorder.TFrame')
+        self.entryborder1.configure(style='WidgetBorder.TFrame')
+        self.entryborder2.configure(style='WidgetBorder.TFrame')
+        self.entryborder3.configure(style='WidgetBorder.TFrame')
 
-        ar_options_eborder1.grid(row=1,
-                                 column=3,
-                                 padx=(2,5), # left/right padding
-                                 pady=(1,1), # top/bottom padding
-                                 sticky=tk.EW
-                                 )
+        self.entryborder1.grid(
+            row=1,
+            column=3,
+            padx=(2,5), # left/right padding
+            pady=(1,1), # top/bottom padding
+            sticky=tk.EW
+            )
         
-        ar_options_eborder2.grid(row=2,
-                                 column=3,
-                                 padx=(2,5), # left/right padding
-                                 pady=(1,1), # top/bottom padding
-                                 sticky=tk.EW
-                                 )
+        self.entryborder2.grid(
+            row=2,
+            column=3,
+            padx=(2,5), # left/right padding
+            pady=(1,1), # top/bottom padding
+            sticky=tk.EW
+            )
         
-        ar_options_eborder3.grid(row=3,
-                                 column=3,
-                                 padx=(2,5), # left/right padding
-                                 pady=(1,1), # top/bottom padding
-                                 sticky=tk.EW
-                                 )
+        self.entryborder3.grid(
+            row=3,
+            column=3,
+            padx=(2,5), # left/right padding
+            pady=(1,1), # top/bottom padding
+            sticky=tk.EW
+            )
 
         # entry fields
-        ar_options_entry1 = tk.Entry(ar_options_eborder1,
-                                     textvariable=self.ar_options_value1)
-        ar_options_entry2 = tk.Entry(ar_options_eborder2,
-                                     textvariable=self.ar_options_value2)
-        ar_options_entry3 = tk.Entry(ar_options_eborder3,
-                                     textvariable=self.ar_options_value3)
+        self.entry1 = tk.Entry(
+            self.entryborder1,
+            textvariable=self.value1)
+        self.entry2 = tk.Entry(
+            self.entryborder2,
+            textvariable=self.value2)
+        self.entry3 = tk.Entry(
+            self.entryborder3,
+            textvariable=self.value3)
 
-        ar_options_entry1.configure(
+        self.entry1.configure(
             font=tk_entry_font,
             background=tk_entry_bg,
             foreground=tk_entry_fg,
             borderwidth=tk_entry_borderwidth,
             insertbackground=tk_entry_insertbackground,
             width=tk_ar_options_entry_width)
-        ar_options_entry2.configure(
+        self.entry2.configure(
             font=tk_entry_font,
             background=tk_entry_bg,
             foreground=tk_entry_fg,
             borderwidth=tk_entry_borderwidth,
             insertbackground=tk_entry_insertbackground,
             width=tk_ar_options_entry_width)
-        ar_options_entry3.configure(
+        self.entry3.configure(
             font=tk_entry_font,
             background=tk_entry_bg,
             foreground=tk_entry_fg,
@@ -965,9 +1036,9 @@ class AROptionsFrame(ttk.Frame):
             insertbackground=tk_entry_insertbackground,
             width=tk_ar_options_entry_width)
 
-        ar_options_entry1.pack(padx=1, pady=1, fill=tk.X)
-        ar_options_entry2.pack(padx=1, pady=1, fill=tk.X)
-        ar_options_entry3.pack(padx=1, pady=1, fill=tk.X)
+        self.entry1.pack(padx=1, pady=1, fill=tk.X)
+        self.entry2.pack(padx=1, pady=1, fill=tk.X)
+        self.entry3.pack(padx=1, pady=1, fill=tk.X)
 
 
 class OtherFrame(ttk.Frame):
@@ -984,15 +1055,17 @@ class OtherFrame(ttk.Frame):
         '''Create necessary widgets within frame'''
 
         # label
-        other_heading_label = ttk.Label(self,
-                                        text='OTHER',
-                                        style='Heading.TLabel')
-        other_heading_label.grid(row=0,
-                                 column=0,
-                                 padx=(5,0), # left padding
-                                 pady=(5,0), # top padding
-                                 sticky=tk.W
-                                 )
+        self.heading_label = ttk.Label(
+            self,
+            text='OTHER',
+            style='Heading.TLabel')
+        self.heading_label.grid(
+            row=0,
+            column=0,
+            padx=(5,0), # left padding
+            pady=(5,0), # top padding
+            sticky=tk.W
+            )
 
         # create variables to store state of "pitch rates" checkbox
         self.pitch_rates_var = tk.StringVar()
@@ -1001,20 +1074,22 @@ class OtherFrame(ttk.Frame):
         self.pitch_rates_var.set(1)
         
         # checkbox
-        other_checkbox = tk.Checkbutton(self,
-                                         text='Change audio pitch with rate',
-                                         variable=self.pitch_rates_var)
-        other_checkbox.configure(
-            font=tk_checkbutton_font,
-            background=tk_checkbutton_bg,
-            activebackground=tk_checkbutton_activebg,
-            foreground=tk_checkbutton_fg,
-            activeforeground=tk_checkbutton_activefg,
-            selectcolor=tk_checkbutton_selectcolor)
-        other_checkbox.grid(row=2,
-                            column=0,
-                            padx=(5,5), # left/right padding
-                            )
+        self.check = tk.Checkbutton(
+            self,
+            text='Change audio pitch with rate',
+            variable=self.pitch_rates_var)
+        self.check.configure(
+            font=tk_check_font,
+            background=tk_check_bg,
+            activebackground=tk_check_activebg,
+            foreground=tk_check_fg,
+            activeforeground=tk_check_activefg,
+            selectcolor=tk_check_selectcolor)
+        self.check.grid(
+            row=2,
+            column=0,
+            padx=(5,5), # left/right padding
+            )
 
 if __name__ == "__main__":
     app = App()
