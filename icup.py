@@ -369,11 +369,37 @@ class App(tk.Tk):
         if self.diffs_frame.ex_var.get() == 1:
             self.user_diffs.append('extreme')
 
-        # if no difficulties are selected,
-        # print error message and set validity variable to False
+        # if no difficulties are selected
         if self.user_diffs == []:
-            print('At least one difficulty must be selected')
+            
+            # allow text inside error widget to be edited
+            self.diffs_frame.error_text.configure(state='normal')
+
+            # clear any text inside error widget
+            self.diffs_frame.error_text.delete('1.0', tk.END)
+
+            # insert error message (line 1, character 0)
+            self.diffs_frame.error_text.insert(
+                '1.0',
+                'At least one difficulty must be selected')
+
+            # prevent text from being edited
+            self.diffs_frame.error_text.configure(state='disabled')
+
+            # indicate that user input is invalid
             self.user_validity = False
+
+        # if at least one difficulty is selected
+        else:
+
+            # allow text to be edited
+            self.diffs_frame.error_text.configure(state='normal')
+            
+            # clear any text
+            self.diffs_frame.error_text.delete('1.0', tk.END)
+
+            # prevent text from being edited
+            self.diffs_frame.error_text.configure(state='disabled')
 
         # get value of minimum and maximum rates
         try:
