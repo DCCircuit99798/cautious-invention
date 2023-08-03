@@ -398,6 +398,22 @@ class App(tk.Tk):
         self.style.configure(
             'RateInc.NormalBorder.TFrame', # rate increment
             background='#aeb9ef')
+
+        # clear all error text messages
+        # allow text in error text widgets to be edited
+        self.diffs_frame.error_text.configure(state='normal')
+        self.rates_frame.error_text.configure(state='normal')
+        self.rate_inc_frame.error_text.configure(state='normal')
+        
+        # clear error message in text widgets
+        self.diffs_frame.error_text.delete('1.0', tk.END)
+        self.rates_frame.error_text.delete('1.0', tk.END)
+        self.rate_inc_frame.error_text.delete('1.0', tk.END)
+
+        # prevent text from being edited
+        self.diffs_frame.error_text.configure(state='disabled')
+        self.rates_frame.error_text.configure(state='disabled')
+        self.rate_inc_frame.error_text.configure(state='disabled')
         
         # check status of difficulty checkboxes and add
         # difficulties to the list if they are selected
@@ -410,7 +426,7 @@ class App(tk.Tk):
         if self.diffs_frame.ex_var.get() == 1:
             self.user_diffs.append('extreme')
 
-        # if no difficulties are selected
+        # if no difficulties are selected (invalid)
         if self.user_diffs == []:
             
             # allow text inside error widget to be edited
@@ -439,57 +455,163 @@ class App(tk.Tk):
 
             # indicate that user input is invalid
             self.user_validity = False
-
-        # if at least one difficulty is selected
-        else:
-
-            # allow text to be edited
-            self.diffs_frame.error_text.configure(state='normal')
             
-            # clear error message in text widget
-            self.diffs_frame.error_text.delete('1.0', tk.END)
-
-            # prevent text from being edited
-            self.diffs_frame.error_text.configure(state='disabled')
 
         # get value of minimum and maximum rates
         try:
             self.user_min = float(self.rates_frame.min_var.get())
             self.user_max = float(self.rates_frame.max_var.get())
 
-            # if minimum rate is zero or negative
+            # if minimum rate is zero or negative (invalid)
             if self.user_min <= 0:
 
-                
-                print('Rates cannot be zero or negative')
+                # allow text inside error widget to be edited
+                self.rates_frame.error_text.configure(state='normal')
+
+                # clear any text inside error widget
+                self.rates_frame.error_text.delete('1.0', tk.END)
+
+                # insert error message (line 1, character 0)
+                self.rates_frame.error_text.insert(
+                    '1.0',
+                    'Rates cannot be zero or negative')
+
+                # prevent text from being edited
+                self.rates_frame.error_text.configure(state='disabled')
+
+                # configure styles
+                self.style.configure(
+                    'Rates.NormalBorder.TFrame',
+                    background='#ee9f9f',
+                    font=('Tahoma', 8, 'bold'))
+
+                self.style.configure(
+                    'Rates.Required.TLabel',
+                    foreground='#ee9f9f',
+                    font=('Tahoma', 8, 'bold'))
+
+                # indicated that user input is invalid
                 self.user_validity = False
 
-            # maximum rate cannot be less than minimum rate
+            # if maximum rate less than minimum rate (invalid)
             elif self.user_max < self.user_min:
-                print('Maximum rate cannot be less than minimum')
+
+                # allow text inside error widget to be edited
+                self.rates_frame.error_text.configure(state='normal')
+
+                # clear any text inside error widget
+                self.rates_frame.error_text.delete('1.0', tk.END)
+
+                # insert error message (line 1, character 0)
+                self.rates_frame.error_text.insert(
+                    '1.0',
+                    'Maximum rate cannot be less than minimum')
+
+                # prevent text from being edited
+                self.rates_frame.error_text.configure(state='disabled')
+
+                # configure styles
+                self.style.configure(
+                    'Rates.NormalBorder.TFrame',
+                    background='#ee9f9f',
+                    font=('Tahoma', 8, 'bold'))
+
+                self.style.configure(
+                    'Rates.Required.TLabel',
+                    foreground='#ee9f9f',
+                    font=('Tahoma', 8, 'bold'))
+
+                # indicated that user input is invalid
                 self.user_validity = False
+                
 
-        # if entry fields are empty,
-        # except error and print error message
+        # if entry fields are empty (invalid)
         except ValueError:
-            print('Minimum and maximum rates must be valid numbers')
-            self.user_validity = False
 
-        
+            # allow text inside error widget to be edited
+                self.rates_frame.error_text.configure(state='normal')
+
+                # clear any text inside error widget
+                self.rates_frame.error_text.delete('1.0', tk.END)
+
+                # insert error message (line 1, character 0)
+                self.rates_frame.error_text.insert(
+                    '1.0',
+                    'Rates must be valid numbers')
+
+                # prevent text from being edited
+                self.rates_frame.error_text.configure(state='disabled')
+
+                # configure styles
+                self.style.configure(
+                    'Rates.NormalBorder.TFrame',
+                    background='#ee9f9f',
+                    font=('Tahoma', 8, 'bold'))
+
+                self.style.configure(
+                    'Rates.Required.TLabel',
+                    foreground='#ee9f9f',
+                    font=('Tahoma', 8, 'bold'))
+
+                # indicated that user input is invalid
+                self.user_validity = False
 
         # if custom increment is selected, get value from entry field
         if self.rate_inc_frame.var.get() == 'Custom':
             try:
                 self.user_rate_inc = float(self.rate_inc_frame.custom_var.get())
 
-                # rate increment cannot be zero or negative
+                # if rate increment zero or negative (invalid)
                 if self.user_rate_inc <= 0:
-                    print('Rate increment cannot be zero or negative')
+
+                    # allow text inside error widget to be edited
+                    self.rate_inc_frame.error_text.configure(state='normal')
+
+                    # clear any text inside error widget
+                    self.rate_inc_frame.error_text.delete('1.0', tk.END)
+
+                    # insert error message (line 1, character 0)
+                    self.rate_inc_frame.error_text.insert(
+                        '1.0',
+                        'Rate increment cannot be zero or negative')
+
+                    # prevent text from being edited
+                    self.rate_inc_frame.error_text.configure(state='disabled')
+
+                    # configure styles
+                    self.style.configure(
+                        'RateInc.NormalBorder.TFrame',
+                        background='#ee9f9f',
+                        font=('Tahoma', 8, 'bold'))
+
+                    # indicated that user input is invalid
                     self.user_validity = False
-            
+
+            # if input is not valid number (invalid)
             except ValueError:
-                print('Custom rate increment must be a valid number')
-                self.user_validity = False
+                
+                # allow text inside error widget to be edited
+                    self.rate_inc_frame.error_text.configure(state='normal')
+
+                    # clear any text inside error widget
+                    self.rate_inc_frame.error_text.delete('1.0', tk.END)
+
+                    # insert error message (line 1, character 0)
+                    self.rate_inc_frame.error_text.insert(
+                        '1.0',
+                        'Rate increment must be a valid number')
+
+                    # prevent text from being edited
+                    self.rate_inc_frame.error_text.configure(state='disabled')
+
+                    # configure styles
+                    self.style.configure(
+                        'RateInc.NormalBorder.TFrame',
+                        background='#ee9f9f',
+                        font=('Tahoma', 8, 'bold'))
+
+                    # indicated that user input is invalid
+                    self.user_validity = False
 
         # otherwise get rate increment from radio buttons
         else:
@@ -705,7 +827,7 @@ class DifficultiesFrame(ttk.Frame):
             borderwidth=tk_error_borderwidth,
             state='disabled',
             wrap=tk_error_wrap,
-            height=tk_error_height,
+            height=5,
             width=tk_error_width
             )
         self.error_text.grid(
@@ -833,7 +955,7 @@ class RatesFrame(ttk.Frame):
             borderwidth=tk_error_borderwidth,
             state='disabled',
             wrap=tk_error_wrap,
-            height=tk_error_height,
+            height=2,
             width=tk_error_width
             )
         self.error_text.grid(
@@ -939,6 +1061,26 @@ class RateIncrementFrame(ttk.Frame):
             width=tk_rate_increment_entry_width)
         self.custom_entry.pack(padx=1, pady=1)
 
+        # text box to display error messages
+        self.error_text = tk.Text(
+            self,
+            font=tk_error_font,
+            background=tk_error_bg,
+            foreground=tk_error_fg,
+            borderwidth=tk_error_borderwidth,
+            state='disabled',
+            wrap=tk_error_wrap,
+            height=2,
+            width=tk_error_width
+            )
+        self.error_text.grid(
+            row=4,
+            column=0,
+            columnspan=2,
+            padx=(5,5), # left/right padding
+            pady=(0,5), # bottom padding
+            sticky=tk.EW
+            )
 
 class AROptionsFrame(ttk.Frame):
     '''Visible frame for difficulty selection checkboxes
