@@ -55,7 +55,7 @@ class App(tk.Tk):
             pady=(0,4)) # bottom padding
 
         self.diffs_border = BorderFrame(self.frame0)
-        self.diffs_border.configure(style='NormalBorder.TFrame')
+        self.diffs_border.configure(style='Diffs.NormalBorder.TFrame')
         self.diffs_border.pack(
             padx=(8,0), # left padding
             pady=(0,4), # bottom padding
@@ -63,7 +63,7 @@ class App(tk.Tk):
             expand=True) # take up rest of vert and horz space
 
         self.rates_border = BorderFrame(self.frame1)
-        self.rates_border.configure(style='NormalBorder.TFrame')
+        self.rates_border.configure(style='Rates.NormalBorder.TFrame')
         self.rates_border.pack(
             padx=(4,0), # left padding
             pady=(0,4), # bottom padding
@@ -72,7 +72,7 @@ class App(tk.Tk):
 
         
         self.rate_inc_border = BorderFrame(self.frame1)
-        self.rate_inc_border.configure(style='NormalBorder.TFrame')
+        self.rate_inc_border.configure(style='RateInc.NormalBorder.TFrame')
         self.rate_inc_border.pack(
             padx=(4,0), # left padding
             pady=(0,4), # bottom padding
@@ -193,8 +193,14 @@ class App(tk.Tk):
 
         # "required" ttk labels
         self.style.configure(
-            'Required.Heading.TLabel',
-            foreground='#aeb9ef')
+            'Diffs.Required.TLabel', # difficulties
+            foreground='#aeb9ef',
+            font=('Tahoma', 8, 'bold'))
+
+        self.style.configure(
+            'Rates.Required.TLabel', # rates
+            foreground='#aeb9ef',
+            font=('Tahoma', 8, 'bold'))
 
         # ttk buttons
         self.style.configure(
@@ -310,7 +316,7 @@ class App(tk.Tk):
         tk_error_font = ('Tahoma', 8)
 
         tk_error_bg = '#2d2d39'
-        tk_error_fg = '#ffffff'
+        tk_error_fg = '#ee9f9f'
 
         tk_error_borderwidth = 0
 
@@ -328,6 +334,18 @@ class App(tk.Tk):
 
         self.style.configure(
             'NormalBorder.TFrame',
+            background='#aeb9ef')
+
+        self.style.configure(
+            'Diffs.NormalBorder.TFrame', # difficulties
+            background='#aeb9ef')
+
+        self.style.configure(
+            'Rates.NormalBorder.TFrame', # rates
+            background='#aeb9ef')
+
+        self.style.configure(
+            'RateInc.NormalBorder.TFrame', # rate increment
             background='#aeb9ef')
 
         # visible frames (that contain widgets)
@@ -357,6 +375,29 @@ class App(tk.Tk):
 
         # variable to keep track of validity of user input
         self.user_validity = True
+
+        # reset styles to default
+        self.style.configure(
+            'Diffs.NormalBorder.TFrame', # difficulties
+            background='#aeb9ef')
+
+        self.style.configure(
+            'Diffs.Required.TLabel', # difficulties
+            foreground='#aeb9ef',
+            font=('Tahoma', 8, 'bold'))
+
+        self.style.configure(
+            'Rates.NormalBorder.TFrame', # rates
+            background='#aeb9ef')
+
+        self.style.configure(
+            'Rates.Required.TLabel', # rates
+            foreground='#aeb9ef',
+            font=('Tahoma', 8, 'bold'))
+
+        self.style.configure(
+            'RateInc.NormalBorder.TFrame', # rate increment
+            background='#aeb9ef')
         
         # check status of difficulty checkboxes and add
         # difficulties to the list if they are selected
@@ -386,6 +427,16 @@ class App(tk.Tk):
             # prevent text from being edited
             self.diffs_frame.error_text.configure(state='disabled')
 
+            # configure styles
+            self.style.configure(
+                'Diffs.NormalBorder.TFrame',
+                background='#ee9f9f')
+
+            self.style.configure(
+                'Diffs.Required.TLabel',
+                foreground='#ee9f9f',
+                font=('Tahoma', 8, 'bold'))
+
             # indicate that user input is invalid
             self.user_validity = False
 
@@ -395,7 +446,7 @@ class App(tk.Tk):
             # allow text to be edited
             self.diffs_frame.error_text.configure(state='normal')
             
-            # clear any text
+            # clear error message in text widget
             self.diffs_frame.error_text.delete('1.0', tk.END)
 
             # prevent text from being edited
@@ -406,8 +457,10 @@ class App(tk.Tk):
             self.user_min = float(self.rates_frame.min_var.get())
             self.user_max = float(self.rates_frame.max_var.get())
 
-            # minimum rate cannot be zero or negative
+            # if minimum rate is zero or negative
             if self.user_min <= 0:
+
+                
                 print('Rates cannot be zero or negative')
                 self.user_validity = False
 
@@ -570,7 +623,7 @@ class DifficultiesFrame(ttk.Frame):
         self.required_label = ttk.Label(
             self,
             text='*Required',
-            style='Required.Heading.TLabel')
+            style='Diffs.Required.TLabel')
         self.required_label.grid(
             row=1,
             column=0,
@@ -695,7 +748,7 @@ class RatesFrame(ttk.Frame):
         self.required_label = ttk.Label(
             self,
             text='*Required',
-            style='Required.Heading.TLabel')
+            style='Rates.Required.TLabel')
         self.required_label.grid(
             row=1,
             column=0,
@@ -771,6 +824,26 @@ class RatesFrame(ttk.Frame):
             width=1 # width depends on length of rate inc frame (fill=tk.X)
             )
         self.max_entry.pack(padx=1, pady=1, fill=tk.X)
+
+        self.error_text = tk.Text(
+            self,
+            font=tk_error_font,
+            background=tk_error_bg,
+            foreground=tk_error_fg,
+            borderwidth=tk_error_borderwidth,
+            state='disabled',
+            wrap=tk_error_wrap,
+            height=tk_error_height,
+            width=tk_error_width
+            )
+        self.error_text.grid(
+            row=4,
+            column=0,
+            columnspan=2,
+            padx=(5,5), # left/right padding
+            pady=(0,5), # bottom padding
+            sticky=tk.EW
+            )
 
 
 class RateIncrementFrame(ttk.Frame):
