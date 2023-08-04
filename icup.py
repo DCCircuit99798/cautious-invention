@@ -322,7 +322,6 @@ class App(tk.Tk):
 
         tk_error_wrap = tk.WORD
 
-        tk_error_height = 5
         tk_error_width = 1 # width controlled by sticky=tk.EW within frame
 
 
@@ -617,7 +616,70 @@ class App(tk.Tk):
         else:
             self.user_rate_inc = self.rate_inc_frame.var.get()
 
+        
+        # AR Option #1:
+        # if type and/or value are inputted, perform validity checks
+        if (self.ar_frame.type1.get() != '' or
+            self.ar_frame.value1.get() != ''):
 
+            # get AR type
+            self.user_ar_type1 = self.ar_frame.type1.get()
+
+            # if AR type is not filled out (invalid)
+            if self.user_ar_type1 == None:
+                print('Both AR type and value must be filled in')
+                self.user_validity = False
+
+            # if AR type is filled, check value
+            else:
+                try:
+                    # get AR value
+                    self.user_ar_value1 = float(self.ar_frame.value1.get())
+
+                    # if value zero or negative (invalid)
+                    if self.user_ar_value1 <= 0:
+                        print('AR values cannot be zero or negative')
+                        self.user_validity = False
+                    
+                    # xmod value must be between 0.001 and 4 (inclusive)
+                    if (self.user_ar_type1 == 'x' and
+                        self.user_ar_value1 < 0.001 or
+                        self.user_ar_value1 > 4):
+                        print('xmod value must be between ' \
+                              '0.001 and 4 (inclusive)')
+                        self.user_validity = False
+
+                    # cmod value must be between 120 and 500 (inclusive)
+                    elif (self.user_ar_type1 == 'c' and
+                        self.user_ar_value1 < 120 or
+                        self.user_ar_value1 > 500):
+                        print('cmod value must be between ' \
+                              '120 and 500 (inclusive)')
+                        self.user_validity = False
+
+                    # Cmod value (like lowercase c but scales with rates)
+                    # must be between 120 and 500 for all rates
+                    elif (self.user_ar_type1 == 'C' and
+                        self.user_ar_value1 * self.user_min < 120 or
+                        self.user_ar_value1 * self.user_max > 500):
+                        print('Cmod value must between 120 and 500 ' \
+                              '(inclusive) for all rates')
+                        self.user_validity = False
+
+                    # if value passed all validity checks
+                    else:
+
+                        # append type and value to list
+                        self.user_ar_option1.append(self.user_ar_type1)
+                        self.user_ar_option1.append(self.user_ar_value1)
+
+                # if value is not valid number (invalid)
+                except ValueError:
+                    print('Both AR type and value must be filled in')
+
+                
+
+        '''
         # AR Option #1:
         # get AR type
         self.user_ar_type1 = self.ar_frame.type1.get()
@@ -636,6 +698,7 @@ class App(tk.Tk):
             # otherwise, check next AR option
             except ValueError:
                 pass
+        '''
                 
         # AR Option #2:
         # get AR type
