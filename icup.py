@@ -20,7 +20,7 @@ class App(tk.Tk):
 
         # configure window
         self.title("Idiot Caleb's Uprating Project")
-        self.geometry('520x260')
+        self.geometry('520x360')
         self.configure(bg='#1e2129')
         #self.resizable(False, False)
 
@@ -80,7 +80,7 @@ class App(tk.Tk):
             expand=True) # space in frame1 is shared between rates and rate inc
 
         self.ar_border = BorderFrame(self.frame2)
-        self.ar_border.configure(style='NormalBorder.TFrame')
+        self.ar_border.configure(style='AR.NormalBorder.TFrame')
         self.ar_border.pack(
             padx=(4,0), # left padding
             pady=(0,4), # bottom padding
@@ -189,17 +189,6 @@ class App(tk.Tk):
         # heading ttk labels
         self.style.configure(
             'Heading.TLabel',
-            font=('Tahoma', 8, 'bold'))
-
-        # "required" ttk labels
-        self.style.configure(
-            'Diffs.Required.TLabel', # difficulties
-            foreground='#aeb9ef',
-            font=('Tahoma', 8, 'bold'))
-
-        self.style.configure(
-            'Rates.Required.TLabel', # rates
-            foreground='#aeb9ef',
             font=('Tahoma', 8, 'bold'))
 
         # ttk buttons
@@ -335,18 +324,6 @@ class App(tk.Tk):
             'NormalBorder.TFrame',
             background='#aeb9ef')
 
-        self.style.configure(
-            'Diffs.NormalBorder.TFrame', # difficulties
-            background='#aeb9ef')
-
-        self.style.configure(
-            'Rates.NormalBorder.TFrame', # rates
-            background='#aeb9ef')
-
-        self.style.configure(
-            'RateInc.NormalBorder.TFrame', # rate increment
-            background='#aeb9ef')
-
         # visible frames (that contain widgets)
         self.style.configure(
             'Normal.TFrame',
@@ -356,6 +333,63 @@ class App(tk.Tk):
         self.style.configure(
             'TFrame',
             background='#1e2129')
+
+        # styles for individual borders to be configured for errors
+        self.style.configure(
+            'Diffs.NormalBorder.TFrame',
+            background='#aeb9ef')
+
+        self.style.configure(
+            'Rates.NormalBorder.TFrame',
+            background='#aeb9ef')
+
+        self.style.configure(
+            'RateInc.NormalBorder.TFrame',
+            background='#aeb9ef')
+
+        self.style.configure(
+            'AR.NormalBorder.TFrame',
+            background='#aeb9ef')
+
+        self.style.configure(
+            'Diffs.Required.TLabel',
+            foreground='#aeb9ef',
+            font=('Tahoma', 8, 'bold'))
+
+        self.style.configure(
+            'Rates.Required.TLabel',
+            foreground='#aeb9ef',
+            font=('Tahoma', 8, 'bold'))
+
+        self.style.configure(
+            'ARCombo1.WidgetBorder.TFrame',
+            background='#ffffff',
+            relief='flat')
+
+        self.style.configure(
+            'ARCombo2.WidgetBorder.TFrame',
+            background='#ffffff',
+            relief='flat')
+
+        self.style.configure(
+            'ARCombo3.WidgetBorder.TFrame',
+            background='#ffffff',
+            relief='flat')
+
+        self.style.configure(
+            'AREntry1.WidgetBorder.TFrame',
+            background='#ffffff',
+            relief='flat')
+
+        self.style.configure(
+            'AREntry2.WidgetBorder.TFrame',
+            background='#ffffff',
+            relief='flat')
+
+        self.style.configure(
+            'AREntry3.WidgetBorder.TFrame',
+            background='#ffffff',
+            relief='flat')
 
 
     def start(self):
@@ -377,42 +411,85 @@ class App(tk.Tk):
 
         # reset styles to default
         self.style.configure(
-            'Diffs.NormalBorder.TFrame', # difficulties
+            'Diffs.NormalBorder.TFrame',
             background='#aeb9ef')
 
         self.style.configure(
-            'Diffs.Required.TLabel', # difficulties
+            'Diffs.Required.TLabel',
             foreground='#aeb9ef',
             font=('Tahoma', 8, 'bold'))
 
         self.style.configure(
-            'Rates.NormalBorder.TFrame', # rates
+            'Rates.NormalBorder.TFrame',
             background='#aeb9ef')
 
         self.style.configure(
-            'Rates.Required.TLabel', # rates
+            'Rates.Required.TLabel',
             foreground='#aeb9ef',
             font=('Tahoma', 8, 'bold'))
 
         self.style.configure(
-            'RateInc.NormalBorder.TFrame', # rate increment
+            'RateInc.NormalBorder.TFrame',
             background='#aeb9ef')
+
+        self.style.configure(
+            'AR.NormalBorder.TFrame',
+            background='#aeb9ef')
+
+        self.style.configure(
+            'ARCombo1.WidgetBorder.TFrame',
+            background='#ffffff',
+            relief='flat')
+
+        self.style.configure(
+            'ARCombo2.WidgetBorder.TFrame',
+            background='#ffffff',
+            relief='flat')
+
+        self.style.configure(
+            'ARCombo3.WidgetBorder.TFrame',
+            background='#ffffff',
+            relief='flat')
+
+        self.style.configure(
+            'AREntry1.WidgetBorder.TFrame',
+            background='#ffffff',
+            relief='flat')
+
+        self.style.configure(
+            'AREntry2.WidgetBorder.TFrame',
+            background='#ffffff',
+            relief='flat')
+
+        self.style.configure(
+            'AREntry3.WidgetBorder.TFrame',
+            background='#ffffff',
+            relief='flat')
 
         # clear all error text messages
         # allow text in error text widgets to be edited
         self.diffs_frame.error_text.configure(state='normal')
         self.rates_frame.error_text.configure(state='normal')
         self.rate_inc_frame.error_text.configure(state='normal')
+        self.ar_frame.error_text1.configure(state='normal')
+        self.ar_frame.error_text2.configure(state='normal')
+        self.ar_frame.error_text3.configure(state='normal')
         
         # clear error message in text widgets
         self.diffs_frame.error_text.delete('1.0', tk.END)
         self.rates_frame.error_text.delete('1.0', tk.END)
         self.rate_inc_frame.error_text.delete('1.0', tk.END)
+        self.ar_frame.error_text1.delete('1.0', tk.END)
+        self.ar_frame.error_text2.delete('1.0', tk.END)
+        self.ar_frame.error_text3.delete('1.0', tk.END)
 
         # prevent text from being edited
         self.diffs_frame.error_text.configure(state='disabled')
         self.rates_frame.error_text.configure(state='disabled')
         self.rate_inc_frame.error_text.configure(state='disabled')
+        self.ar_frame.error_text1.configure(state='disabled')
+        self.ar_frame.error_text2.configure(state='disabled')
+        self.ar_frame.error_text3.configure(state='disabled')
         
         # check status of difficulty checkboxes and add
         # difficulties to the list if they are selected
@@ -583,7 +660,7 @@ class App(tk.Tk):
                         background='#ee9f9f',
                         font=('Tahoma', 8, 'bold'))
 
-                    # indicated that user input is invalid
+                    # indicate that user input is invalid
                     self.user_validity = False
 
             # if input is not valid number (invalid)
@@ -626,44 +703,124 @@ class App(tk.Tk):
             self.user_ar_type1 = self.ar_frame.type1.get()
 
             # if AR type is not filled out (invalid)
-            if self.user_ar_type1 == None:
-                print('Both AR type and value must be filled in')
-                self.user_validity = False
+            if self.user_ar_type1 == '':
+                
+                # display error message
+                    self.ar_error(
+                        1,
+                        'Both AR type and value must be filled in')
+
+                    # configure styles
+                    self.style.configure(
+                        'AR.NormalBorder.TFrame',
+                        background='#ee9f9f')
+
+                    self.style.configure(
+                        'ARCombo1.WidgetBorder.TFrame',
+                        background='#ee9f9f',
+                        relief='flat')
+
+                    # indicate that user input is invalid
+                    self.user_validity = False
 
             # if AR type is filled, check value
             else:
                 try:
                     # get AR value
                     self.user_ar_value1 = float(self.ar_frame.value1.get())
-
+                    
                     # if value zero or negative (invalid)
                     if self.user_ar_value1 <= 0:
-                        print('AR values cannot be zero or negative')
+
+                        # display error message
+                        self.ar_error(
+                            1,
+                            'AR values cannot be zero or negative')
+
+                        # configure styles
+                        self.style.configure(
+                            'AR.NormalBorder.TFrame',
+                            background='#ee9f9f')
+
+                        self.style.configure(
+                            'AREntry1.WidgetBorder.TFrame',
+                            background='#ee9f9f',
+                            relief='flat')
+
+                        # indicate that user input is invalid
                         self.user_validity = False
                     
                     # xmod value must be between 0.001 and 4 (inclusive)
-                    if (self.user_ar_type1 == 'x' and
-                        self.user_ar_value1 < 0.001 or
-                        self.user_ar_value1 > 4):
-                        print('xmod value must be between ' \
-                              '0.001 and 4 (inclusive)')
+                    elif (self.user_ar_type1 == 'x' and
+                        (self.user_ar_value1 < 0.001 or
+                        self.user_ar_value1 > 4)):
+
+                        # display error message
+                        self.ar_error(
+                            1,
+                            'xmod value must be between ' \
+                            '0.001 and 4 (inclusive)')
+
+                        # configure styles
+                        self.style.configure(
+                            'AR.NormalBorder.TFrame',
+                            background='#ee9f9f')
+
+                        self.style.configure(
+                            'AREntry1.WidgetBorder.TFrame',
+                            background='#ee9f9f',
+                            relief='flat')
+
+                        # indicate that user input is invalid
                         self.user_validity = False
 
                     # cmod value must be between 120 and 500 (inclusive)
+                    # for all rates (lowercase c scales with rates)
                     elif (self.user_ar_type1 == 'c' and
-                        self.user_ar_value1 < 120 or
-                        self.user_ar_value1 > 500):
-                        print('cmod value must be between ' \
-                              '120 and 500 (inclusive)')
+                        (self.user_min * self.user_ar_value1 < 120 or
+                        self.user_max * self.user_ar_value1 > 500)):
+
+                        # display error message
+                        self.ar_error(
+                            1,
+                            'cmod value must be between 120 and 500 ' \
+                            '(inclusive) for all rates')
+
+                        # configure styles
+                        self.style.configure(
+                            'AR.NormalBorder.TFrame',
+                            background='#ee9f9f')
+
+                        self.style.configure(
+                            'AREntry1.WidgetBorder.TFrame',
+                            background='#ee9f9f',
+                            relief='flat')
+
+                        # indicate that user input is invalid
                         self.user_validity = False
 
-                    # Cmod value (like lowercase c but scales with rates)
-                    # must be between 120 and 500 for all rates
+                    # Cmod value must be between 120 and 500
                     elif (self.user_ar_type1 == 'C' and
-                        self.user_ar_value1 * self.user_min < 120 or
-                        self.user_ar_value1 * self.user_max > 500):
-                        print('Cmod value must between 120 and 500 ' \
-                              '(inclusive) for all rates')
+                        (self.user_ar_value1 < 120 or
+                        self.user_ar_value1 > 500)):
+
+                        # display error message
+                        self.ar_error(
+                            1,
+                            'Cmod value must be between ' \
+                            '120 and 500 (inclusive)')
+
+                        # configure styles
+                        self.style.configure(
+                            'AR.NormalBorder.TFrame',
+                            background='#ee9f9f')
+
+                        self.style.configure(
+                            'AREntry1.WidgetBorder.TFrame',
+                            background='#ee9f9f',
+                            relief='flat')
+
+                        # indicate that user input is invalid
                         self.user_validity = False
 
                     # if value passed all validity checks
@@ -675,75 +832,345 @@ class App(tk.Tk):
 
                 # if value is not valid number (invalid)
                 except ValueError:
-                    print('Both AR type and value must be filled in')
 
-                
+                    # display error message
+                    self.ar_error(
+                        1,
+                        'Both AR type and value must be filled in')
 
-        '''
-        # AR Option #1:
-        # get AR type
-        self.user_ar_type1 = self.ar_frame.type1.get()
+                    # configure styles
+                    self.style.configure(
+                        'AR.NormalBorder.TFrame',
+                        background='#ee9f9f')
 
-        # if type is chosen, get AR value
-        if self.user_ar_type1 != None:
-            
-            try:
-                # get AR value
-                self.user_ar_value1 = float(self.ar_frame.value1.get())
+                    self.style.configure(
+                        'AREntry1.WidgetBorder.TFrame',
+                        background='#ee9f9f',
+                        relief='flat')
 
-                # append type and value to list if value is valid
-                self.user_ar_option1.append(self.user_ar_type1)
-                self.user_ar_option1.append(self.user_ar_value1)
+                    # indicate that user input is invalid
+                    self.user_validity = False
 
-            # otherwise, check next AR option
-            except ValueError:
-                pass
-        '''
-                
         # AR Option #2:
-        # get AR type
-        self.user_ar_type2 = self.ar_frame.type2.get()
+        # if type and/or value are inputted, perform validity checks
+        if (self.ar_frame.type2.get() != '' or
+            self.ar_frame.value2.get() != ''):
 
-        # if type is chosen, get AR value
-        if self.user_ar_type2 != None:
-            
-            try:
-                # get AR value
-                self.user_ar_value2 = float(self.ar_frame.value2.get())
+            # get AR type
+            self.user_ar_type2 = self.ar_frame.type2.get()
 
-                # append type and value to list if value is valid
-                self.user_ar_option2.append(self.user_ar_type2)
-                self.user_ar_option2.append(self.user_ar_value2)
+            # if AR type is not filled out (invalid)
+            if self.user_ar_type2 == '':
+                
+                # display error message
+                    self.ar_error(
+                        2,
+                        'Both AR type and value must be filled in')
 
-            # otherwise, check next AR option
-            except ValueError:
-                pass
+                    # configure styles
+                    self.style.configure(
+                        'AR.NormalBorder.TFrame',
+                        background='#ee9f9f')
 
+                    self.style.configure(
+                        'ARCombo2.WidgetBorder.TFrame',
+                        background='#ee9f9f',
+                        relief='flat')
+
+                    # indicate that user input is invalid
+                    self.user_validity = False
+
+            # if AR type is filled, check value
+            else:
+                try:
+                    # get AR value
+                    self.user_ar_value2 = float(self.ar_frame.value2.get())
+                    
+                    # if value zero or negative (invalid)
+                    if self.user_ar_value2 <= 0:
+
+                        # display error message
+                        self.ar_error(
+                            2,
+                            'AR values cannot be zero or negative')
+
+                        # configure styles
+                        self.style.configure(
+                            'AR.NormalBorder.TFrame',
+                            background='#ee9f9f')
+
+                        self.style.configure(
+                            'AREntry2.WidgetBorder.TFrame',
+                            background='#ee9f9f',
+                            relief='flat')
+
+                        # indicate that user input is invalid
+                        self.user_validity = False
+                    
+                    # xmod value must be between 0.001 and 4 (inclusive)
+                    elif (self.user_ar_type2 == 'x' and
+                        (self.user_ar_value2 < 0.001 or
+                        self.user_ar_value2 > 4)):
+
+                        # display error message
+                        self.ar_error(
+                            2,
+                            'xmod value must be between ' \
+                            '0.001 and 4 (inclusive)')
+
+                        # configure styles
+                        self.style.configure(
+                            'AR.NormalBorder.TFrame',
+                            background='#ee9f9f')
+
+                        self.style.configure(
+                            'AREntry2.WidgetBorder.TFrame',
+                            background='#ee9f9f',
+                            relief='flat')
+
+                        # indicate that user input is invalid
+                        self.user_validity = False
+
+                    # cmod value must be between 120 and 500 (inclusive)
+                    # for all rates (lowercase c scales with rates)
+                    elif (self.user_ar_type2 == 'c' and
+                        (self.user_min * self.user_ar_value2 < 120 or
+                        self.user_max * self.user_ar_value2 > 500)):
+
+                        # display error message
+                        self.ar_error(
+                            2,
+                            'cmod value must be between 120 and 500 ' \
+                            '(inclusive) for all rates')
+
+                        # configure styles
+                        self.style.configure(
+                            'AR.NormalBorder.TFrame',
+                            background='#ee9f9f')
+
+                        self.style.configure(
+                            'AREntry2.WidgetBorder.TFrame',
+                            background='#ee9f9f',
+                            relief='flat')
+
+                        # indicate that user input is invalid
+                        self.user_validity = False
+
+                    # Cmod value must be between 120 and 500
+                    elif (self.user_ar_type2 == 'C' and
+                        (self.user_ar_value2 < 120 or
+                        self.user_ar_value2 > 500)):
+
+                        # display error message
+                        self.ar_error(
+                            2,
+                            'Cmod value must be between ' \
+                            '120 and 500 (inclusive)')
+
+                        # configure styles
+                        self.style.configure(
+                            'AR.NormalBorder.TFrame',
+                            background='#ee9f9f')
+
+                        self.style.configure(
+                            'AREntry2.WidgetBorder.TFrame',
+                            background='#ee9f9f',
+                            relief='flat')
+
+                        # indicate that user input is invalid
+                        self.user_validity = False
+
+                    # if value passed all validity checks
+                    else:
+
+                        # append type and value to list
+                        self.user_ar_option2.append(self.user_ar_type2)
+                        self.user_ar_option2.append(self.user_ar_value2)
+
+                # if value is not valid number (invalid)
+                except ValueError:
+
+                    # display error message
+                    self.ar_error(
+                        2,
+                        'Both AR type and value must be filled in')
+
+                    # configure styles
+                    self.style.configure(
+                        'AR.NormalBorder.TFrame',
+                        background='#ee9f9f')
+
+                    self.style.configure(
+                        'AREntry2.WidgetBorder.TFrame',
+                        background='#ee9f9f',
+                        relief='flat')
+
+                    # indicate that user input is invalid
+                    self.user_validity = False
+                    
         # AR Option #3:
-        # get AR type
-        self.user_ar_type3 = self.ar_frame.type3.get()
+        # if type and/or value are inputted, perform validity checks
+        if (self.ar_frame.type3.get() != '' or
+            self.ar_frame.value3.get() != ''):
 
-        # if type is chosen, get AR value
-        if self.user_ar_type3 != None:
-            
-            try:
-                # get AR value
-                self.user_ar_value3 = float(self.ar_frame.value3.get())
+            # get AR type
+            self.user_ar_type3 = self.ar_frame.type3.get()
 
-                # append type and value to list if value is valid
-                self.user_ar_option3.append(self.user_ar_type3)
-                self.user_ar_option3.append(self.user_ar_value3)
+            # if AR type is not filled out (invalid)
+            if self.user_ar_type3 == '':
+                
+                # display error message
+                    self.ar_error(
+                        3,
+                        'Both AR type and value must be filled in')
 
-            # otherwise, check next AR option
-            except ValueError:
-                pass
+                    # configure styles
+                    self.style.configure(
+                        'AR.NormalBorder.TFrame',
+                        background='#ee9f9f')
 
+                    self.style.configure(
+                        'ARCombo3.WidgetBorder.TFrame',
+                        background='#ee9f9f',
+                        relief='flat')
+
+                    # indicate that user input is invalid
+                    self.user_validity = False
+
+            # if AR type is filled, check value
+            else:
+                try:
+                    # get AR value
+                    self.user_ar_value3 = float(self.ar_frame.value3.get())
+                    
+                    # if value zero or negative (invalid)
+                    if self.user_ar_value3 <= 0:
+
+                        # display error message
+                        self.ar_error(
+                            3,
+                            'AR values cannot be zero or negative')
+
+                        # configure styles
+                        self.style.configure(
+                            'AR.NormalBorder.TFrame',
+                            background='#ee9f9f')
+
+                        self.style.configure(
+                            'AREntry3.WidgetBorder.TFrame',
+                            background='#ee9f9f',
+                            relief='flat')
+
+                        # indicate that user input is invalid
+                        self.user_validity = False
+                    
+                    # xmod value must be between 0.001 and 4 (inclusive)
+                    elif (self.user_ar_type3 == 'x' and
+                        (self.user_ar_value3 < 0.001 or
+                        self.user_ar_value3 > 4)):
+
+                        # display error message
+                        self.ar_error(
+                            3,
+                            'xmod value must be between ' \
+                            '0.001 and 4 (inclusive)')
+
+                        # configure styles
+                        self.style.configure(
+                            'AR.NormalBorder.TFrame',
+                            background='#ee9f9f')
+
+                        self.style.configure(
+                            'AREntry3.WidgetBorder.TFrame',
+                            background='#ee9f9f',
+                            relief='flat')
+
+                        # indicate that user input is invalid
+                        self.user_validity = False
+
+                    # cmod value must be between 120 and 500 (inclusive)
+                    # for all rates (lowercase c scales with rates)
+                    elif (self.user_ar_type3 == 'c' and
+                        (self.user_min * self.user_ar_value3 < 120 or
+                        self.user_max * self.user_ar_value3 > 500)):
+
+                        # display error message
+                        self.ar_error(
+                            3,
+                            'cmod value must be between 120 and 500 ' \
+                            '(inclusive) for all rates')
+
+                        # configure styles
+                        self.style.configure(
+                            'AR.NormalBorder.TFrame',
+                            background='#ee9f9f')
+
+                        self.style.configure(
+                            'AREntry3.WidgetBorder.TFrame',
+                            background='#ee9f9f',
+                            relief='flat')
+
+                        # indicate that user input is invalid
+                        self.user_validity = False
+
+                    # Cmod value must be between 120 and 500
+                    elif (self.user_ar_type3 == 'C' and
+                        (self.user_ar_value3 < 120 or
+                        self.user_ar_value3 > 500)):
+
+                        # display error message
+                        self.ar_error(
+                            3,
+                            'Cmod value must be between ' \
+                            '120 and 500 (inclusive)')
+
+                        # configure styles
+                        self.style.configure(
+                            'AR.NormalBorder.TFrame',
+                            background='#ee9f9f')
+
+                        self.style.configure(
+                            'AREntry3.WidgetBorder.TFrame',
+                            background='#ee9f9f',
+                            relief='flat')
+
+                        # indicate that user input is invalid
+                        self.user_validity = False
+
+                    # if value passed all validity checks
+                    else:
+
+                        # append type and value to list
+                        self.user_ar_option3.append(self.user_ar_type3)
+                        self.user_ar_option3.append(self.user_ar_value3)
+
+                # if value is not valid number (invalid)
+                except ValueError:
+
+                    # display error message
+                    self.ar_error(
+                        3,
+                        'Both AR type and value must be filled in')
+
+                    # configure styles
+                    self.style.configure(
+                        'AR.NormalBorder.TFrame',
+                        background='#ee9f9f')
+
+                    self.style.configure(
+                        'AREntry3.WidgetBorder.TFrame',
+                        background='#ee9f9f',
+                        relief='flat')
+
+                    # indicate that user input is invalid
+                    self.user_validity = False
 
         # get status of "pitch rates"
         self.user_pitch_rates = self.other_frame.pitch_rates_var.get()
 
         # print collected user info
         # NOTE: only for debugging purposes, remove in final program
+        '''
         print(self.user_diffs)
         print(self.user_min)
         print(self.user_max)
@@ -752,11 +1179,69 @@ class App(tk.Tk):
         print(self.user_ar_option2)
         print(self.user_ar_option3)
         print(self.user_pitch_rates)
+        '''
 
         # print self.user_validity
         # NOTE: only for debugging purpose, remove in final program
         print()
         print(self.user_validity)
+
+    def ar_error(self, index, message):
+        '''Displays error message for an AR option in the first
+           available text widget'''
+
+        # display error message in first text widget if it is empty
+        if self.ar_frame.error_text1.get('1.0', 'end-1c') == '':
+
+            # allow text inside error widget to be edited
+            self.ar_frame.error_text1.configure(state='normal')
+
+            # clear any text inside error widget
+            self.ar_frame.error_text1.delete('1.0', tk.END)
+
+            # insert error message
+            self.ar_frame.error_text1.insert(
+                '1.0',
+                'AR Option #{}: {}'.format(index, message))
+
+            # prevent text from being edited
+            self.ar_frame.error_text1.configure(state='disabled')
+
+        # if first text widget is already filled,
+        # display errors in second text widget if it is empty
+        elif self.ar_frame.error_text2.get('1.0', 'end-1c') == '':
+
+            # allow text inside error widget to be edited
+            self.ar_frame.error_text2.configure(state='normal')
+
+            # clear any text inside error widget
+            self.ar_frame.error_text2.delete('1.0', tk.END)
+
+            # insert error message
+            self.ar_frame.error_text2.insert(
+                '1.0',
+                'AR Option #{}: {}'.format(index, message))
+
+            # prevent text from being edited
+            self.ar_frame.error_text2.configure(state='disabled')
+
+        # if both the first and second text widgets are filled,
+        # display error messages in the third text widget
+        else:
+            
+            # allow text inside error widget to be edited
+            self.ar_frame.error_text3.configure(state='normal')
+
+            # clear any text inside error widget
+            self.ar_frame.error_text3.delete('1.0', tk.END)
+
+            # insert error message
+            self.ar_frame.error_text3.insert(
+                '1.0',
+                'AR Option #{}: {}'.format(index, message))
+
+            # prevent text from being edited
+            self.ar_frame.error_text3.configure(state='disabled')
 
 class OuterFrame(ttk.Frame):
     '''This class creates invisible frames for the buttons and visible
@@ -1060,19 +1545,7 @@ class RateIncrementFrame(ttk.Frame):
         # variable to store selected rate increment
         self.var = tk.StringVar()
 
-        # variable to store custom rate increment in entry field
-        self.custom_var = tk.StringVar()
-
-        # border for custom entry field
-        self.entry_border = BorderFrame(self)
-        self.entry_border.configure(style='WidgetBorder.TFrame')
-        self.entry_border.grid(
-            row=3,
-            column=1,
-            padx=(0,5), # right padding
-            pady=(0,5) # bottom padding
-            )
-
+        
         # radio buttons
         self.radio1 = ttk.Radiobutton(
             self,
@@ -1110,6 +1583,19 @@ class RateIncrementFrame(ttk.Frame):
 
         # set default value of rate increment to 0.05
         self.var.set(0.05)
+
+        # border for custom entry field
+        self.entry_border = BorderFrame(self)
+        self.entry_border.configure(style='WidgetBorder.TFrame')
+        self.entry_border.grid(
+            row=3,
+            column=1,
+            padx=(0,5), # right padding
+            pady=(0,5) # bottom padding
+            )
+        
+        # variable to store custom rate increment in entry field
+        self.custom_var = tk.StringVar()
 
         # entry field for custom rate increment
         self.custom_entry = tk.Entry(
@@ -1217,29 +1703,29 @@ class AROptionsFrame(ttk.Frame):
         self.value3 = tk.StringVar()
 
         # borders for comboboxes (dropdown menus)
-        self.checkborder1 = BorderFrame(self)
-        self.checkborder2 = BorderFrame(self)
-        self.checkborder3 = BorderFrame(self)
+        self.comboborder1 = BorderFrame(self)
+        self.comboborder2 = BorderFrame(self)
+        self.comboborder3 = BorderFrame(self)
 
-        self.checkborder1.configure(style='WidgetBorder.TFrame')
-        self.checkborder2.configure(style='WidgetBorder.TFrame')
-        self.checkborder3.configure(style='WidgetBorder.TFrame')
+        self.comboborder1.configure(style='ARCombo1.WidgetBorder.TFrame')
+        self.comboborder2.configure(style='ARCombo2.WidgetBorder.TFrame')
+        self.comboborder3.configure(style='ARCombo3.WidgetBorder.TFrame')
 
-        self.checkborder1.grid(
+        self.comboborder1.grid(
             row=1,
             column=2,
             padx=(2,0), # left padding
             pady=(1,1), # top/bottom padding
             )
         
-        self.checkborder2.grid(
+        self.comboborder2.grid(
             row=2,
             column=2,
             padx=(2,0), # left padding
             pady=(1,1), # top/bottom padding
             )
         
-        self.checkborder3.grid(
+        self.comboborder3.grid(
             row=3,
             column=2,
             padx=(2,0), # left padding
@@ -1248,15 +1734,15 @@ class AROptionsFrame(ttk.Frame):
 
         # comboboxes (dropdown menus)
         self.combo1 = ttk.Combobox(
-            self.checkborder1,
+            self.comboborder1,
             textvariable=self.type1,
             width=ttk_ar_options_combo_width)
         self.combo2 = ttk.Combobox(
-            self.checkborder2,
+            self.comboborder2,
             textvariable=self.type2,
             width=ttk_ar_options_combo_width)
         self.combo3 = ttk.Combobox(
-            self.checkborder3,
+            self.comboborder3,
             textvariable=self.type3,
             width=ttk_ar_options_combo_width)
 
@@ -1265,9 +1751,9 @@ class AROptionsFrame(ttk.Frame):
         self.combo3.pack(padx=1, pady=1)
 
         # define possible values for comboboxes
-        self.combo1['values'] = ('x', 'c', 'C')
-        self.combo2['values'] = ('x', 'c', 'C')
-        self.combo3['values'] = ('x', 'c', 'C')
+        self.combo1['values'] = ('', 'x', 'c', 'C')
+        self.combo2['values'] = ('', 'x', 'c', 'C')
+        self.combo3['values'] = ('', 'x', 'c', 'C')
 
         # prevent user from entering a custom value in the comboboxes
         self.combo1['state'] = 'readonly'
@@ -1279,9 +1765,9 @@ class AROptionsFrame(ttk.Frame):
         self.entryborder2 = BorderFrame(self)
         self.entryborder3 = BorderFrame(self)
 
-        self.entryborder1.configure(style='WidgetBorder.TFrame')
-        self.entryborder2.configure(style='WidgetBorder.TFrame')
-        self.entryborder3.configure(style='WidgetBorder.TFrame')
+        self.entryborder1.configure(style='AREntry1.WidgetBorder.TFrame')
+        self.entryborder2.configure(style='AREntry2.WidgetBorder.TFrame')
+        self.entryborder3.configure(style='AREntry3.WidgetBorder.TFrame')
 
         self.entryborder1.grid(
             row=1,
@@ -1343,6 +1829,66 @@ class AROptionsFrame(ttk.Frame):
         self.entry1.pack(padx=1, pady=1, fill=tk.X)
         self.entry2.pack(padx=1, pady=1, fill=tk.X)
         self.entry3.pack(padx=1, pady=1, fill=tk.X)
+
+        # text boxes to display error messages
+        self.error_text1 = tk.Text(
+            self,
+            font=tk_error_font,
+            background=tk_error_bg,
+            foreground=tk_error_fg,
+            borderwidth=tk_error_borderwidth,
+            state='disabled',
+            wrap=tk_error_wrap,
+            height=2,
+            width=tk_error_width
+            )
+        self.error_text2 = tk.Text(
+            self,
+            font=tk_error_font,
+            background=tk_error_bg,
+            foreground=tk_error_fg,
+            borderwidth=tk_error_borderwidth,
+            state='disabled',
+            wrap=tk_error_wrap,
+            height=2,
+            width=tk_error_width
+            )
+        self.error_text3 = tk.Text(
+            self,
+            font=tk_error_font,
+            background=tk_error_bg,
+            foreground=tk_error_fg,
+            borderwidth=tk_error_borderwidth,
+            state='disabled',
+            wrap=tk_error_wrap,
+            height=2,
+            width=tk_error_width
+            )
+        
+        self.error_text1.grid(
+            row=4,
+            column=0,
+            columnspan=4,
+            padx=(5,5), # left/right padding
+            pady=(0,5), # bottom padding
+            sticky=tk.EW
+            )
+        self.error_text2.grid(
+            row=5,
+            column=0,
+            columnspan=4,
+            padx=(5,5), # left/right padding
+            pady=(0,5), # bottom padding
+            sticky=tk.EW
+            )
+        self.error_text3.grid(
+            row=6,
+            column=0,
+            columnspan=4,
+            padx=(5,5), # left/right padding
+            pady=(0,5), # bottom padding
+            sticky=tk.EW
+            )
 
 
 class OtherFrame(ttk.Frame):
