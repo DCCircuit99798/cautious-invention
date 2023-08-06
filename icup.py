@@ -851,6 +851,14 @@ class App(tk.Tk):
                     # indicate that user input is invalid
                     self.user_validity = False
 
+                # TypeError occurs when cmod is selected
+                # and rates aren't filled out
+
+                # rates have validity check anyway,
+                # so no action needed
+                except TypeError:
+                    pass
+
         # AR Option #2:
         # if type and/or value are inputted, perform validity checks
         if (self.ar_frame.type2.get() != '' or
@@ -1007,6 +1015,14 @@ class App(tk.Tk):
 
                     # indicate that user input is invalid
                     self.user_validity = False
+
+                # TypeError occurs when cmod is selected
+                # and rates aren't filled out
+
+                # rates have validity check anyway,
+                # so no action needed
+                except TypeError:
+                    pass
                     
         # AR Option #3:
         # if type and/or value are inputted, perform validity checks
@@ -1164,6 +1180,14 @@ class App(tk.Tk):
 
                     # indicate that user input is invalid
                     self.user_validity = False
+
+                # TypeError occurs when cmod is selected
+                # and rates aren't filled out
+
+                # rates have validity check anyway,
+                # so no action needed
+                except TypeError:
+                    pass
 
         # get status of "pitch rates"
         self.user_pitch_rates = self.other_frame.pitch_rates_var.get()
