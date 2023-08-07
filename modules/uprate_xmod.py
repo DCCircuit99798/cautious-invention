@@ -40,7 +40,7 @@ for note in chart['note_list']:
     except KeyError:
         
         # change approach rate of each note to chosen multiplier
-        note["approach_rate"] = ar_rate
+        note['approach_rate'] = ar_rate
 
 # export the chart file
 with open(output_name, 'w') as output_file:

@@ -1,35 +1,50 @@
 # import required modules
 import json
 
-# ask for user info
-input_name = input("Enter filename: ")
-output_name = input("Enter output filename: ")
-rate = float(input("Enter a rate eg. 1.1: "))
+def create_file(filename, rate):
+    '''Function to change the speed of a Cytoid chart file.'''
+    
+    # attempt to open the chart file
+    try:
+        chart = json.load(open(filename, 'r', encoding='utf-8'))
 
-# NOTE: output_name will automatically be determined by the rate chosen
-# by the user in the final program
+    # print error message if file is not found
+    except FileNotFoundError:
+        print('ERROR: File not found!')
+        input()
+        exit()
 
-# attempt to open the chart file
-try:
-    chart = json.load(open(input_name, 'r', encoding='utf-8'))
+    # print error message if text file is not valid json
+    except json.JSONDecodeError:
+        print('ERROR: Invalid input file!')
+        input()
+        exit()
 
-# print error message if file is not found
-except FileNotFoundError:
-    print('ERROR: File not found!')
-    input()
-    exit()
+    # loop through tempo_list in the chart file and change each tempo value
+    # (the tempo value determines the speed of the chart)
+    for tempo in chart['tempo_list']:
+        tempo['value'] = round(tempo['value'] / rate)
 
-# print error message if text file is not valid json
-except json.JSONDecodeError:
-    print('ERROR: Invalid input file!')
-    input()
-    exit()
+    # get the index of the last dot in filename
+    last_dot = filename.rfind('.')
 
-# loop through tempo_list in the chart file and change each tempo value
-# (the tempo value determines the speed of the chart)
-for tempo in chart['tempo_list']:
-    tempo['value'] = round(tempo['value'] / rate)
+    # if file does not have extension (no dot in filename),
+    # put the rate after the entire filename
+    if last_dot == -1:
+        output_name = (filename
+                       + '_'
+                       + str(rate)
+                       + 'x')
 
-# export the chart file
-with open(output_name, 'w') as output_file:
-    json.dump(chart, output_file, indent=3)
+    # otherwise, create the output name by putting the rate
+    # in between the filename and the extension
+    else:
+        output_name = (filename[:last_dot]
+                       + '_'
+                       + str(rate)
+                       + 'x'
+                       + filename[last_dot:])
+
+    # export the chart file
+    with open(output_name, 'w') as output_file:
+        json.dump(chart, output_file, indent=3)

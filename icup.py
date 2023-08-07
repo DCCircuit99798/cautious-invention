@@ -1189,26 +1189,8 @@ class App(tk.Tk):
                 except TypeError:
                     pass
 
-        # get status of "pitch rates"
+        # get status of "pitch rates" checkbutton
         self.user_pitch_rates = self.other_frame.pitch_rates_var.get()
-
-        # print collected user info
-        # NOTE: only for debugging purposes, remove in final program
-        '''
-        print(self.user_diffs)
-        print(self.user_min)
-        print(self.user_max)
-        print(self.user_rate_inc)
-        print(self.user_ar_option1)
-        print(self.user_ar_option2)
-        print(self.user_ar_option3)
-        print(self.user_pitch_rates)
-        '''
-
-        # print self.user_validity
-        # NOTE: only for debugging purpose, remove in final program
-        print()
-        print(self.user_validity)
 
     def ar_error(self, index, message):
         '''Displays error message for an AR option in the first
