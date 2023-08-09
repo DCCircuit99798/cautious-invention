@@ -26,16 +26,32 @@ def create_file(filename, rate):
     # (allows the audio to be played properly on other programs)
     audio_rate = audio_framerate.set_frame_rate(audio.frame_rate)
 
+    # export the file
+    audio_rate.export(get_output_name(filename, rate))
+
+
+def get_output_name(filename, rate):
+    '''Function that returns the output name for an audio file being
+    worked with.'''
+
     # get the index of the last dot in filename
     last_dot = filename.rfind('.')
 
-    # create the output name by putting the rate
-    # in between the filename and the extension
-    output_name = (filename[:last_dot]
-                   + '_'
-                   + str(rate)
-                   + 'x'
-                   + filename[last_dot:])
+    # if file does not have extension (no dot in filename),
+    # put the rate after the entire filename
+    if last_dot == -1:
+        output_name = (filename
+                       + '_'
+                       + str(rate)
+                       + 'x')
 
-    # export the file
-    audio_rate.export(output_name)
+    # otherwise, create the output name by putting the rate
+    # in between the filename and the extension
+    else:
+        output_name = (filename[:last_dot]
+                       + '_'
+                       + str(rate)
+                       + 'x'
+                       + filename[last_dot:])
+
+    return output_name

@@ -25,6 +25,15 @@ def create_file(filename, rate):
     for tempo in chart['tempo_list']:
         tempo['value'] = round(tempo['value'] / rate)
 
+    # export the chart file
+    with open(get_output_name(filename, rate), 'w') as output_file:
+        json.dump(chart, output_file, indent=3)
+        
+
+def get_output_name(filename, rate):
+    '''Function that returns the output name for an audio file being
+    worked with.'''
+
     # get the index of the last dot in filename
     last_dot = filename.rfind('.')
 
@@ -45,6 +54,4 @@ def create_file(filename, rate):
                        + 'x'
                        + filename[last_dot:])
 
-    # export the chart file
-    with open(output_name, 'w') as output_file:
-        json.dump(chart, output_file, indent=3)
+    return output_name
