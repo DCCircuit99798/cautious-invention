@@ -59,7 +59,7 @@ class App(tk.Tk):
 
         # create border frames to contain widgets and visible frames
         self.choose_file_border = BorderFrame(self.frame0)
-        self.choose_file_border.configure(style='WidgetBorder.TFrame')
+        self.choose_file_border.configure(style='ChooseFile.WidgetBorder.TFrame')
         self.choose_file_border.pack(
             padx=(8,0), # left padding
             pady=(0,4)) # bottom padding
@@ -377,6 +377,10 @@ class App(tk.Tk):
             font=('Tahoma', 8, 'bold'))
 
         self.style.configure(
+            'ChooseFile.WidgetBorder.TFrame',
+            background='#ee9f9f')
+
+        self.style.configure(
             'ARCombo1.WidgetBorder.TFrame',
             background='#ffffff',
             relief='flat')
@@ -413,6 +417,9 @@ class App(tk.Tk):
         '''Allows the user to open the Cytoid level file to be
         worked with.'''
 
+        # variable to keep track of validity of Cytoid level
+        self.level_validity = True
+
         # open menu to let user choose file
         # and tracks the path of the chosen file
         self.user_level_path = filedialog.askopenfilename(
@@ -431,14 +438,23 @@ class App(tk.Tk):
                     'Please select a file'
             )
 
+            self.level_validity = False
+
+            # configure 'choose file' button border to red
+            self.style.configure(
+                'ChooseFile.WidgetBorder.TFrame',
+                background='#ee9f9f')
+                
             return
 
         # create list of files to delete after all files have
         # been checked
         self.files_to_delete = []
 
-        # variable to keep track of validity of Cytoid level
-        self.level_validity = True
+        # reset styles to default
+        self.style.configure(
+            'ChooseFile.WidgetBorder.TFrame',
+            background='#ffffff')
 
         # opens the Cytoid level file in read mode
         with ZipFile(self.user_level_path, 'r') as level:
@@ -628,6 +644,18 @@ class App(tk.Tk):
                 )
 
             self.level_validity = False
+
+        # configure 'choose file' button border to white if level is valid
+        if self.level_validity == True:
+            self.style.configure(
+                'ChooseFile.WidgetBorder.TFrame',
+                background='#ffffff')
+
+        # configure 'choose file' button border to red if level is invalid
+        if self.level_validity == False:
+            self.style.configure(
+                'ChooseFile.WidgetBorder.TFrame',
+                background='#ee9f9f')
 
         # delete extracted files after everything has been checked
         for path in self.files_to_delete:
@@ -1441,8 +1469,17 @@ class App(tk.Tk):
         # get status of "pitch rates" checkbutton
         #self.user_pitch_rates = self.other_frame.pitch_rates_var.get()
 
+        # display error messagebox if Cytoid level is invalid
+        if self.level_validity == False:
+            messagebox.showerror(
+                'Error',
+                'Chosen Cytoid level file is not valid'
+                )
+
         # call function to work with necessary files
-        self.work_with_files()
+        # if both user input and Cytoid level file are valid
+        elif self.level_validity == True and self.user_validity == True:
+            self.work_with_files()
 
     def ar_error(self, index, message):
         '''Displays error message for an AR option in the first
@@ -1505,6 +1542,9 @@ class App(tk.Tk):
         '''This function starts working with files and creating
         new levels.'''
 
+        print('start working with files')
+
+        '''
         # create list of files to delete after all new levels have
         # been created
         self.files_to_delete = []
@@ -1543,6 +1583,7 @@ class App(tk.Tk):
 
                 # add music path to list of files to delete
                 self.files_to_delete.append(chart['path'])
+        '''
 
         
             
