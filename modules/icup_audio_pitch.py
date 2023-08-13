@@ -1,4 +1,4 @@
-# import the required modules
+# import required modules
 from pydub import AudioSegment
 import ffmpeg
 

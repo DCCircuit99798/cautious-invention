@@ -1,16 +1,26 @@
 # import required modules
-import tkinter as tk
-from tkinter import ttk
-from tkinter import filedialog
+import json
 import os
 from pathlib import Path
+import tkinter as tk
+from tkinter import filedialog
+from tkinter import messagebox
+from tkinter import ttk
 import sys
+from zipfile import ZipFile
 
-# get path of modules that aren't built-in
+# add modules folder to system path
+sys.path.append(str(Path(os.getcwd()) / 'modules'))
 
-# append path to system
+# import third party modules
+from pydub import AudioSegment
+import ffmpeg
 
-# import required modules
+# import custom modules
+import icup_audio_pitch
+import icup_chart
+import icup_json
+import icup_xmod
 
 class App(tk.Tk):
     '''Create the main window of the program'''
@@ -87,12 +97,14 @@ class App(tk.Tk):
             fill=tk.BOTH,
             expand=True) # take up rest of vert and horz space
 
+        '''
         self.other_border = BorderFrame(self.frame2)
         self.other_border.configure(style='NormalBorder.TFrame')
         self.other_border.pack(
             padx=(4,0), # left padding
             pady=(0,4), # bottom padding
             fill=tk.X) # take up all horz space
+        '''
 
         self.start_border = BorderFrame(self.frame2)
         self.start_border.configure(style='WidgetBorder.TFrame')
@@ -104,7 +116,8 @@ class App(tk.Tk):
         # create buttons and frames for layout of program
         self.choose_file_button = ttk.Button(
             self.choose_file_border,
-            text='Choose File')
+            text='Choose File',
+            command=self.choose_file)
         self.choose_file_button.pack(
             padx=1,
             pady=1,
@@ -142,17 +155,19 @@ class App(tk.Tk):
             fill=tk.BOTH,
             expand=True) # take up rest of vert and horz space
 
+        '''
         self.other_frame = OtherFrame(self.other_border)
         self.other_frame.configure(style='Normal.TFrame')
         self.other_frame.pack(
             padx=1,
             pady=1,
             fill=tk.X) # take up all horz space
-
+        '''
+        
         self.start_button = ttk.Button(
             self.start_border,
             text='Start!',
-            command=self.start)
+            command=self.check_user_validity)
         self.start_button.pack(
             padx=1,
             pady=1,
@@ -391,10 +406,244 @@ class App(tk.Tk):
             background='#ffffff',
             relief='flat')
 
+        # mark Cytoid level as invalid before user opens a file
+        self.level_validity = False
 
-    def start(self):
-        '''Start working with files and creating new levels.
-           NOTE: Only prints information in terminal as of now.'''
+    def choose_file(self):
+        '''Allows the user to open the Cytoid level file to be
+        worked with.'''
+
+        # open menu to let user choose file
+        # and tracks the path of the chosen file
+        self.user_level_path = filedialog.askopenfilename(
+            initialdir = './',
+            defaultextension = '*.*',
+            title = 'Open a Cytoid level file',
+            filetypes = (('.CYTOIDLEVEL file','*.cytoidlevel'),
+                         ('.zip file','*.zip'),
+                         ('All files','*.*'))
+            )
+
+        # display messagebox if user does not select a file
+        if self.user_level_path == '':
+            messagebox.showerror(
+                    'Error',
+                    'Please select a file'
+            )
+
+            return
+
+        # create list of files to delete after all files have
+        # been checked
+        self.files_to_delete = []
+
+        # variable to keep track of validity of Cytoid level
+        self.level_validity = True
+
+        # opens the Cytoid level file in read mode
+        with ZipFile(self.user_level_path, 'r') as level:
+
+            # extract level.json file from Cytoid level file
+            # (level.json is required for all levels)
+            try:
+                level.extract('level.json')
+                self.files_to_delete.append('level.json')
+
+            # if level.json does not exist, print error message
+            # and mark Cytoid level file as invalid
+            except KeyError:
+                messagebox.showerror(
+                    'Error',
+                    'level.json file does not exist within Cytoid level file'
+                )
+
+                self.level_validity = False
+
+        # open level.json to get paths of other needed files
+        self.user_json = json.load(open(
+            'level.json',
+            'r',
+            encoding='utf-8')
+            )
+
+        # list of available diffs with valid music and chart files
+        self.diffs_available = []
+
+        # variable that states if Cytoid level file has music file
+        self.has_music = True
+
+        # opens the Cytoid level file in read mode
+        with ZipFile(self.user_level_path, 'r') as level:
+
+            # extract and open music file from Cytoid level file
+            try:
+                level.extract(self.user_json['music']['path'])
+                self.files_to_delete.append(self.user_json['music']['path'])
+                AudioSegment.from_file(self.user_json['music']['path'])
+
+            # if key or audio file does not exist, then level file
+            # does not contain music file
+            except (KeyError, FileNotFoundError) as e:
+                self.has_music = False
+            
+            # iterate through each diff in level.json
+            for chart in self.user_json['charts']:
+
+                # check diff_type
+                self.diff_type = chart['type']
+
+                # if chart type is easy, check if easy diff is valid
+                if self.diff_type == 'easy':
+
+                    # get chart
+                    try:
+                        level.extract(chart['path'])
+                        self.files_to_delete.append(chart['path'])
+                        json.loads(
+                            open(chart['path'], 'r', encoding='utf-8').read())
+
+                    # if key doesn't exist in level.json or
+                    # chart file does not exist or
+                    # chart file is not valid json,
+                    # check next diff in level.json (this diff is invalid)
+                    except (KeyError, FileNotFoundError, json.JSONDecodeError) as e:
+                        continue
+
+                    # get music_override
+                    try:
+                        level.extract(chart['music_override']['path'])
+                        self.files_to_delete.append(chart['music_override']['path'])
+                        AudioSegment.from_file(chart['music_override']['path'])
+
+                        # if there is a valid music_override file,
+                        # this diff is valid
+                        self.diffs_available.append('easy')
+
+                    # if key doesn't exist in level.json or
+                    # audio file does not exist
+                    except (KeyError, FileNotFoundError) as e:
+
+                        # if there is no music or music_override file,
+                        # check next diff (this diff is invalid,
+                        # an audio file is required)
+                        if self.has_music == False:
+                            continue
+
+                        # if there is a music file and no music_override,
+                        # this diff is valid
+                        else:
+                            self.diffs_available.append('easy')
+
+                # if chart type is hard, check if hard diff is valid
+                if self.diff_type == 'hard':
+
+                    # get chart
+                    try:
+                        level.extract(chart['path'])
+                        self.files_to_delete.append(chart['path'])
+                        json.loads(
+                            open(chart['path'], 'r', encoding='utf-8').read())
+
+                    # if key doesn't exist in level.json or
+                    # chart file does not exist or
+                    # chart file is not valid json,
+                    # check next diff in level.json (this diff is invalid)
+                    except (KeyError, FileNotFoundError, json.JSONDecodeError) as e:
+                        continue
+
+                    # get music_override
+                    try:
+                        level.extract(chart['music_override']['path'])
+                        self.files_to_delete.append(chart['music_override']['path'])
+                        AudioSegment.from_file(chart['music_override']['path'])
+
+                        # if there is a valid music_override file,
+                        # this diff is valid
+                        self.diffs_available.append('hard')
+
+                    # if key doesn't exist in level.json or
+                    # audio file does not exist
+                    except (KeyError, FileNotFoundError) as e:
+
+                        # if there is no music or music_override file,
+                        # check next diff (this diff is invalid,
+                        # an audio file is required)
+                        if self.has_music == False:
+                            continue
+
+                        # if there is a music file and no music_override,
+                        # this diff is valid
+                        else:
+                            self.diffs_available.append('hard')
+
+                # if chart type is extreme, check if extreme diff is valid
+                if self.diff_type == 'extreme':
+
+                    # get chart
+                    try:
+                        level.extract(chart['path'])
+                        self.files_to_delete.append(chart['path'])
+                        json.loads(
+                            open(chart['path'], 'r', encoding='utf-8').read())
+
+                    # if key doesn't exist in level.json or
+                    # chart file does not exist or
+                    # chart file is not valid json,
+                    # check next diff in level.json (this diff is invalid)
+                    except (KeyError, FileNotFoundError, json.JSONDecodeError) as e:
+                        continue
+
+                    # get music_override
+                    try:
+                        level.extract(chart['music_override']['path'])
+                        self.files_to_delete.append(chart['music_override']['path'])
+                        AudioSegment.from_file(chart['music_override']['path'])
+
+                        # if there is a valid music_override file,
+                        # this diff is valid
+                        self.diffs_available.append('extreme')
+
+                    # if key doesn't exist in level.json or
+                    # audio file does not exist
+                    except (KeyError, FileNotFoundError) as e:
+
+                        # if there is no music or music_override file,
+                        # check next diff (this diff is invalid,
+                        # an audio file is required)
+                        if self.has_music == False:
+                            continue
+
+                        # if there is a music file and no music_override,
+                        # this diff is valid
+                        else:
+                            self.diffs_available.append('extreme')
+
+        # if no valid diffs, display error message and mark the
+        # Cytoid level file as invalid
+        if self.diffs_available == []:
+            messagebox.showerror(
+                'Error',
+                'No valid diffs within Cytoid level file - ' \
+                'are your charts in c1 format?' # speaking from personal experience...
+                )
+
+            self.level_validity = False
+
+        # delete extracted files after everything has been checked
+        for path in self.files_to_delete:
+
+            try:
+                os.remove(path)
+
+            # if file was already deleted, move on to text file
+            # (sometimes music and music_override paths are duplicates)
+            except FileNotFoundError:
+                pass
+            
+
+    def check_user_validity(self):
+        '''This function checks the validity of the user input before
+        working with the necessary files.'''
 
         # create variables to keep track of user info
         self.user_diffs = []
@@ -404,7 +653,7 @@ class App(tk.Tk):
         self.user_ar_option1 = []
         self.user_ar_option2 = []
         self.user_ar_option3 = []
-        self.user_pitch_rates = 1
+        #self.user_pitch_rates = 1
 
         # variable to keep track of validity of user input
         self.user_validity = True
@@ -1190,7 +1439,10 @@ class App(tk.Tk):
                     pass
 
         # get status of "pitch rates" checkbutton
-        self.user_pitch_rates = self.other_frame.pitch_rates_var.get()
+        #self.user_pitch_rates = self.other_frame.pitch_rates_var.get()
+
+        # call function to work with necessary files
+        self.work_with_files()
 
     def ar_error(self, index, message):
         '''Displays error message for an AR option in the first
@@ -1248,6 +1500,53 @@ class App(tk.Tk):
 
             # prevent text from being edited
             self.ar_frame.error_text3.configure(state='disabled')
+
+    def work_with_files(self):
+        '''This function starts working with files and creating
+        new levels.'''
+
+        # create list of files to delete after all new levels have
+        # been created
+        self.files_to_delete = []
+
+        # opens the Cytoid level file in read mode
+        with ZipFile(self.user_level_path, 'r') as level:
+
+            # extract level.json file from Cytoid level file
+            level.extract('level.json')
+
+        # rename level.json file
+        os.rename('level.json', 'beta.level.json')
+
+        # add beta.level.json to list of files to delete
+        self.files_to_delete.append('beta.level.json')
+
+        # open beta.level.json to get paths of other needed files
+        self.user_json = json.load(open(
+            'beta.level.json',
+            'r',
+            encoding='utf-8')
+            )
+
+        # opens the Cytoid level file in read mode
+        with ZipFile(self.user_level_path, 'r') as level:
+
+            # extract music file (compulsory in a level)
+            level.extract(self.user_json['music']['path'])
+
+            # add music path to list of files to delete
+            self.files_to_delete.append(self.user_json['music']['path'])
+
+            # extract chart files (at least one is compulsory in a level)
+            for chart in self.user_json['charts']:
+                level.extract(chart['path'])
+
+                # add music path to list of files to delete
+                self.files_to_delete.append(chart['path'])
+
+        
+            
+
 
 class OuterFrame(ttk.Frame):
     '''This class creates invisible frames for the buttons and visible
@@ -1899,7 +2198,10 @@ class AROptionsFrame(ttk.Frame):
 
 class OtherFrame(ttk.Frame):
     '''Visible frame for difficulty selection checkboxes
-    to be displayed.'''
+    to be displayed.
+
+    NOTE: Not currently used, modules did not work for nopitch audio
+    rates. Audio pitch rates are on by default.'''
 
     def __init__(self, container):
         super().__init__(container)
