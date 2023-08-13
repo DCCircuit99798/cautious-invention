@@ -57,9 +57,8 @@ def get_output_name(filename, ar_value):
     # in between the filename and the extension
     else:
         output_name = (filename[:last_dot]
-                       + '_ar'
+                       + '_ar_x'
                        + str(ar_value)
-                       + 'x'
                        + filename[last_dot:])
 
     return output_name
