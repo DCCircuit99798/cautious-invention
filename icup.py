@@ -1540,11 +1540,11 @@ class App(tk.Tk):
 
     def work_with_files(self):
         '''This function starts working with files and creating
-        new levels.'''
+        new levels once the Cytoid level file and user input have
+        been marked as valid.'''
 
-        print('start working with files')
+        print('start working with files') # debugging purposes
 
-        '''
         # create list of files to delete after all new levels have
         # been created
         self.files_to_delete = []
@@ -1571,19 +1571,107 @@ class App(tk.Tk):
         # opens the Cytoid level file in read mode
         with ZipFile(self.user_level_path, 'r') as level:
 
-            # extract music file (compulsory in a level)
-            level.extract(self.user_json['music']['path'])
+            try:
+                
+                # try to extract music file
+                level.extract(self.user_json['music']['path'])
 
-            # add music path to list of files to delete
-            self.files_to_delete.append(self.user_json['music']['path'])
+                # store path of file
+                self.music_path = self.user_json['music']['path']
 
-            # extract chart files (at least one is compulsory in a level)
+                # add file path to list of files to delete
+                self.files_to_delete.append(self.user_json['music']['path'])
+
+            # if no key in level.json or file doesn't exist,
+            # skip this step and extract music_override instead
+            except (KeyError, FileNotFoundError) as e:
+                self.music_path = ''
+
+            # extract chart files of chosen difficulties
             for chart in self.user_json['charts']:
-                level.extract(chart['path'])
 
-                # add music path to list of files to delete
-                self.files_to_delete.append(chart['path'])
-        '''
+                if chart['type'] == 'easy' and 'easy' in self.user_diffs:
+
+                    # extract chart file
+                    level.extract(chart['path'])
+
+                    # store path of file
+                    self.easy_chart_path = chart['path']
+
+                    # add chart path to list of files to delete
+                    self.files_to_delete.append(chart['path'])
+
+                    try:
+
+                        # try to extract music_override file
+                        level.extract(chart['music_override']['path'])
+
+                        # store path of file
+                        self.easy_music_path = chart['music_override']['path']
+
+                        # add file path to list of files to delete
+                        self.files_to_delete.append(chart['music_override']['path'])
+
+                    # if no key in level.json or file doesn't exist,
+                    # skip this step
+                    except (KeyError, FileNotFoundError) as e:
+                        self.easy_music_path = ''
+
+                if chart['type'] == 'hard' and 'hard' in self.user_diffs:
+
+                    # extract chart file
+                    level.extract(chart['path'])
+
+                    # store path of file
+                    self.hard_chart_path = chart['path']
+
+                    # add chart path to list of files to delete
+                    self.files_to_delete.append(chart['path'])
+
+                    try:
+
+                        # try to extract music_override file
+                        level.extract(chart['music_override']['path'])
+
+                        # store path of file
+                        self.hard_music_path = chart['music_override']['path']
+
+                        # add file path to list of files to delete
+                        self.files_to_delete.append(chart['music_override']['path'])
+
+                    # if no key in level.json or file doesn't exist,
+                    # skip this step
+                    except (KeyError, FileNotFoundError) as e:
+                        self.hard_music_path = ''
+
+                if chart['type'] == 'extreme' and 'extreme' in self.user_diffs:
+
+                    # extract chart file
+                    level.extract(chart['path'])
+
+                    # store path of file
+                    self.ex_chart_path = chart['path']
+
+                    # add chart path to list of files to delete
+                    self.files_to_delete.append(chart['path'])
+
+                    try:
+
+                        # try to extract music_override file
+                        level.extract(chart['music_override']['path'])
+
+                        # store path of file
+                        self.ex_music_path = chart['music_override']['path']
+
+                        # add file path to list of files to delete
+                        self.files_to_delete.append(chart['music_override']['path'])
+
+                    # if no key in level.json or file doesn't exist,
+                    # skip this step
+                    except (KeyError, FileNotFoundError) as e:
+                        self.ex_music_path = ''
+
+        # working with files - start here
 
         
             
