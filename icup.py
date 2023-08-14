@@ -521,9 +521,6 @@ class App(tk.Tk):
                 'ChooseFile.WidgetBorder.TFrame',
                 background='#ee9f9f')
 
-            # close the level.json file
-            #self.user_json.close()
-
             # remove the extracted level.json file
             os.remove('level.json')
 
@@ -694,11 +691,41 @@ class App(tk.Tk):
 
             self.level_validity = False
 
-        # configure 'choose file' button border to white if level is valid
+        # if level is valid
         if self.level_validity == True:
+
+            # configure 'choose file' button border to white
             self.style.configure(
                 'ChooseFile.WidgetBorder.TFrame',
                 background='#ffffff')
+
+            # if difficulty not available,
+            # disable the corresponding checkbutton in diffs frame
+            # and deselect the difficulty
+
+            # if difficulty is available,
+            # enable the corresponding checkbutton
+            if 'easy' not in self.diffs_available:
+                self.diffs_frame.easy_check.configure(state='disabled')
+                self.diffs_frame.easy_var.set(0)
+
+            else:
+                self.diffs_frame.easy_check.configure(state='normal')
+
+            if 'hard' not in self.diffs_available:
+                self.diffs_frame.hard_check.configure(state='disabled')
+                self.diffs_frame.hard_var.set(0)
+
+            else:
+                self.diffs_frame.hard_check.configure(state='normal')
+
+            if 'extreme' not in self.diffs_available:
+                self.diffs_frame.ex_check.configure(state='disabled')
+                self.diffs_frame.ex_var.set(0)
+
+            else:
+                self.diffs_frame.ex_check.configure(state='normal')
+                
 
         # configure 'choose file' button border to red if level is invalid
         if self.level_validity == False:
