@@ -8,6 +8,7 @@ from tkinter import messagebox
 from tkinter import ttk
 import sys
 from zipfile import ZipFile
+import zipfile
 
 # add modules folder to system path
 sys.path.append(str(Path(os.getcwd()) / 'modules'))
@@ -444,7 +445,9 @@ class App(tk.Tk):
             self.style.configure(
                 'ChooseFile.WidgetBorder.TFrame',
                 background='#ee9f9f')
-                
+
+            # prevent the rest of the level validity checks
+            # from running
             return
 
         # create list of files to delete after all files have
@@ -456,31 +459,74 @@ class App(tk.Tk):
             'ChooseFile.WidgetBorder.TFrame',
             background='#ffffff')
 
-        # opens the Cytoid level file in read mode
-        with ZipFile(self.user_level_path, 'r') as level:
+        # try to open the Cytoid level file (read mode)
+        try:
+            with ZipFile(self.user_level_path, 'r') as level:
 
-            # extract level.json file from Cytoid level file
-            # (level.json is required for all levels)
-            try:
-                level.extract('level.json')
-                self.files_to_delete.append('level.json')
+                # extract level.json file from Cytoid level file
+                # (level.json is required for all levels)
+                try:
+                    level.extract('level.json')
+                    self.files_to_delete.append('level.json')
 
-            # if level.json does not exist, print error message
-            # and mark Cytoid level file as invalid
-            except KeyError:
-                messagebox.showerror(
-                    'Error',
-                    'level.json file does not exist within Cytoid level file'
-                )
+                # if level.json does not exist, display error message
+                # and mark Cytoid level file as invalid
+                except KeyError:
+                    messagebox.showerror(
+                        'Error',
+                        'level.json file does not exist within ' \
+                        'Cytoid level file'
+                    )
 
-                self.level_validity = False
+                    self.level_validity = False
+
+        # if selected file is not a .zip file, display error
+        # message and mark Cytoid level file as invalid
+        except zipfile.BadZipFile:
+            messagebox.showerror(
+                'Error',
+                'Please select a valid .zip file ' \
+                '(.cytoidlevel is acceptable)'
+            )
+
+            self.level_validity = False
+
+            # configure 'choose file' button border to red
+            self.style.configure(
+                'ChooseFile.WidgetBorder.TFrame',
+                background='#ee9f9f')
+
+            # prevent the rest of the level validity checks
+            # from running
+            return
+                
 
         # open level.json to get paths of other needed files
-        self.user_json = json.load(open(
-            'level.json',
-            'r',
-            encoding='utf-8')
+        try:
+            with open('level.json', 'r', encoding='utf-8') as outfile:
+                self.user_json = json.load(outfile)
+
+        # if level.json file is invalid JSON, display error messagebox
+        # and mark Cytoid level as invalid
+        except json.JSONDecodeError:
+            messagebox.showerror(
+                'Error',
+                'level.json file within Cytoid level file is invalid'
             )
+
+            self.level_validity = False
+
+            # configure 'choose file' button border to red
+            self.style.configure(
+                'ChooseFile.WidgetBorder.TFrame',
+                background='#ee9f9f')
+
+            # remove the extracted level.json file
+            os.remove('level.json')
+
+            # prevent the rest of the level validity checks
+            # from running
+            return
 
         # list of available diffs with valid music and chart files
         self.diffs_available = []
@@ -645,11 +691,41 @@ class App(tk.Tk):
 
             self.level_validity = False
 
-        # configure 'choose file' button border to white if level is valid
+        # if level is valid
         if self.level_validity == True:
+
+            # configure 'choose file' button border to white
             self.style.configure(
                 'ChooseFile.WidgetBorder.TFrame',
                 background='#ffffff')
+
+            # if difficulty not available,
+            # disable the corresponding checkbutton in diffs frame
+            # and deselect the difficulty
+
+            # if difficulty is available,
+            # enable the corresponding checkbutton
+            if 'easy' not in self.diffs_available:
+                self.diffs_frame.easy_check.configure(state='disabled')
+                self.diffs_frame.easy_var.set(0)
+
+            else:
+                self.diffs_frame.easy_check.configure(state='normal')
+
+            if 'hard' not in self.diffs_available:
+                self.diffs_frame.hard_check.configure(state='disabled')
+                self.diffs_frame.hard_var.set(0)
+
+            else:
+                self.diffs_frame.hard_check.configure(state='normal')
+
+            if 'extreme' not in self.diffs_available:
+                self.diffs_frame.ex_check.configure(state='disabled')
+                self.diffs_frame.ex_var.set(0)
+
+            else:
+                self.diffs_frame.ex_check.configure(state='normal')
+                
 
         # configure 'choose file' button border to red if level is invalid
         if self.level_validity == False:
@@ -1110,23 +1186,48 @@ class App(tk.Tk):
                 # if value is not valid number (invalid)
                 except ValueError:
 
-                    # display error message
-                    self.ar_error(
-                        1,
-                        'Both AR type and value must be filled in')
+                    # if value is completely empty
+                    if self.ar_frame.value1.get() == '':
 
-                    # configure styles
-                    self.style.configure(
-                        'AR.NormalBorder.TFrame',
-                        background='#ee9f9f')
+                        # display error message
+                        self.ar_error(
+                            1,
+                            'Both AR type and value must be filled in')
 
-                    self.style.configure(
-                        'AREntry1.WidgetBorder.TFrame',
-                        background='#ee9f9f',
-                        relief='flat')
+                        # configure styles
+                        self.style.configure(
+                            'AR.NormalBorder.TFrame',
+                            background='#ee9f9f')
 
-                    # indicate that user input is invalid
-                    self.user_validity = False
+                        self.style.configure(
+                            'AREntry1.WidgetBorder.TFrame',
+                            background='#ee9f9f',
+                            relief='flat')
+
+                        # indicate that user input is invalid
+                        self.user_validity = False
+
+                    # if value is not empty,
+                    # but still an invalid number
+                    else:
+
+                        # display error message
+                        self.ar_error(
+                            1,
+                            'AR value must be a valid number')
+
+                        # configure styles
+                        self.style.configure(
+                            'AR.NormalBorder.TFrame',
+                            background='#ee9f9f')
+
+                        self.style.configure(
+                            'AREntry1.WidgetBorder.TFrame',
+                            background='#ee9f9f',
+                            relief='flat')
+
+                        # indicate that user input is invalid
+                        self.user_validity = False
 
                 # TypeError occurs when cmod is selected
                 # and rates aren't filled out
@@ -1275,23 +1376,48 @@ class App(tk.Tk):
                 # if value is not valid number (invalid)
                 except ValueError:
 
-                    # display error message
-                    self.ar_error(
-                        2,
-                        'Both AR type and value must be filled in')
+                    # if value is completely empty
+                    if self.ar_frame.value2.get() == '':
 
-                    # configure styles
-                    self.style.configure(
-                        'AR.NormalBorder.TFrame',
-                        background='#ee9f9f')
+                        # display error message
+                        self.ar_error(
+                            2,
+                            'Both AR type and value must be filled in')
 
-                    self.style.configure(
-                        'AREntry2.WidgetBorder.TFrame',
-                        background='#ee9f9f',
-                        relief='flat')
+                        # configure styles
+                        self.style.configure(
+                            'AR.NormalBorder.TFrame',
+                            background='#ee9f9f')
 
-                    # indicate that user input is invalid
-                    self.user_validity = False
+                        self.style.configure(
+                            'AREntry2.WidgetBorder.TFrame',
+                            background='#ee9f9f',
+                            relief='flat')
+
+                        # indicate that user input is invalid
+                        self.user_validity = False
+
+                    # if value is not empty,
+                    # but still an invalid number
+                    else:
+
+                        # display error message
+                        self.ar_error(
+                            2,
+                            'AR value must be a valid number')
+
+                        # configure styles
+                        self.style.configure(
+                            'AR.NormalBorder.TFrame',
+                            background='#ee9f9f')
+
+                        self.style.configure(
+                            'AREntry2.WidgetBorder.TFrame',
+                            background='#ee9f9f',
+                            relief='flat')
+
+                        # indicate that user input is invalid
+                        self.user_validity = False
 
                 # TypeError occurs when cmod is selected
                 # and rates aren't filled out
@@ -1440,23 +1566,48 @@ class App(tk.Tk):
                 # if value is not valid number (invalid)
                 except ValueError:
 
-                    # display error message
-                    self.ar_error(
-                        3,
-                        'Both AR type and value must be filled in')
+                    # if value is completely empty
+                    if self.ar_frame.value3.get() == '':
 
-                    # configure styles
-                    self.style.configure(
-                        'AR.NormalBorder.TFrame',
-                        background='#ee9f9f')
+                        # display error message
+                        self.ar_error(
+                            3,
+                            'Both AR type and value must be filled in')
 
-                    self.style.configure(
-                        'AREntry3.WidgetBorder.TFrame',
-                        background='#ee9f9f',
-                        relief='flat')
+                        # configure styles
+                        self.style.configure(
+                            'AR.NormalBorder.TFrame',
+                            background='#ee9f9f')
 
-                    # indicate that user input is invalid
-                    self.user_validity = False
+                        self.style.configure(
+                            'AREntry3.WidgetBorder.TFrame',
+                            background='#ee9f9f',
+                            relief='flat')
+
+                        # indicate that user input is invalid
+                        self.user_validity = False
+
+                    # if value is not empty,
+                    # but still an invalid number
+                    else:
+
+                        # display error message
+                        self.ar_error(
+                            3,
+                            'AR value must be a valid number')
+
+                        # configure styles
+                        self.style.configure(
+                            'AR.NormalBorder.TFrame',
+                            background='#ee9f9f')
+
+                        self.style.configure(
+                            'AREntry3.WidgetBorder.TFrame',
+                            background='#ee9f9f',
+                            relief='flat')
+
+                        # indicate that user input is invalid
+                        self.user_validity = False
 
                 # TypeError occurs when cmod is selected
                 # and rates aren't filled out
