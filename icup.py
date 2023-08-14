@@ -1186,23 +1186,48 @@ class App(tk.Tk):
                 # if value is not valid number (invalid)
                 except ValueError:
 
-                    # display error message
-                    self.ar_error(
-                        1,
-                        'Both AR type and value must be filled in')
+                    # if value is completely empty
+                    if self.ar_frame.value1.get() == '':
 
-                    # configure styles
-                    self.style.configure(
-                        'AR.NormalBorder.TFrame',
-                        background='#ee9f9f')
+                        # display error message
+                        self.ar_error(
+                            1,
+                            'Both AR type and value must be filled in')
 
-                    self.style.configure(
-                        'AREntry1.WidgetBorder.TFrame',
-                        background='#ee9f9f',
-                        relief='flat')
+                        # configure styles
+                        self.style.configure(
+                            'AR.NormalBorder.TFrame',
+                            background='#ee9f9f')
 
-                    # indicate that user input is invalid
-                    self.user_validity = False
+                        self.style.configure(
+                            'AREntry1.WidgetBorder.TFrame',
+                            background='#ee9f9f',
+                            relief='flat')
+
+                        # indicate that user input is invalid
+                        self.user_validity = False
+
+                    # if value is not empty,
+                    # but still an invalid number
+                    else:
+
+                        # display error message
+                        self.ar_error(
+                            1,
+                            'AR value must be a valid number')
+
+                        # configure styles
+                        self.style.configure(
+                            'AR.NormalBorder.TFrame',
+                            background='#ee9f9f')
+
+                        self.style.configure(
+                            'AREntry1.WidgetBorder.TFrame',
+                            background='#ee9f9f',
+                            relief='flat')
+
+                        # indicate that user input is invalid
+                        self.user_validity = False
 
                 # TypeError occurs when cmod is selected
                 # and rates aren't filled out
@@ -1351,23 +1376,48 @@ class App(tk.Tk):
                 # if value is not valid number (invalid)
                 except ValueError:
 
-                    # display error message
-                    self.ar_error(
-                        2,
-                        'Both AR type and value must be filled in')
+                    # if value is completely empty
+                    if self.ar_frame.value2.get() == '':
 
-                    # configure styles
-                    self.style.configure(
-                        'AR.NormalBorder.TFrame',
-                        background='#ee9f9f')
+                        # display error message
+                        self.ar_error(
+                            2,
+                            'Both AR type and value must be filled in')
 
-                    self.style.configure(
-                        'AREntry2.WidgetBorder.TFrame',
-                        background='#ee9f9f',
-                        relief='flat')
+                        # configure styles
+                        self.style.configure(
+                            'AR.NormalBorder.TFrame',
+                            background='#ee9f9f')
 
-                    # indicate that user input is invalid
-                    self.user_validity = False
+                        self.style.configure(
+                            'AREntry2.WidgetBorder.TFrame',
+                            background='#ee9f9f',
+                            relief='flat')
+
+                        # indicate that user input is invalid
+                        self.user_validity = False
+
+                    # if value is not empty,
+                    # but still an invalid number
+                    else:
+
+                        # display error message
+                        self.ar_error(
+                            2,
+                            'AR value must be a valid number')
+
+                        # configure styles
+                        self.style.configure(
+                            'AR.NormalBorder.TFrame',
+                            background='#ee9f9f')
+
+                        self.style.configure(
+                            'AREntry2.WidgetBorder.TFrame',
+                            background='#ee9f9f',
+                            relief='flat')
+
+                        # indicate that user input is invalid
+                        self.user_validity = False
 
                 # TypeError occurs when cmod is selected
                 # and rates aren't filled out
@@ -1516,23 +1566,48 @@ class App(tk.Tk):
                 # if value is not valid number (invalid)
                 except ValueError:
 
-                    # display error message
-                    self.ar_error(
-                        3,
-                        'Both AR type and value must be filled in')
+                    # if value is completely empty
+                    if self.ar_frame.value3.get() == '':
 
-                    # configure styles
-                    self.style.configure(
-                        'AR.NormalBorder.TFrame',
-                        background='#ee9f9f')
+                        # display error message
+                        self.ar_error(
+                            3,
+                            'Both AR type and value must be filled in')
 
-                    self.style.configure(
-                        'AREntry3.WidgetBorder.TFrame',
-                        background='#ee9f9f',
-                        relief='flat')
+                        # configure styles
+                        self.style.configure(
+                            'AR.NormalBorder.TFrame',
+                            background='#ee9f9f')
 
-                    # indicate that user input is invalid
-                    self.user_validity = False
+                        self.style.configure(
+                            'AREntry3.WidgetBorder.TFrame',
+                            background='#ee9f9f',
+                            relief='flat')
+
+                        # indicate that user input is invalid
+                        self.user_validity = False
+
+                    # if value is not empty,
+                    # but still an invalid number
+                    else:
+
+                        # display error message
+                        self.ar_error(
+                            3,
+                            'AR value must be a valid number')
+
+                        # configure styles
+                        self.style.configure(
+                            'AR.NormalBorder.TFrame',
+                            background='#ee9f9f')
+
+                        self.style.configure(
+                            'AREntry3.WidgetBorder.TFrame',
+                            background='#ee9f9f',
+                            relief='flat')
+
+                        # indicate that user input is invalid
+                        self.user_validity = False
 
                 # TypeError occurs when cmod is selected
                 # and rates aren't filled out
