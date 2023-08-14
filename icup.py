@@ -8,6 +8,7 @@ from tkinter import messagebox
 from tkinter import ttk
 import sys
 from zipfile import ZipFile
+import zipfile
 
 # add modules folder to system path
 sys.path.append(str(Path(os.getcwd()) / 'modules'))
@@ -444,7 +445,9 @@ class App(tk.Tk):
             self.style.configure(
                 'ChooseFile.WidgetBorder.TFrame',
                 background='#ee9f9f')
-                
+
+            # prevent the rest of the level validity checks
+            # from running
             return
 
         # create list of files to delete after all files have
@@ -456,31 +459,77 @@ class App(tk.Tk):
             'ChooseFile.WidgetBorder.TFrame',
             background='#ffffff')
 
-        # opens the Cytoid level file in read mode
-        with ZipFile(self.user_level_path, 'r') as level:
+        # try to open the Cytoid level file (read mode)
+        try:
+            with ZipFile(self.user_level_path, 'r') as level:
 
-            # extract level.json file from Cytoid level file
-            # (level.json is required for all levels)
-            try:
-                level.extract('level.json')
-                self.files_to_delete.append('level.json')
+                # extract level.json file from Cytoid level file
+                # (level.json is required for all levels)
+                try:
+                    level.extract('level.json')
+                    self.files_to_delete.append('level.json')
 
-            # if level.json does not exist, print error message
-            # and mark Cytoid level file as invalid
-            except KeyError:
-                messagebox.showerror(
-                    'Error',
-                    'level.json file does not exist within Cytoid level file'
-                )
+                # if level.json does not exist, display error message
+                # and mark Cytoid level file as invalid
+                except KeyError:
+                    messagebox.showerror(
+                        'Error',
+                        'level.json file does not exist within ' \
+                        'Cytoid level file'
+                    )
 
-                self.level_validity = False
+                    self.level_validity = False
+
+        # if selected file is not a .zip file, display error
+        # message and mark Cytoid level file as invalid
+        except zipfile.BadZipFile:
+            messagebox.showerror(
+                'Error',
+                'Please select a valid .zip file ' \
+                '(.cytoidlevel is acceptable)'
+            )
+
+            self.level_validity = False
+
+            # configure 'choose file' button border to red
+            self.style.configure(
+                'ChooseFile.WidgetBorder.TFrame',
+                background='#ee9f9f')
+
+            # prevent the rest of the level validity checks
+            # from running
+            return
+                
 
         # open level.json to get paths of other needed files
-        self.user_json = json.load(open(
-            'level.json',
-            'r',
-            encoding='utf-8')
+        try:
+            with open('level.json', 'r', encoding='utf-8') as outfile:
+                self.user_json = json.load(outfile)
+
+        # if level.json file is invalid JSON, display error messagebox
+        # and mark Cytoid level as invalid
+        except json.JSONDecodeError:
+            messagebox.showerror(
+                'Error',
+                'level.json file within Cytoid level file is invalid'
             )
+
+            self.level_validity = False
+
+            # configure 'choose file' button border to red
+            self.style.configure(
+                'ChooseFile.WidgetBorder.TFrame',
+                background='#ee9f9f')
+
+            # close the level.json file
+            #self.user_json.close()
+
+            # remove the extracted level.json file
+            os.remove('level.json')
+
+            # prevent the rest of the level validity checks
+            # from running
+            return
 
         # list of available diffs with valid music and chart files
         self.diffs_available = []
