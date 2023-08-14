@@ -32,7 +32,7 @@ class App(tk.Tk):
         self.title("Idiot Caleb's Uprating Project")
         self.geometry('485x325')
         self.configure(bg='#1e2129')
-        #self.resizable(False, False)
+        self.resizable(False, False)
 
         # call method to configure styles
         self.__configure_styles()
