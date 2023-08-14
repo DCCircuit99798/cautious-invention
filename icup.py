@@ -30,7 +30,7 @@ class App(tk.Tk):
 
         # configure window
         self.title("Idiot Caleb's Uprating Project")
-        self.geometry('520x360')
+        self.geometry('485x325')
         self.configure(bg='#1e2129')
         #self.resizable(False, False)
 
