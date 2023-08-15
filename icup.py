@@ -1847,9 +1847,10 @@ class App(tk.Tk):
             # loop through rates between chosen min and max rate
             while self.current_rate <= self.user_max:
 
-                # create list of files to delete after a single new level
+                # create list of files to
+                # delete after a single new level
                 # has been created
-                self.files_to_delete_level = []
+                self.output_level_files = []
                 
                 # if easy diff is chosen
                 if diff == 'easy':
@@ -1864,7 +1865,7 @@ class App(tk.Tk):
 
                         # add the output file to list of files to
                         # delete after level is created
-                        self.files_to_delete_level.append(
+                        self.output_level_files.append(
                             icup_audio_pitch.get_output_name(
                                 self.easy_music_path,
                                 self.current_rate
@@ -1881,7 +1882,7 @@ class App(tk.Tk):
 
                         # add the output file to list of files to
                         # delete after level is created
-                        self.files_to_delete_level.append(
+                        self.output_level_files.append(
                             icup_audio_pitch.get_output_name(
                                 self.music_path,
                                 self.current_rate
@@ -1897,20 +1898,57 @@ class App(tk.Tk):
 
                         # add the output file to list of files to
                         # delete after level is created
-                        self.files_to_delete_level.append(
+                        self.output_level_files.append(
                             icup_audio_pitch.get_output_name(
                                 self.preview_path,
                                 self.current_rate
                                 ))
 
-                # after all files have been worked with and the level
-                # has been created, delete necessary files, then move
-                # on to next rate and repeat the loop
-                for path in self.files_to_delete_level:
-                    os.remove(path)
+                    # work with chart file
+                    icup_chart.create_file(
+                        self.easy_chart_path,
+                        self.current_rate
+                        )
 
+                    # add the output file to list of files to
+                    # delete after level is created
+                    self.output_level_files.append(
+                        icup_chart.get_output_name(
+                            self.easy_chart_path,
+                            self.current_rate
+                            ))
+
+                # get index of the last dot in
+                # filename of Cytoid level file
+                self.last_dot = self.user_level_path.rfind('.')
+
+                # create output name by putting the rate
+                # in between the filename and the extension
+                self.output_name = (self.user_level_path[:self.last_dot]
+                       + '_'
+                       + str(self.current_rate)
+                       + 'x'
+                       + self.user_level_path[self.last_dot:])
+
+                # open the output Cytoid level file
+                with ZipFile(self.output_name, 'w') as level:
+
+                    # after all files have been worked with
+                    for path in self.output_level_files:
+
+                        # send all necessary files to
+                        # the output Cytoid level file
+                        level.write(path)
+                        
+                        # delete files
+                        os.remove(path)
+
+                # increase current rate by chosen rate increment
                 self.current_rate += self.user_rate_inc
-            
+
+                # round to eliminate round-off errors from
+                # addition of floats
+                self.current_rate = round(self.current_rate, 8)
 
 
 class OuterFrame(ttk.Frame):
