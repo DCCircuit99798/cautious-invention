@@ -1754,6 +1754,22 @@ class App(tk.Tk):
             except (KeyError, FileNotFoundError) as e:
                 self.preview_path = None
 
+            try:
+
+                # try to extract background file
+                level.extract(self.user_json['background']['path'])
+
+                # store path of file
+                self.background_path = self.user_json['background']['path']
+
+                # add file path to list of files to delete
+                self.files_to_delete.append(self.user_json['background']['path'])
+
+            # if no key in level.json or file doesn't exist,
+            # skip this step
+            except (KeyError, FileNotFoundError) as e:
+                self.background_path = None
+
             # extract chart files of chosen difficulties
             for chart in self.user_json['charts']:
 
@@ -1932,6 +1948,11 @@ class App(tk.Tk):
 
                 # open the output Cytoid level file
                 with ZipFile(self.output_name, 'w') as level:
+
+                    # send background file to the output Cytoid
+                    # level file (if it exists)
+                    if self.background_path != None:
+                        level.write(self.background_path)
 
                     # after all files have been worked with
                     for path in self.output_level_files:
