@@ -1044,7 +1044,7 @@ class App(tk.Tk):
 
         # otherwise get rate increment from radio buttons
         else:
-            self.user_rate_inc = self.rate_inc_frame.var.get()
+            self.user_rate_inc = float(self.rate_inc_frame.var.get())
 
         
         # AR Option #1:
@@ -1736,7 +1736,23 @@ class App(tk.Tk):
             # if no key in level.json or file doesn't exist,
             # skip this step and extract music_override instead
             except (KeyError, FileNotFoundError) as e:
-                self.music_path = ''
+                self.music_path = None
+
+            try:
+                
+                # try to extract music preview file
+                level.extract(self.user_json['music_preview']['path'])
+
+                # store path of file
+                self.preview_path = self.user_json['music_preview']['path']
+
+                # add file path to list of files to delete
+                self.files_to_delete.append(self.user_json['music_preview']['path'])
+
+            # if no key in level.json or file doesn't exist,
+            # skip this step and extract music_override instead
+            except (KeyError, FileNotFoundError) as e:
+                self.preview_path = None
 
             # extract chart files of chosen difficulties
             for chart in self.user_json['charts']:
@@ -1766,7 +1782,7 @@ class App(tk.Tk):
                     # if no key in level.json or file doesn't exist,
                     # skip this step
                     except (KeyError, FileNotFoundError) as e:
-                        self.easy_music_path = ''
+                        self.easy_music_path = None
 
                 if chart['type'] == 'hard' and 'hard' in self.user_diffs:
 
@@ -1793,7 +1809,7 @@ class App(tk.Tk):
                     # if no key in level.json or file doesn't exist,
                     # skip this step
                     except (KeyError, FileNotFoundError) as e:
-                        self.hard_music_path = ''
+                        self.hard_music_path = None
 
                 if chart['type'] == 'extreme' and 'extreme' in self.user_diffs:
 
@@ -1820,11 +1836,80 @@ class App(tk.Tk):
                     # if no key in level.json or file doesn't exist,
                     # skip this step
                     except (KeyError, FileNotFoundError) as e:
-                        self.ex_music_path = ''
+                        self.ex_music_path = None
 
-        # working with files - start here
+        # loop through each difficulty selected by the user
+        for diff in self.user_diffs:
 
-        
+            # start at minimum rate chosen by user
+            self.current_rate = self.user_min
+
+            # loop through rates between chosen min and max rate
+            while self.current_rate <= self.user_max:
+
+                # create list of files to delete after a single new level
+                # has been created
+                self.files_to_delete_level = []
+                
+                # if easy diff is chosen
+                if diff == 'easy':
+
+                    if self.easy_music_path != None:
+
+                        # work with music_override file (if it exists)
+                        icup_audio_pitch.create_file(
+                            self.easy_music_path,
+                            self.current_rate
+                            )
+
+                        # add the output file to list of files to
+                        # delete after level is created
+                        self.files_to_delete_level.append(
+                            icup_audio_pitch.get_output_name(
+                                self.easy_music_path,
+                                self.current_rate
+                                ))
+                            
+                    else:
+
+                        # if no music_override file,
+                        # work with music file
+                        icup_audio_pitch.create_file(
+                            self.music_path,
+                            self.current_rate
+                            )
+
+                        # add the output file to list of files to
+                        # delete after level is created
+                        self.files_to_delete_level.append(
+                            icup_audio_pitch.get_output_name(
+                                self.music_path,
+                                self.current_rate
+                                ))
+
+                    if self.preview_path != None:
+                            
+                        # work with music_preview file (if it exists)
+                        icup_audio_pitch.create_file(
+                            self.preview_path,
+                            self.current_rate
+                            )
+
+                        # add the output file to list of files to
+                        # delete after level is created
+                        self.files_to_delete_level.append(
+                            icup_audio_pitch.get_output_name(
+                                self.preview_path,
+                                self.current_rate
+                                ))
+
+                # after all files have been worked with and the level
+                # has been created, delete necessary files, then move
+                # on to next rate and repeat the loop
+                for path in self.files_to_delete_level:
+                    os.remove(path)
+
+                self.current_rate += self.user_rate_inc
             
 
 
