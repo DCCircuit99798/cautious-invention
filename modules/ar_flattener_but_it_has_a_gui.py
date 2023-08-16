@@ -86,7 +86,7 @@ def flatten():
     # actual ar flattening
 
     #calculate target AR
-    target_BPM = float(target_BPM_input.get())
+    #target_BPM = float(target_BPM_input.get())
     target_AR = calc_ar(1 / (target_BPM / 120), 0, 1 / (target_BPM / 120))
 
     # desired ar calculation method for convenice
@@ -243,4 +243,5 @@ def flattenGUI():
     menu.resizable(0, 0)
     menu.mainloop()
 
-flattenGUI()
+if __name__ == '__main__':
+    flattenGUI()

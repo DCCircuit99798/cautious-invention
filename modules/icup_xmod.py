@@ -49,9 +49,8 @@ def get_output_name(filename, ar_value):
     # put the rate after the entire filename
     if last_dot == -1:
         output_name = (filename
-                       + '_ar'
-                       + str(ar_value)
-                       + 'x')
+                       + '_ar_x'
+                       + str(ar_value))
 
     # otherwise, create the output name by putting the rate
     # in between the filename and the extension
