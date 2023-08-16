@@ -1872,139 +1872,6 @@ class App(tk.Tk):
                 # delete after a single new level
                 # has been created
                 self.output_level_files = []
-                
-                # if easy diff is chosen
-                if diff == 'easy':
-
-                    if self.easy_music_path != None:
-
-                        # work with music_override file (if it exists)
-                        icup_audio_pitch.create_file(
-                            self.easy_music_path,
-                            self.current_rate
-                            )
-
-                        # add the output file to list of files to
-                        # delete after level is created
-                        self.output_level_files.append(
-                            icup_audio_pitch.get_output_name(
-                                self.easy_music_path,
-                                self.current_rate
-                                ))
-                            
-                    else:
-
-                        # if no music_override file,
-                        # work with music file
-                        icup_audio_pitch.create_file(
-                            self.music_path,
-                            self.current_rate
-                            )
-
-                        # add the output file to list of files to
-                        # delete after level is created
-                        self.output_level_files.append(
-                            icup_audio_pitch.get_output_name(
-                                self.music_path,
-                                self.current_rate
-                                ))
-
-                    if self.preview_path != None:
-                            
-                        # work with music_preview file (if it exists)
-                        icup_audio_pitch.create_file(
-                            self.preview_path,
-                            self.current_rate
-                            )
-
-                        # add the output file to list of files to
-                        # delete after level is created
-                        self.output_level_files.append(
-                            icup_audio_pitch.get_output_name(
-                                self.preview_path,
-                                self.current_rate
-                                ))
-
-                    # work with chart file
-                    icup_chart.create_file(
-                        self.easy_chart_path,
-                        self.current_rate
-                        )
-
-                    # store output name of new chart file
-                    # (file is worked with further if user has
-                    # selected AR options)
-                    self.rate_chart_path = icup_chart.get_output_name(
-                        self.easy_chart_path,
-                        self.current_rate
-                        )
-
-                # if user has not selected any AR options
-                if self.user_ar_options == []:
-                    
-                    # add the output file to list of files to
-                    # delete after level is created
-                    self.output_level_files.append(
-                        self.rate_chart_path)
-
-                    # (if user has selected AR options,
-                    # chart file will be deleted separately to
-                    # prevent it from being written to the Cytoid
-                    # output file)
-
-                # loop through AR options chosen by the user
-                for option in self.user_ar_options:
-
-                    # if AR type is xmod
-                    if option[0] == 'x':
-
-                        # work with chart file using xmod module
-                        icup_xmod.create_file(
-                            self.rate_chart_path,
-                            option[1] # ar value
-                            )
-
-                        # add the output file to list of files to
-                        # delete after level is created
-                        self.output_level_files.append(
-                            icup_xmod.get_output_name(
-                                self.rate_chart_path,
-                                option[1]
-                            ))
-
-                    # if AR type is cmod (scales with rates)
-                    if option[0] == 'c':
-
-                        # work with chart file using xmod module
-                        icup_cmod.create_file(
-                            self.rate_chart_path,
-                            round((option[1] * self.current_rate), 8)
-                            )
-
-                        # add the output file to list of files to
-                        # delete after level is created
-                        self.output_level_files.append(
-                            icup_cmod.get_output_name(
-                                self.rate_chart_path,
-                                round((option[1] * self.current_rate), 8)
-                            ))
-
-                    # if AR type is Cmod (does not scale with rates)
-                    if option[0] == 'C':
-
-                        # work with chart file using xmod module
-                        icup_cmod.create_file(
-                            self.rate_chart_path,
-                            option[1] # ar value
-                            )
-
-                        # add the output file to list of files to
-                        # delete after level is created
-                        self.output_level_files.append(
-                            icup_cmod.get_output_name(
-                                self.rate_chart_path,
-                                option[1]
-                            ))
 
                 # open beta.level.json to work with and update metadata
                 self.output_json = json.load(open(
@@ -2062,6 +1929,176 @@ class App(tk.Tk):
                 # if the chart has no title_localized, skip this step
                 except KeyError:
                     pass
+
+                # delete all chart objects in output json file
+                # (chart objects will be created with updated metadata
+                # after files have been worked with)
+                for i in range(0, len(self.output_json['charts'])):
+                    del self.output_json['charts'][0]
+                
+                # if easy diff is chosen
+                if diff == 'easy':
+
+                    if self.easy_music_path != None:
+
+                        # work with music_override file (if it exists)
+                        icup_audio_pitch.create_file(
+                            self.easy_music_path,
+                            self.current_rate
+                            )
+
+                        # add the output file to list of files to
+                        # delete after level is created
+                        self.output_level_files.append(
+                            icup_audio_pitch.get_output_name(
+                                self.easy_music_path,
+                                self.current_rate
+                                ))
+
+                        # add path of new music_override file
+                        # to level.json
+                        self.output_json['music']['path'] \
+                        = \
+                        icup_audio_pitch.get_output_name(
+                                self.easy_music_path,
+                                self.current_rate
+                                )
+                            
+                    else:
+
+                        # if no music_override file,
+                        # work with music file
+                        icup_audio_pitch.create_file(
+                            self.music_path,
+                            self.current_rate
+                            )
+
+                        # add the output file to list of files to
+                        # delete after level is created
+                        self.output_level_files.append(
+                            icup_audio_pitch.get_output_name(
+                                self.music_path,
+                                self.current_rate
+                                ))
+
+                        # add path of new music file
+                        # to level.json
+                        self.output_json['music']['path'] \
+                        = \
+                        icup_audio_pitch.get_output_name(
+                                self.music_path,
+                                self.current_rate
+                                )
+
+                    if self.preview_path != None:
+                            
+                        # work with music_preview file (if it exists)
+                        icup_audio_pitch.create_file(
+                            self.preview_path,
+                            self.current_rate
+                            )
+
+                        # add the output file to list of files to
+                        # delete after level is created
+                        self.output_level_files.append(
+                            icup_audio_pitch.get_output_name(
+                                self.preview_path,
+                                self.current_rate
+                                ))
+
+                        # add path of new music_preview file
+                        # to level.json
+                        self.output_json['music_preview']['path'] \
+                        = \
+                        icup_audio_pitch.get_output_name(
+                                self.preview_path,
+                                self.current_rate
+                                )
+
+                    # work with chart file
+                    icup_chart.create_file(
+                        self.easy_chart_path,
+                        self.current_rate
+                        )
+
+                    # store output name of new chart file
+                    # (file is worked with further if user has
+                    # selected AR options)
+                    self.rate_chart_path = icup_chart.get_output_name(
+                        self.easy_chart_path,
+                        self.current_rate
+                        )
+
+                # if user has not selected any AR options
+                if self.user_ar_options == []:
+                    
+                    # add the output file to list of files to
+                    # delete after level is created
+                    self.output_level_files.append(
+                        self.rate_chart_path)
+
+                    # (if user has selected AR options,
+                    # chart file will be deleted separately to
+                    # prevent it from being written to the Cytoid
+                    # output file)
+
+                    
+
+                # loop through AR options chosen by the user
+                for option in self.user_ar_options:
+
+                    # if AR type is xmod
+                    if option[0] == 'x':
+
+                        # work with chart file using xmod module
+                        icup_xmod.create_file(
+                            self.rate_chart_path,
+                            option[1] # ar value
+                            )
+
+                        # add the output file to list of files to
+                        # delete after level is created
+                        self.output_level_files.append(
+                            icup_xmod.get_output_name(
+                                self.rate_chart_path,
+                                option[1]
+                            ))
+
+                    # if AR type is cmod (scales with rates)
+                    if option[0] == 'c':
+
+                        # work with chart file using xmod module
+                        icup_cmod.create_file(
+                            self.rate_chart_path,
+                            round((option[1] * self.current_rate), 8)
+                            )
+
+                        # add the output file to list of files to
+                        # delete after level is created
+                        self.output_level_files.append(
+                            icup_cmod.get_output_name(
+                                self.rate_chart_path,
+                                round((option[1] * self.current_rate), 8)
+                            ))
+
+                    # if AR type is Cmod (does not scale with rates)
+                    if option[0] == 'C':
+
+                        # work with chart file using xmod module
+                        icup_cmod.create_file(
+                            self.rate_chart_path,
+                            option[1] # ar value
+                            )
+
+                        # add the output file to list of files to
+                        # delete after level is created
+                        self.output_level_files.append(
+                            icup_cmod.get_output_name(
+                                self.rate_chart_path,
+                                option[1]
+                            ))
+
+                
 
                 # create level.json for output Cytoid level file
                 with open('level.json', 'w', encoding='utf-8') as output_file:
