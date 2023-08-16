@@ -20,6 +20,7 @@ import ffmpeg
 # import custom modules
 import icup_audio_pitch
 import icup_chart
+import icup_cmod
 import icup_json
 import icup_xmod
 
@@ -754,9 +755,7 @@ class App(tk.Tk):
         self.user_min = None
         self.user_max = None
         self.user_rate_inc = None
-        self.user_ar_option1 = []
-        self.user_ar_option2 = []
-        self.user_ar_option3 = []
+        self.user_ar_options = []
         #self.user_pitch_rates = 1
 
         # variable to keep track of validity of user input
@@ -1179,9 +1178,11 @@ class App(tk.Tk):
                     # if value passed all validity checks
                     else:
 
-                        # append type and value to list
-                        self.user_ar_option1.append(self.user_ar_type1)
-                        self.user_ar_option1.append(self.user_ar_value1)
+                        # append AR option to list
+                        self.user_ar_options.append(
+                            [self.user_ar_type1,
+                             self.user_ar_value1]
+                            )
 
                 # if value is not valid number (invalid)
                 except ValueError:
@@ -1369,9 +1370,11 @@ class App(tk.Tk):
                     # if value passed all validity checks
                     else:
 
-                        # append type and value to list
-                        self.user_ar_option2.append(self.user_ar_type2)
-                        self.user_ar_option2.append(self.user_ar_value2)
+                        # append AR option to list
+                        self.user_ar_options.append(
+                            [self.user_ar_type2,
+                             self.user_ar_value2]
+                            )
 
                 # if value is not valid number (invalid)
                 except ValueError:
@@ -1559,9 +1562,11 @@ class App(tk.Tk):
                     # if value passed all validity checks
                     else:
 
-                        # append type and value to list
-                        self.user_ar_option3.append(self.user_ar_type3)
-                        self.user_ar_option3.append(self.user_ar_value3)
+                        # append AR option to list
+                        self.user_ar_options.append(
+                            [self.user_ar_type3,
+                             self.user_ar_value3]
+                            )
 
                 # if value is not valid number (invalid)
                 except ValueError:
@@ -1926,13 +1931,155 @@ class App(tk.Tk):
                         self.current_rate
                         )
 
+                    # store output name of new chart file
+                    # (file is worked with further if user has
+                    # selected AR options)
+                    self.rate_chart_path = icup_chart.get_output_name(
+                        self.easy_chart_path,
+                        self.current_rate
+                        )
+
+                # if user has not selected any AR options
+                if self.user_ar_options == []:
+                    
                     # add the output file to list of files to
                     # delete after level is created
                     self.output_level_files.append(
-                        icup_chart.get_output_name(
-                            self.easy_chart_path,
-                            self.current_rate
+                        self.rate_chart_path)
+
+                    # (if user has selected AR options,
+                    # chart file will be deleted separately to
+                    # prevent it from being written to the Cytoid
+                    # output file)
+
+                # loop through AR options chosen by the user
+                for option in self.user_ar_options:
+
+                    # if AR type is xmod
+                    if option[0] == 'x':
+
+                        # work with chart file using xmod module
+                        icup_xmod.create_file(
+                            self.rate_chart_path,
+                            option[1] # ar value
+                            )
+
+                        # add the output file to list of files to
+                        # delete after level is created
+                        self.output_level_files.append(
+                            icup_xmod.get_output_name(
+                                self.rate_chart_path,
+                                option[1]
                             ))
+
+                    # if AR type is cmod (scales with rates)
+                    if option[0] == 'c':
+
+                        # work with chart file using xmod module
+                        icup_cmod.create_file(
+                            self.rate_chart_path,
+                            round((option[1] * self.current_rate), 8)
+                            )
+
+                        # add the output file to list of files to
+                        # delete after level is created
+                        self.output_level_files.append(
+                            icup_cmod.get_output_name(
+                                self.rate_chart_path,
+                                round((option[1] * self.current_rate), 8)
+                            ))
+
+                    # if AR type is Cmod (does not scale with rates)
+                    if option[0] == 'C':
+
+                        # work with chart file using xmod module
+                        icup_cmod.create_file(
+                            self.rate_chart_path,
+                            option[1] # ar value
+                            )
+
+                        # add the output file to list of files to
+                        # delete after level is created
+                        self.output_level_files.append(
+                            icup_cmod.get_output_name(
+                                self.rate_chart_path,
+                                option[1]
+                            ))
+
+                # open beta.level.json to work with and update metadata
+                self.output_json = json.load(open(
+                    'beta.level.json',
+                    'r',
+                    encoding='utf-8')
+                    )
+
+                # add rate to level id, separated by an underscore
+                self.output_json['id'] \
+                = \
+                (self.output_json['id']
+                 + '_'
+                 + str(self.current_rate)
+                 + 'x')
+
+                # add rate to title inside existing square brackets 
+                if self.square_brackets(self.output_json['title']) == True:
+                    self.output_json['title'] \
+                    = \
+                    (self.output_json['title'][:-1]
+                     + ' '
+                     + str(self.current_rate)
+                     + 'x]')
+
+                # add rate to title in new square brackets
+                # (if title doesn't have them)
+                else:
+                    self.output_json['title'] \
+                    = \
+                    (self.output_json['title']
+                     + ' ['
+                     + str(self.current_rate)
+                     + 'x]')
+
+                # add rate to title_localized inside existing square brackets
+                try: 
+                    if self.square_brackets(self.output_json['title_localized']) == True:
+                        self.output_json['title_localized'] \
+                        = \
+                        (self.output_json['title_localized'][:-1]
+                         + ' '
+                         + str(self.current_rate)
+                         + 'x]')
+
+                    # add rate to title_localized in new square brackets    
+                    else:
+                        self.output_json['title_localized'] \
+                         = \
+                         (self.output_json['title_localized']
+                          + ' ['
+                          + str(self.current_rate)
+                          + 'x]')
+
+                # if the chart has no title_localized, skip this step
+                except KeyError:
+                    pass
+
+                # create level.json for output Cytoid level file
+                with open('level.json', 'w', encoding='utf-8') as output_file:
+                    json.dump(
+                        self.output_json,
+                        output_file,
+                        indent=3,
+                        ensure_ascii=False
+                        )
+
+                # add level.json to list of files
+                # for output Cytoid level file
+                self.output_level_files.append('level.json')
+
+                # delete output chart from icup_chart if
+                # AR options were selected
+                if self.user_ar_options != []:
+                    os.remove(self.rate_chart_path)
 
                 # get index of the last dot in
                 # filename of Cytoid level file
@@ -1957,12 +2104,22 @@ class App(tk.Tk):
                     # after all files have been worked with
                     for path in self.output_level_files:
 
-                        # send all necessary files to
-                        # the output Cytoid level file
-                        level.write(path)
-                        
-                        # delete files
-                        os.remove(path)
+                        try:
+
+                            # send all necessary files to
+                            # the output Cytoid level file
+                            level.write(path)
+                            
+                            # delete files
+                            os.remove(path)
+
+                        # if file was already deleted due to
+                        # AR options being the same, delete next file
+                        except FileNotFoundError:
+                            pass
+
+                
+                            
 
                 # increase current rate by chosen rate increment
                 self.current_rate += self.user_rate_inc
@@ -1971,6 +2128,32 @@ class App(tk.Tk):
                 # addition of floats
                 self.current_rate = round(self.current_rate, 8)
 
+            # delete all of the original files extracted from the
+            # Cytoid level file opened by the user
+            for path in self.files_to_delete:
+
+                try:
+                    os.remove(path)
+
+                # if file was already deleted, move on to text file
+                # (sometimes music and music_override paths are duplicates)
+                except FileNotFoundError:
+                    pass
+
+    def square_brackets(self, string):
+        '''The function checks if the title or title_localized fields
+        in a level.json file have square brackets. Square brackets are
+        a convention used by some charters that include information
+        describing the chart(s), and is not considered part of the
+        song title. If square brackets are detected in the song title,
+        the rate will be inserted inside the square brackets instead
+        of being appended at the end of the title.
+        '''
+        
+        if '[' in string and string.endswith(']'):
+            return True
+        else:
+            return False
 
 class OuterFrame(ttk.Frame):
     '''This class creates invisible frames for the buttons and visible

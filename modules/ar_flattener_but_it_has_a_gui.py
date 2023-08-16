@@ -1,3 +1,6 @@
+# NOTE: had to comment target_BPM assignment for ICUP. (line 92)
+# to get this program to work on its own, uncomment line 92
+
 import tkinter as tk
 from tkinter import filedialog
 import json

@@ -1,3 +1,6 @@
+# NOTE: not currently being used - this code was moved to the main
+# program to make it easier to get the necessary paths.
+
 # import required modules
 import json
 
@@ -62,13 +65,15 @@ def create_file(rate):
 
 # function to check for square brackets e.g. [Hard]
 def square_brackets(string):
-    '''The function checks whether title or title_localized have square 
-    brackets. Square brackets are a convention used by some charters 
-    that include information describing the chart(s), and is not
-    considered part of the song title. If square brackets are detected
-    in the song title, the rate will be inserted inside the square 
-    brackets instead of being appended at the end of the title.
+    '''The function checks if the title or title_localized fields in
+    a level.json file have square brackets. Square brackets are a
+    convention used by some charters that include information
+    describing the chart(s), and is not considered part of the song
+    title. If square brackets are detected in the song title, the rate
+    will be inserted inside the square brackets instead of being
+    appended at the end of the title.
     '''
+    
     if '[' in string and string.endswith(']'):
         return True
     else:
