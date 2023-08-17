@@ -2042,10 +2042,20 @@ class App(tk.Tk):
                     # prevent it from being written to the Cytoid
                     # output file)
 
+                    # add chart object to charts in output level.json
+                    self.output_json['charts'].append({
+                        'type': 'extreme',
+                        'difficulty': 0,
+                        'path': self.rate_chart_path
+                        })
                     
 
                 # loop through AR options chosen by the user
                 for option in self.user_ar_options:
+
+                    # create variable to track which AR option is
+                    # being worked with
+                    ar_index = 0
 
                     # if AR type is xmod
                     if option[0] == 'x':
@@ -2062,7 +2072,7 @@ class App(tk.Tk):
                             icup_xmod.get_output_name(
                                 self.rate_chart_path,
                                 option[1]
-                            ))
+                            )) 
 
                     # if AR type is cmod (scales with rates)
                     if option[0] == 'c':
