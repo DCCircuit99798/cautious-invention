@@ -1699,8 +1699,6 @@ class App(tk.Tk):
         new levels once the Cytoid level file and user input have
         been marked as valid.'''
 
-        print('start working with files') # debugging purposes
-
         # create list of files to delete after all new levels have
         # been created
         self.files_to_delete = []
@@ -1885,50 +1883,10 @@ class App(tk.Tk):
                 = \
                 (self.output_json['id']
                  + '_'
+                 + diff
+                 + '_'
                  + str(self.current_rate)
                  + 'x')
-
-                # add rate to title inside existing square brackets 
-                if self.square_brackets(self.output_json['title']) == True:
-                    self.output_json['title'] \
-                    = \
-                    (self.output_json['title'][:-1]
-                     + ' '
-                     + str(self.current_rate)
-                     + 'x]')
-
-                # add rate to title in new square brackets
-                # (if title doesn't have them)
-                else:
-                    self.output_json['title'] \
-                    = \
-                    (self.output_json['title']
-                     + ' ['
-                     + str(self.current_rate)
-                     + 'x]')
-
-                # add rate to title_localized inside existing square brackets
-                try: 
-                    if self.square_brackets(self.output_json['title_localized']) == True:
-                        self.output_json['title_localized'] \
-                        = \
-                        (self.output_json['title_localized'][:-1]
-                         + ' '
-                         + str(self.current_rate)
-                         + 'x]')
-
-                    # add rate to title_localized in new square brackets    
-                    else:
-                        self.output_json['title_localized'] \
-                         = \
-                         (self.output_json['title_localized']
-                          + ' ['
-                          + str(self.current_rate)
-                          + 'x]')
-
-                # if the chart has no title_localized, skip this step
-                except KeyError:
-                    pass
 
                 # delete all chart objects in output json file
                 # (chart objects will be created with updated metadata
@@ -1938,6 +1896,48 @@ class App(tk.Tk):
                 
                 # if easy diff is chosen
                 if diff == 'easy':
+
+                    # add rate to title inside existing square brackets 
+                    if self.square_brackets(self.output_json['title']) == True:
+                        self.output_json['title'] \
+                        = \
+                        (self.output_json['title'][:-1]
+                         + ': Easy '
+                         + str(self.current_rate)
+                         + 'x]')
+
+                    # add rate to title in new square brackets
+                    # (if title doesn't have them)
+                    else:
+                        self.output_json['title'] \
+                        = \
+                        (self.output_json['title']
+                         + ' [Easy '
+                         + str(self.current_rate)
+                         + 'x]')
+
+                    # add rate to title_localized inside existing square brackets
+                    try: 
+                        if self.square_brackets(self.output_json['title_localized']) == True:
+                            self.output_json['title_localized'] \
+                            = \
+                            (self.output_json['title_localized'][:-1]
+                             + ': Easy '
+                             + str(self.current_rate)
+                             + 'x]')
+
+                        # add rate to title_localized in new square brackets    
+                        else:
+                            self.output_json['title_localized'] \
+                             = \
+                             (self.output_json['title_localized']
+                              + ' [Easy '
+                              + str(self.current_rate)
+                              + 'x]')
+
+                    # if the chart has no title_localized, skip this step
+                    except KeyError:
+                        pass
 
                     if self.easy_music_path != None:
 
@@ -2029,6 +2029,276 @@ class App(tk.Tk):
                         self.current_rate
                         )
 
+                # if hard diff is chosen
+                if diff == 'hard':
+
+                    # add rate to title inside existing square brackets 
+                    if self.square_brackets(self.output_json['title']) == True:
+                        self.output_json['title'] \
+                        = \
+                        (self.output_json['title'][:-1]
+                         + ': Hard '
+                         + str(self.current_rate)
+                         + 'x]')
+
+                    # add rate to title in new square brackets
+                    # (if title doesn't have them)
+                    else:
+                        self.output_json['title'] \
+                        = \
+                        (self.output_json['title']
+                         + ' [Hard '
+                         + str(self.current_rate)
+                         + 'x]')
+
+                    # add rate to title_localized inside existing square brackets
+                    try: 
+                        if self.square_brackets(self.output_json['title_localized']) == True:
+                            self.output_json['title_localized'] \
+                            = \
+                            (self.output_json['title_localized'][:-1]
+                             + ': Hard '
+                             + str(self.current_rate)
+                             + 'x]')
+
+                        # add rate to title_localized in new square brackets    
+                        else:
+                            self.output_json['title_localized'] \
+                             = \
+                             (self.output_json['title_localized']
+                              + ' [Hard '
+                              + str(self.current_rate)
+                              + 'x]')
+
+                    # if the chart has no title_localized, skip this step
+                    except KeyError:
+                        pass
+
+                    if self.hard_music_path != None:
+
+                        # work with music_override file (if it exists)
+                        icup_audio_pitch.create_file(
+                            self.hard_music_path,
+                            self.current_rate
+                            )
+
+                        # add the output file to list of files to
+                        # delete after level is created
+                        self.output_level_files.append(
+                            icup_audio_pitch.get_output_name(
+                                self.hard_music_path,
+                                self.current_rate
+                                ))
+
+                        # add path of new music_override file
+                        # to level.json
+                        self.output_json['music']['path'] \
+                        = \
+                        icup_audio_pitch.get_output_name(
+                                self.hard_music_path,
+                                self.current_rate
+                                )
+                            
+                    else:
+
+                        # if no music_override file,
+                        # work with music file
+                        icup_audio_pitch.create_file(
+                            self.music_path,
+                            self.current_rate
+                            )
+
+                        # add the output file to list of files to
+                        # delete after level is created
+                        self.output_level_files.append(
+                            icup_audio_pitch.get_output_name(
+                                self.music_path,
+                                self.current_rate
+                                ))
+
+                        # add path of new music file
+                        # to level.json
+                        self.output_json['music']['path'] \
+                        = \
+                        icup_audio_pitch.get_output_name(
+                                self.music_path,
+                                self.current_rate
+                                )
+
+                    if self.preview_path != None:
+                            
+                        # work with music_preview file (if it exists)
+                        icup_audio_pitch.create_file(
+                            self.preview_path,
+                            self.current_rate
+                            )
+
+                        # add the output file to list of files to
+                        # delete after level is created
+                        self.output_level_files.append(
+                            icup_audio_pitch.get_output_name(
+                                self.preview_path,
+                                self.current_rate
+                                ))
+
+                        # add path of new music_preview file
+                        # to level.json
+                        self.output_json['music_preview']['path'] \
+                        = \
+                        icup_audio_pitch.get_output_name(
+                                self.preview_path,
+                                self.current_rate
+                                )
+
+                    # work with chart file
+                    icup_chart.create_file(
+                        self.hard_chart_path,
+                        self.current_rate
+                        )
+
+                    # store output name of new chart file
+                    # (file is worked with further if user has
+                    # selected AR options)
+                    self.rate_chart_path = icup_chart.get_output_name(
+                        self.hard_chart_path,
+                        self.current_rate
+                        )
+
+                # if extreme diff is chosen
+                if diff == 'extreme':
+
+                    # add rate to title inside existing square brackets 
+                    if self.square_brackets(self.output_json['title']) == True:
+                        self.output_json['title'] \
+                        = \
+                        (self.output_json['title'][:-1]
+                         + ': Extreme '
+                         + str(self.current_rate)
+                         + 'x]')
+
+                    # add rate to title in new square brackets
+                    # (if title doesn't have them)
+                    else:
+                        self.output_json['title'] \
+                        = \
+                        (self.output_json['title']
+                         + ' [Extreme '
+                         + str(self.current_rate)
+                         + 'x]')
+
+                    # add rate to title_localized inside existing square brackets
+                    try: 
+                        if self.square_brackets(self.output_json['title_localized']) == True:
+                            self.output_json['title_localized'] \
+                            = \
+                            (self.output_json['title_localized'][:-1]
+                             + ': Extreme '
+                             + str(self.current_rate)
+                             + 'x]')
+
+                        # add rate to title_localized in new square brackets    
+                        else:
+                            self.output_json['title_localized'] \
+                             = \
+                             (self.output_json['title_localized']
+                              + ' [Extreme '
+                              + str(self.current_rate)
+                              + 'x]')
+
+                    # if the chart has no title_localized, skip this step
+                    except KeyError:
+                        pass
+
+                    if self.ex_music_path != None:
+
+                        # work with music_override file (if it exists)
+                        icup_audio_pitch.create_file(
+                            self.ex_music_path,
+                            self.current_rate
+                            )
+
+                        # add the output file to list of files to
+                        # delete after level is created
+                        self.output_level_files.append(
+                            icup_audio_pitch.get_output_name(
+                                self.ex_music_path,
+                                self.current_rate
+                                ))
+
+                        # add path of new music_override file
+                        # to level.json
+                        self.output_json['music']['path'] \
+                        = \
+                        icup_audio_pitch.get_output_name(
+                                self.ex_music_path,
+                                self.current_rate
+                                )
+                            
+                    else:
+
+                        # if no music_override file,
+                        # work with music file
+                        icup_audio_pitch.create_file(
+                            self.music_path,
+                            self.current_rate
+                            )
+
+                        # add the output file to list of files to
+                        # delete after level is created
+                        self.output_level_files.append(
+                            icup_audio_pitch.get_output_name(
+                                self.music_path,
+                                self.current_rate
+                                ))
+
+                        # add path of new music file
+                        # to level.json
+                        self.output_json['music']['path'] \
+                        = \
+                        icup_audio_pitch.get_output_name(
+                                self.music_path,
+                                self.current_rate
+                                )
+
+                    if self.preview_path != None:
+                            
+                        # work with music_preview file (if it exists)
+                        icup_audio_pitch.create_file(
+                            self.preview_path,
+                            self.current_rate
+                            )
+
+                        # add the output file to list of files to
+                        # delete after level is created
+                        self.output_level_files.append(
+                            icup_audio_pitch.get_output_name(
+                                self.preview_path,
+                                self.current_rate
+                                ))
+
+                        # add path of new music_preview file
+                        # to level.json
+                        self.output_json['music_preview']['path'] \
+                        = \
+                        icup_audio_pitch.get_output_name(
+                                self.preview_path,
+                                self.current_rate
+                                )
+
+                    # work with chart file
+                    icup_chart.create_file(
+                        self.ex_chart_path,
+                        self.current_rate
+                        )
+
+                    # store output name of new chart file
+                    # (file is worked with further if user has
+                    # selected AR options)
+                    self.rate_chart_path = icup_chart.get_output_name(
+                        self.ex_chart_path,
+                        self.current_rate
+                        )
+
                 # if user has not selected any AR options
                 if self.user_ar_options == []:
                     
@@ -2048,22 +2318,35 @@ class App(tk.Tk):
                         'difficulty': 0,
                         'path': self.rate_chart_path
                         })
+
+                # create list of diffs to output the charts to
+                # (if AR options have been selected)
+                self.output_diffs = []
+
+                # adds diffs to self.output_diffs starting
+                # from extreme (extreme is often seen as the 'default'
+                # difficulty by players)
+                for i in range(0, len(self.user_ar_options)):
+
+                    if i == 0:
+                        self.output_diffs.insert(0, 'extreme')
                     
+                    if i == 1:
+                        self.output_diffs.insert(0, 'hard')
+                    
+                    if i == 2:
+                        self.output_diffs.insert(0, 'easy')
 
                 # loop through AR options chosen by the user
-                for option in self.user_ar_options:
-
-                    # create variable to track which AR option is
-                    # being worked with
-                    ar_index = 0
+                for i in range(0, len(self.user_ar_options)):
 
                     # if AR type is xmod
-                    if option[0] == 'x':
+                    if self.user_ar_options[i][0] == 'x':
 
                         # work with chart file using xmod module
                         icup_xmod.create_file(
                             self.rate_chart_path,
-                            option[1] # ar value
+                            self.user_ar_options[i][1] # ar value
                             )
 
                         # add the output file to list of files to
@@ -2071,16 +2354,25 @@ class App(tk.Tk):
                         self.output_level_files.append(
                             icup_xmod.get_output_name(
                                 self.rate_chart_path,
-                                option[1]
-                            )) 
+                                self.user_ar_options[i][1]
+                            ))
+
+                        # add chart object to charts in output level.json
+                        self.output_json['charts'].append({
+                            'type': self.output_diffs[i],
+                            'difficulty': 0,
+                            'path': icup_xmod.get_output_name(
+                                self.rate_chart_path,
+                                self.user_ar_options[i][1])
+                            })
 
                     # if AR type is cmod (scales with rates)
-                    if option[0] == 'c':
+                    if self.user_ar_options[i][0] == 'c':
 
                         # work with chart file using xmod module
                         icup_cmod.create_file(
                             self.rate_chart_path,
-                            round((option[1] * self.current_rate), 8)
+                            round((self.user_ar_options[i][1] * self.current_rate), 8)
                             )
 
                         # add the output file to list of files to
@@ -2088,16 +2380,25 @@ class App(tk.Tk):
                         self.output_level_files.append(
                             icup_cmod.get_output_name(
                                 self.rate_chart_path,
-                                round((option[1] * self.current_rate), 8)
+                                round((self.user_ar_options[i][1] * self.current_rate), 8)
                             ))
+
+                        # add chart object to charts in output level.json
+                        self.output_json['charts'].append({
+                            'type': self.output_diffs[i],
+                            'difficulty': 0,
+                            'path': icup_cmod.get_output_name(
+                                self.rate_chart_path,
+                                round((self.user_ar_options[i][1] * self.current_rate), 8))
+                            })
 
                     # if AR type is Cmod (does not scale with rates)
-                    if option[0] == 'C':
+                    if self.user_ar_options[i][0] == 'C':
 
                         # work with chart file using xmod module
                         icup_cmod.create_file(
                             self.rate_chart_path,
-                            option[1] # ar value
+                            self.user_ar_options[i][1] # ar value
                             )
 
                         # add the output file to list of files to
@@ -2105,8 +2406,17 @@ class App(tk.Tk):
                         self.output_level_files.append(
                             icup_cmod.get_output_name(
                                 self.rate_chart_path,
-                                option[1]
+                                self.user_ar_options[i][1]
                             ))
+
+                        # add chart object to charts in output level.json
+                        self.output_json['charts'].append({
+                            'type': self.output_diffs[i],
+                            'difficulty': 0,
+                            'path': icup_cmod.get_output_name(
+                                self.rate_chart_path,
+                                self.user_ar_options[i][1])
+                            })
 
                 
 
@@ -2132,9 +2442,11 @@ class App(tk.Tk):
                 # filename of Cytoid level file
                 self.last_dot = self.user_level_path.rfind('.')
 
-                # create output name by putting the rate
+                # create output name by putting the diff and rate
                 # in between the filename and the extension
                 self.output_name = (self.user_level_path[:self.last_dot]
+                       + '_'
+                       + diff
                        + '_'
                        + str(self.current_rate)
                        + 'x'
@@ -2165,6 +2477,8 @@ class App(tk.Tk):
                         except FileNotFoundError:
                             pass
 
+                print(self.output_name)
+
                 
                             
 
@@ -2175,17 +2489,18 @@ class App(tk.Tk):
                 # addition of floats
                 self.current_rate = round(self.current_rate, 8)
 
-            # delete all of the original files extracted from the
-            # Cytoid level file opened by the user
-            for path in self.files_to_delete:
+        # once all output Cytoid levels have been created,
+        # delete all of the original files extracted from the
+        # Cytoid level file opened by the user
+        for path in self.files_to_delete:
 
-                try:
-                    os.remove(path)
+            try:
+                os.remove(path)
 
-                # if file was already deleted, move on to text file
-                # (sometimes music and music_override paths are duplicates)
-                except FileNotFoundError:
-                    pass
+            # if file was already deleted, move on to text file
+            # (sometimes music and music_override paths are duplicates)
+            except FileNotFoundError:
+                pass
 
     def square_brackets(self, string):
         '''The function checks if the title or title_localized fields
@@ -2201,6 +2516,12 @@ class App(tk.Tk):
             return True
         else:
             return False
+
+    def add_ar_chart(self, index):
+        '''This function adds a chart object with the path of the
+        chart file and the correct type (easy, hard, extreme) to the
+        output level.json file.
+        '''
 
 class OuterFrame(ttk.Frame):
     '''This class creates invisible frames for the buttons and visible
