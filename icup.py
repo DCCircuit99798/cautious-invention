@@ -2343,6 +2343,13 @@ class App(tk.Tk):
                     # if AR type is xmod
                     if self.user_ar_options[i][0] == 'x':
 
+                        # create AR name for output difficulty
+                        self.ar_name \
+                        = \
+                        ('AR x'
+                         + str(self.user_ar_options[i][1])
+                         )
+                        
                         # work with chart file using xmod module
                         icup_xmod.create_file(
                             self.rate_chart_path,
@@ -2360,6 +2367,7 @@ class App(tk.Tk):
                         # add chart object to charts in output level.json
                         self.output_json['charts'].append({
                             'type': self.output_diffs[i],
+                            'name': self.ar_name,
                             'difficulty': 0,
                             'path': icup_xmod.get_output_name(
                                 self.rate_chart_path,
@@ -2368,6 +2376,13 @@ class App(tk.Tk):
 
                     # if AR type is cmod (scales with rates)
                     if self.user_ar_options[i][0] == 'c':
+
+                        # create AR name for output difficulty
+                        self.ar_name \
+                        = \
+                        ('AR C'
+                         + str(round((self.user_ar_options[i][1] * self.current_rate), 8))
+                         )
 
                         # work with chart file using xmod module
                         icup_cmod.create_file(
@@ -2386,6 +2401,7 @@ class App(tk.Tk):
                         # add chart object to charts in output level.json
                         self.output_json['charts'].append({
                             'type': self.output_diffs[i],
+                            'name': self.ar_name,
                             'difficulty': 0,
                             'path': icup_cmod.get_output_name(
                                 self.rate_chart_path,
@@ -2394,6 +2410,13 @@ class App(tk.Tk):
 
                     # if AR type is Cmod (does not scale with rates)
                     if self.user_ar_options[i][0] == 'C':
+
+                        # create AR name for output difficulty
+                        self.ar_name \
+                        = \
+                        ('AR C'
+                         + str(self.user_ar_options[i][1])
+                         )
 
                         # work with chart file using xmod module
                         icup_cmod.create_file(
@@ -2412,6 +2435,7 @@ class App(tk.Tk):
                         # add chart object to charts in output level.json
                         self.output_json['charts'].append({
                             'type': self.output_diffs[i],
+                            'name': self.ar_name,
                             'difficulty': 0,
                             'path': icup_cmod.get_output_name(
                                 self.rate_chart_path,
