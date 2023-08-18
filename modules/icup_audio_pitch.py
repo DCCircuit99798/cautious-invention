@@ -1,6 +1,7 @@
 # import required modules
 from pydub import AudioSegment
 import ffmpeg
+import fleep
 
 def create_file(filename, rate):
     '''Function to change the speed and pitch of an audio file
@@ -27,7 +28,31 @@ def create_file(filename, rate):
     audio_rate = audio_framerate.set_frame_rate(audio.frame_rate)
 
     # export the file
-    audio_rate.export(get_output_name(filename, rate))
+    audio_rate.export(get_output_name(filename, rate),
+                      format=get_format(filename))
+
+
+def get_format(filename):
+    '''Function to get the file extension of a chosen file.'''
+
+    with open(filename, 'rb') as file:
+        info = fleep.get(file.read(128))
+
+    # if audio file is ogg format (commonly used format in Cytoid
+    # where info.extension returns a list of two strings instead of
+    # a single string)
+    if info.extension == ['oga', 'ogv']:
+
+        # set file_format to ogg
+        file_format = 'ogg'
+
+    else:
+
+        # for other extensions, let file_format be
+        # same as info.extension
+        file_format = info.extension[0]
+
+    return file_format
 
 
 def get_output_name(filename, rate):
@@ -43,7 +68,8 @@ def get_output_name(filename, rate):
         output_name = (filename
                        + '_'
                        + str(rate)
-                       + 'x')
+                       + 'x.'
+                       + get_format(filename))
 
     # otherwise, create the output name by putting the rate
     # in between the filename and the extension
@@ -51,7 +77,7 @@ def get_output_name(filename, rate):
         output_name = (filename[:last_dot]
                        + '_'
                        + str(rate)
-                       + 'x'
-                       + filename[last_dot:])
+                       + 'x.'
+                       + get_format(filename))
 
     return output_name
