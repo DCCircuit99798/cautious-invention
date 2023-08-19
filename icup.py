@@ -1,5 +1,6 @@
 # import required modules
 import json
+import math
 import os
 from pathlib import Path
 import tkinter as tk
@@ -22,13 +23,6 @@ import icup_audio_pitch
 import icup_chart
 import icup_cmod
 import icup_xmod
-
-# store path of temp folder to store temporary files
-temp_path = str(Path(os.getcwd()) / 'temp')
-
-# if temp folder does not exist already, create the folder
-if os.path.isdir(temp_path) == False:
-    os.mkdir(temp_path)
 
 class App(tk.Tk):
     '''Create the main window of the program'''
@@ -438,7 +432,7 @@ class App(tk.Tk):
                          ('.zip file','*.zip'),
                          ('All files','*.*'))
             )
-
+        
         # display messagebox if user does not select a file
         if self.user_level_path == '':
             messagebox.showerror(
@@ -455,6 +449,25 @@ class App(tk.Tk):
 
             # prevent the rest of the level validity checks
             # from running
+            return
+
+        # convert level path to Path object then to string
+        # (make checks for unexpected files easier)
+        self.user_level_path = str(Path(self.user_level_path))
+
+        # if there are unexpected files in the current working
+        # directory and the user chooses not to continue
+        if self.unexpected_files() == False:
+
+            # mark Cytoid level file as invalid
+            self.level_validity = False
+
+            # configure 'choose file' button border to red
+            self.style.configure(
+                'ChooseFile.WidgetBorder.TFrame',
+                background='#ee9f9f')
+            
+            # exit the function without extracting any files
             return
 
         # create list of files to delete after all files have
@@ -662,6 +675,52 @@ class App(tk.Tk):
             # (sometimes music and music_override paths are duplicates)
             except FileNotFoundError:
                 pass
+
+    def unexpected_files(self):
+        '''This function is used by the choose_file and
+        check_user_validity functions to check if there are any
+        unexpected files in the current working directory that may be
+        overwritten and deleted when files are being worked with.'''
+
+        # create list of expected files and directories in the
+        # ICUP folder
+        self.expected_files = ['icup.py',
+                               'modules',
+                               '.git',
+                               '.gitattributes']
+
+        # append path of chosen Cytoid level to list of
+        # expected files
+        self.expected_files.append(self.user_level_path)
+        
+        # set default confirmation value if messagebox does not appear
+        # (no unexpected files)
+        confirm = True
+
+        # loop through paths of all files in current working directory
+        for path in os.listdir():
+
+            # if extra file is detected
+            if path not in self.expected_files:
+
+                # (this accounts for user_level_path being an
+                # absolute path)
+                if str(Path(os.getcwd()) / path) not in self.expected_files:
+
+                    # display messagebox to confirm if user wants
+                    # to continue
+                    confirm = messagebox.askyesno(
+                        title='Confirmation',
+                        message='Extra files have been detected in ' \
+                        'this folder that may be deleted or ' \
+                        'overwritten when the Cytoid level file is ' \
+                        'worked with. Do you wish to continue?')
+
+                    # exit the loop so that messagebox only appears once
+                    break
+
+        # return confirmation value
+        return confirm
             
 
     def check_user_validity(self):
@@ -1550,10 +1609,47 @@ class App(tk.Tk):
                 'Chosen Cytoid level file is not valid'
                 )
 
-        # call function to work with necessary files
-        # if both user input and Cytoid level file are valid
-        elif self.level_validity == True and self.user_validity == True:
+        # call function to work with necessary files if
+        # both user input and Cytoid level file are valid and
+        # unexpected_files returns True
+        elif (self.level_validity == True
+              and self.user_validity == True
+              and self.unexpected_files() == True
+              and self.output_num_check() == True):
             self.work_with_files()
+
+    def output_num_check(self):
+        '''This function calculates the total number of Cytoid levels
+        that will be created according to the user input, and warns
+        the user if more than 20 levels will be created.
+        '''
+
+        # calculate total number of rates that are looped through
+        total_rates = (self.user_max - self.user_min) / self.user_rate_inc + 1
+
+        # round to eliminate round-off errors from working with floats
+        # then round down to nearest integer
+        total_rates = math.floor(round(total_rates, 8))
+
+        # calculate total levels
+        total_levels = total_rates * len(self.user_diffs)
+
+        # set default confirmation value if messagebox does not appear
+        # (i.e. number of levels created will be 20 or fewer)
+        confirm = True
+
+        # if more than 20 levels will be created
+        if total_levels > 20:
+
+            # display messagebox to confirm to the user if they want
+            # to continue
+            confirm = messagebox.askyesno(
+                title='Warning',
+                message='You are about to create ' \
+                        '{} new Cytoid level files. ' \
+                        'Do you wish to continue?'.format(total_levels))
+
+        return confirm
 
     def ar_error(self, index, message):
         '''Displays error message for an AR option in the first
