@@ -21,8 +21,14 @@ import ffmpeg
 import icup_audio_pitch
 import icup_chart
 import icup_cmod
-import icup_json
 import icup_xmod
+
+# store path of temp folder to store temporary files
+temp_path = str(Path(os.getcwd()) / 'temp')
+
+# if temp folder does not exist already, create the folder
+if os.path.isdir(temp_path) == False:
+    os.mkdir(temp_path)
 
 class App(tk.Tk):
     '''Create the main window of the program'''
@@ -544,150 +550,62 @@ class App(tk.Tk):
                 self.files_to_delete.append(self.user_json['music']['path'])
                 AudioSegment.from_file(self.user_json['music']['path'])
 
-            # if key or audio file does not exist, then level file
-            # does not contain music file
-            except (KeyError, FileNotFoundError) as e:
+            # if key or audio file does not exist, or audio file is
+            # invalid, then level file does not contain music file
+            except (KeyError, FileNotFoundError, IndexError) as e:
                 self.has_music = False
             
             # iterate through each diff in level.json
             for chart in self.user_json['charts']:
+                
+                # get chart
+                try:
+                    level.extract(chart['path'])
+                    self.files_to_delete.append(chart['path'])
+                    json.loads(
+                        open(chart['path'], 'r', encoding='utf-8').read())
 
-                # check diff_type
-                self.diff_type = chart['type']
+                # if key doesn't exist in level.json or
+                # chart file does not exist or
+                # chart file is not valid json,
+                # check next diff in level.json (this diff is invalid)
+                except (KeyError, FileNotFoundError, json.JSONDecodeError) as e:
+                    continue
 
-                # if chart type is easy, check if easy diff is valid
-                if self.diff_type == 'easy':
+                # get music_override
+                try:
+                    level.extract(chart['music_override']['path'])
+                    self.files_to_delete.append(chart['music_override']['path'])
+                    AudioSegment.from_file(chart['music_override']['path'])
 
-                    # get chart
-                    try:
-                        level.extract(chart['path'])
-                        self.files_to_delete.append(chart['path'])
-                        json.loads(
-                            open(chart['path'], 'r', encoding='utf-8').read())
+                    # if there is a valid music_override file,
+                    # this diff is valid
+                    self.diffs_available.append(chart['type'])
 
-                    # if key doesn't exist in level.json or
-                    # chart file does not exist or
-                    # chart file is not valid json,
-                    # check next diff in level.json (this diff is invalid)
-                    except (KeyError, FileNotFoundError, json.JSONDecodeError) as e:
+                # if key or audio file does not exist, or audio
+                # file is invalid, then level file does not
+                # contain music override file
+                except (KeyError, FileNotFoundError, IndexError) as e:
+                    
+                    # if there is no music or music_override file,
+                    # check next diff (this diff is invalid,
+                    # an audio file is required)
+                    if self.has_music == False:
                         continue
 
-                    # get music_override
-                    try:
-                        level.extract(chart['music_override']['path'])
-                        self.files_to_delete.append(chart['music_override']['path'])
-                        AudioSegment.from_file(chart['music_override']['path'])
-
-                        # if there is a valid music_override file,
-                        # this diff is valid
-                        self.diffs_available.append('easy')
-
-                    # if key doesn't exist in level.json or
-                    # audio file does not exist
-                    except (KeyError, FileNotFoundError) as e:
-
-                        # if there is no music or music_override file,
-                        # check next diff (this diff is invalid,
-                        # an audio file is required)
-                        if self.has_music == False:
-                            continue
-
-                        # if there is a music file and no music_override,
-                        # this diff is valid
-                        else:
-                            self.diffs_available.append('easy')
-
-                # if chart type is hard, check if hard diff is valid
-                if self.diff_type == 'hard':
-
-                    # get chart
-                    try:
-                        level.extract(chart['path'])
-                        self.files_to_delete.append(chart['path'])
-                        json.loads(
-                            open(chart['path'], 'r', encoding='utf-8').read())
-
-                    # if key doesn't exist in level.json or
-                    # chart file does not exist or
-                    # chart file is not valid json,
-                    # check next diff in level.json (this diff is invalid)
-                    except (KeyError, FileNotFoundError, json.JSONDecodeError) as e:
-                        continue
-
-                    # get music_override
-                    try:
-                        level.extract(chart['music_override']['path'])
-                        self.files_to_delete.append(chart['music_override']['path'])
-                        AudioSegment.from_file(chart['music_override']['path'])
-
-                        # if there is a valid music_override file,
-                        # this diff is valid
-                        self.diffs_available.append('hard')
-
-                    # if key doesn't exist in level.json or
-                    # audio file does not exist
-                    except (KeyError, FileNotFoundError) as e:
-
-                        # if there is no music or music_override file,
-                        # check next diff (this diff is invalid,
-                        # an audio file is required)
-                        if self.has_music == False:
-                            continue
-
-                        # if there is a music file and no music_override,
-                        # this diff is valid
-                        else:
-                            self.diffs_available.append('hard')
-
-                # if chart type is extreme, check if extreme diff is valid
-                if self.diff_type == 'extreme':
-
-                    # get chart
-                    try:
-                        level.extract(chart['path'])
-                        self.files_to_delete.append(chart['path'])
-                        json.loads(
-                            open(chart['path'], 'r', encoding='utf-8').read())
-
-                    # if key doesn't exist in level.json or
-                    # chart file does not exist or
-                    # chart file is not valid json,
-                    # check next diff in level.json (this diff is invalid)
-                    except (KeyError, FileNotFoundError, json.JSONDecodeError) as e:
-                        continue
-
-                    # get music_override
-                    try:
-                        level.extract(chart['music_override']['path'])
-                        self.files_to_delete.append(chart['music_override']['path'])
-                        AudioSegment.from_file(chart['music_override']['path'])
-
-                        # if there is a valid music_override file,
-                        # this diff is valid
-                        self.diffs_available.append('extreme')
-
-                    # if key doesn't exist in level.json or
-                    # audio file does not exist
-                    except (KeyError, FileNotFoundError) as e:
-
-                        # if there is no music or music_override file,
-                        # check next diff (this diff is invalid,
-                        # an audio file is required)
-                        if self.has_music == False:
-                            continue
-
-                        # if there is a music file and no music_override,
-                        # this diff is valid
-                        else:
-                            self.diffs_available.append('extreme')
-
+                    # if there is a music file and no music_override,
+                    # this diff is valid
+                    else:
+                        self.diffs_available.append(chart['type'])
+                        
         # if no valid diffs, display error message and mark the
         # Cytoid level file as invalid
         if self.diffs_available == []:
             messagebox.showerror(
                 'Error',
                 'No valid diffs within Cytoid level file - ' \
-                'are your charts in c1 format?' # speaking from personal experience...
+                'Try checking if your chart files are in c1 format ' \
+                'or if your audio files are invalid'
                 )
 
             self.level_validity = False
@@ -2502,10 +2420,7 @@ class App(tk.Tk):
                             pass
 
                 print(self.output_name)
-
                 
-                            
-
                 # increase current rate by chosen rate increment
                 self.current_rate += self.user_rate_inc
 

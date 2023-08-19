@@ -17,6 +17,13 @@ def create_file(filename, rate):
         input()
         exit()
 
+    # if fleep cannot get extension of file and filename has no
+    # extension, print an error message
+    if get_format(filename) == None:
+        print('ERROR: Cannot get format of file')
+        input()
+        exit()
+
     # manually override samplerate
     # (how many samples to play per second)
     audio_framerate = audio._spawn(audio.raw_data, overrides={
@@ -33,15 +40,34 @@ def create_file(filename, rate):
 
 
 def get_format(filename):
-    '''Function to get the file extension of a chosen file.'''
+    '''Function to get the file extension of a chosen file.
+    Returns None if fleep cannot get extension AND no extension in
+    filename.'''
 
     with open(filename, 'rb') as file:
         info = fleep.get(file.read(128))
 
+    # if fleep cannot get the extension of the file, get format from
+    # filename instead
+    if info.extension == []:
+
+        # get the index of the last dot in filename
+        last_dot = filename.rfind('.')
+
+        # if filename has no extension
+        if last_dot == -1:
+            return None
+
+        # if filename does have dot
+        else:
+        
+            # get extension/format from filename
+            file_format = filename[last_dot+1:]
+
     # if audio file is ogg format (commonly used format in Cytoid
     # where info.extension returns a list of two strings instead of
     # a single string)
-    if info.extension == ['oga', 'ogv']:
+    elif info.extension == ['oga', 'ogv']:
 
         # set file_format to ogg
         file_format = 'ogg'
