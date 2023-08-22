@@ -100,15 +100,6 @@ class App(tk.Tk):
             fill=tk.BOTH,
             expand=True) # take up rest of vert and horz space
 
-        '''
-        self.other_border = BorderFrame(self.frame2)
-        self.other_border.configure(style='NormalBorder.TFrame')
-        self.other_border.pack(
-            padx=(4,0), # left padding
-            pady=(0,4), # bottom padding
-            fill=tk.X) # take up all horz space
-        '''
-
         self.start_border = BorderFrame(self.frame2)
         self.start_border.configure(style='WidgetBorder.TFrame')
         self.start_border.pack(
@@ -157,15 +148,6 @@ class App(tk.Tk):
             pady=1,
             fill=tk.BOTH,
             expand=True) # take up rest of vert and horz space
-
-        '''
-        self.other_frame = OtherFrame(self.other_border)
-        self.other_frame.configure(style='Normal.TFrame')
-        self.other_frame.pack(
-            padx=1,
-            pady=1,
-            fill=tk.X) # take up all horz space
-        '''
         
         self.start_button = ttk.Button(
             self.start_border,
@@ -222,28 +204,6 @@ class App(tk.Tk):
                           ('active', '#ffffff')]
             )
         
-        '''
-        # ttk checkbuttons
-        self.style.configure(
-            'TCheckbutton',
-            background='#2d2d39',
-            indicatorbackground='#2d2d39',
-            indicatorforeground='#ffffff',
-            borderwidth=0)
-        self.style.map(
-            'TCheckbutton',
-            background = [('pressed', '#2d2d39'),
-                         ('active', '#2d2d39')],
-            foreground = [('pressed', '#ffffff'),
-                         ('active', '#ffffff')],
-            indicatorbackground = [('pressed', '#2d2d39'),
-                                  ('active', '#2d2d39')],
-            indicatorforeground = [('pressed', '#ffffff'),
-                                  ('active', '#ffffff')]
-            )
-        '''
-        
-
         # ttk radiobuttons
         self.style.configure(
             'TRadiobutton',
@@ -569,48 +529,84 @@ class App(tk.Tk):
             except (KeyError, FileNotFoundError, IndexError) as e:
                 self.has_music = False
             
-            # iterate through each diff in level.json
-            for chart in self.user_json['charts']:
-                
-                # get chart
-                try:
-                    level.extract(chart['path'])
-                    self.files_to_delete.append(chart['path'])
-                    json.loads(
-                        open(chart['path'], 'r', encoding='utf-8').read())
-
-                # if key doesn't exist in level.json or
-                # chart file does not exist or
-                # chart file is not valid json,
-                # check next diff in level.json (this diff is invalid)
-                except (KeyError, FileNotFoundError, json.JSONDecodeError) as e:
-                    continue
-
-                # get music_override
-                try:
-                    level.extract(chart['music_override']['path'])
-                    self.files_to_delete.append(chart['music_override']['path'])
-                    AudioSegment.from_file(chart['music_override']['path'])
-
-                    # if there is a valid music_override file,
-                    # this diff is valid
-                    self.diffs_available.append(chart['type'])
-
-                # if key or audio file does not exist, or audio
-                # file is invalid, then level file does not
-                # contain music override file
-                except (KeyError, FileNotFoundError, IndexError) as e:
+            # attempt to iterate through each diff in level.json
+            try:
+                for chart in self.user_json['charts']:
                     
-                    # if there is no music or music_override file,
-                    # check next diff (this diff is invalid,
-                    # an audio file is required)
-                    if self.has_music == False:
+                    # get chart
+                    try:
+                        level.extract(chart['path'])
+                        self.files_to_delete.append(chart['path'])
+                        json.loads(
+                            open(chart['path'], 'r', encoding='utf-8').read())
+
+                    # if key doesn't exist in level.json or
+                    # chart file does not exist or
+                    # chart file is not valid json,
+                    # check next diff in level.json (this diff is invalid)
+                    except (KeyError, FileNotFoundError, json.JSONDecodeError) as e:
                         continue
 
-                    # if there is a music file and no music_override,
-                    # this diff is valid
-                    else:
+                    # get music_override
+                    try:
+                        level.extract(chart['music_override']['path'])
+                        self.files_to_delete.append(chart['music_override']['path'])
+                        AudioSegment.from_file(chart['music_override']['path'])
+
+                        # if there is a valid music_override file,
+                        # this diff is valid
                         self.diffs_available.append(chart['type'])
+
+                    # if key or audio file does not exist, or audio
+                    # file is invalid, then level file does not
+                    # contain music override file
+                    except (KeyError, FileNotFoundError, IndexError) as e:
+                        
+                        # if there is no music or music_override file,
+                        # check next diff (this diff is invalid,
+                        # an audio file is required)
+                        if self.has_music == False:
+                            continue
+
+                        # if there is a music file and no music_override,
+                        # this diff is valid
+                        else:
+                            self.diffs_available.append(chart['type'])
+
+            # if "charts" key isn't in level.json
+            except KeyError:
+
+                # display messagebox
+                messagebox.showerror(
+                    'Error',
+                    'No charts found in level.json'
+                    )
+
+                # mark Cytoid level as invalid
+                self.level_validity = False
+
+                # configure 'choose file' button border to red
+                self.style.configure(
+                    'ChooseFile.WidgetBorder.TFrame',
+                    background='#ee9f9f')
+                
+                # delete all extracted files so far
+                for path in self.files_to_delete:
+
+                    try:
+                        os.remove(path)
+
+                    # if file was already deleted,
+                    # move on to text file
+                    # (sometimes music and music_override
+                    # paths are duplicates)
+                    except FileNotFoundError:
+                        pass
+                
+                # prevent the rest of the level validity checks
+                # from running
+                return
+                
                         
         # if no valid diffs, display error message and mark the
         # Cytoid level file as invalid
@@ -1037,7 +1033,7 @@ class App(tk.Tk):
                 if self.user_ar_type == '':
                     
                     # display error message
-                        self.ar_error(
+                        self.ar_error_msg(
                             i+1,
                             'Both AR type and value must be filled in')
 
@@ -1046,23 +1042,7 @@ class App(tk.Tk):
                             'AR.NormalBorder.TFrame',
                             background='#ee9f9f')
 
-                        if i == 0:
-                            self.style.configure(
-                                'ARCombo1.WidgetBorder.TFrame',
-                                background='#ee9f9f',
-                                relief='flat')
-
-                        elif i == 1:
-                            self.style.configure(
-                                'ARCombo2.WidgetBorder.TFrame',
-                                background='#ee9f9f',
-                                relief='flat')
-
-                        else:
-                            self.style.configure(
-                                'ARCombo3.WidgetBorder.TFrame',
-                                background='#ee9f9f',
-                                relief='flat')
+                        self.ar_error_combo(i+1)
 
                         # indicate that user input is invalid
                         self.user_validity = False
@@ -1077,7 +1057,7 @@ class App(tk.Tk):
                         if self.user_ar_value <= 0:
 
                             # display error message
-                            self.ar_error(
+                            self.ar_error_msg(
                                 i+1,
                                 'AR values cannot be zero or negative')
 
@@ -1086,23 +1066,7 @@ class App(tk.Tk):
                                 'AR.NormalBorder.TFrame',
                                 background='#ee9f9f')
 
-                            if i == 0:
-                                self.style.configure(
-                                    'AREntry1.WidgetBorder.TFrame',
-                                    background='#ee9f9f',
-                                    relief='flat')
-
-                            elif i == 1:
-                                self.style.configure(
-                                    'AREntry2.WidgetBorder.TFrame',
-                                    background='#ee9f9f',
-                                    relief='flat')
-
-                            else:
-                                self.style.configure(
-                                    'AREntry3.WidgetBorder.TFrame',
-                                    background='#ee9f9f',
-                                    relief='flat')
+                            self.ar_error_entry(i+1)
 
                             # indicate that user input is invalid
                             self.user_validity = False
@@ -1113,7 +1077,7 @@ class App(tk.Tk):
                             self.user_ar_value > 4)):
 
                             # display error message
-                            self.ar_error(
+                            self.ar_error_msg(
                                 i+1,
                                 'xmod value must be between ' \
                                 '0.001 and 4 (inclusive)')
@@ -1123,23 +1087,7 @@ class App(tk.Tk):
                                 'AR.NormalBorder.TFrame',
                                 background='#ee9f9f')
 
-                            if i == 0:
-                                self.style.configure(
-                                    'AREntry1.WidgetBorder.TFrame',
-                                    background='#ee9f9f',
-                                    relief='flat')
-
-                            elif i == 1:
-                                self.style.configure(
-                                    'AREntry2.WidgetBorder.TFrame',
-                                    background='#ee9f9f',
-                                    relief='flat')
-
-                            else:
-                                self.style.configure(
-                                    'AREntry3.WidgetBorder.TFrame',
-                                    background='#ee9f9f',
-                                    relief='flat')
+                            self.ar_error_entry(i+1)
 
                             # indicate that user input is invalid
                             self.user_validity = False
@@ -1151,7 +1099,7 @@ class App(tk.Tk):
                             self.user_max * self.user_ar_value > 500)):
 
                             # display error message
-                            self.ar_error(
+                            self.ar_error_msg(
                                 i+1,
                                 'cmod value must be between 120 and 500 ' \
                                 '(inclusive) for all rates')
@@ -1161,23 +1109,7 @@ class App(tk.Tk):
                                 'AR.NormalBorder.TFrame',
                                 background='#ee9f9f')
 
-                            if i == 0:
-                                self.style.configure(
-                                    'AREntry1.WidgetBorder.TFrame',
-                                    background='#ee9f9f',
-                                    relief='flat')
-
-                            elif i == 1:
-                                self.style.configure(
-                                    'AREntry2.WidgetBorder.TFrame',
-                                    background='#ee9f9f',
-                                    relief='flat')
-
-                            else:
-                                self.style.configure(
-                                    'AREntry3.WidgetBorder.TFrame',
-                                    background='#ee9f9f',
-                                    relief='flat')
+                            self.ar_error_entry(i+1)
 
                             # indicate that user input is invalid
                             self.user_validity = False
@@ -1188,7 +1120,7 @@ class App(tk.Tk):
                             self.user_ar_value > 500)):
 
                             # display error message
-                            self.ar_error(
+                            self.ar_error_msg(
                                 i+1,
                                 'Cmod value must be between ' \
                                 '120 and 500 (inclusive)')
@@ -1198,23 +1130,7 @@ class App(tk.Tk):
                                 'AR.NormalBorder.TFrame',
                                 background='#ee9f9f')
 
-                            if i == 0:
-                                self.style.configure(
-                                    'AREntry1.WidgetBorder.TFrame',
-                                    background='#ee9f9f',
-                                    relief='flat')
-
-                            elif i == 1:
-                                self.style.configure(
-                                    'AREntry2.WidgetBorder.TFrame',
-                                    background='#ee9f9f',
-                                    relief='flat')
-
-                            else:
-                                self.style.configure(
-                                    'AREntry3.WidgetBorder.TFrame',
-                                    background='#ee9f9f',
-                                    relief='flat')
+                            self.ar_error_entry(i+1)
 
                             # indicate that user input is invalid
                             self.user_validity = False
@@ -1235,7 +1151,7 @@ class App(tk.Tk):
                         if self.ar_frame.user_input_list[i][1].get() == '':
 
                             # display error message
-                            self.ar_error(
+                            self.ar_error_msg(
                                 i+1,
                                 'Both AR type and value must be filled in')
 
@@ -1244,23 +1160,7 @@ class App(tk.Tk):
                                 'AR.NormalBorder.TFrame',
                                 background='#ee9f9f')
 
-                            if i == 0:
-                                self.style.configure(
-                                    'AREntry1.WidgetBorder.TFrame',
-                                    background='#ee9f9f',
-                                    relief='flat')
-
-                            elif i == 1:
-                                self.style.configure(
-                                    'AREntry2.WidgetBorder.TFrame',
-                                    background='#ee9f9f',
-                                    relief='flat')
-
-                            else:
-                                self.style.configure(
-                                    'AREntry3.WidgetBorder.TFrame',
-                                    background='#ee9f9f',
-                                    relief='flat')
+                            self.ar_error_entry(i+1)
 
                             # indicate that user input is invalid
                             self.user_validity = False
@@ -1270,7 +1170,7 @@ class App(tk.Tk):
                         else:
 
                             # display error message
-                            self.ar_error(
+                            self.ar_error_msg(
                                 i+1,
                                 'AR value must be a valid number')
 
@@ -1279,23 +1179,7 @@ class App(tk.Tk):
                                 'AR.NormalBorder.TFrame',
                                 background='#ee9f9f')
 
-                            if i == 0:
-                                self.style.configure(
-                                    'AREntry1.WidgetBorder.TFrame',
-                                    background='#ee9f9f',
-                                    relief='flat')
-
-                            elif i == 1:
-                                self.style.configure(
-                                    'AREntry2.WidgetBorder.TFrame',
-                                    background='#ee9f9f',
-                                    relief='flat')
-
-                            else:
-                                self.style.configure(
-                                    'AREntry3.WidgetBorder.TFrame',
-                                    background='#ee9f9f',
-                                    relief='flat')
+                            self.ar_error_entry(i+1)
 
                             # indicate that user input is invalid
                             self.user_validity = False
@@ -1307,9 +1191,6 @@ class App(tk.Tk):
                     # so no action needed
                     except TypeError:
                         pass
-
-        # get status of "pitch rates" checkbutton
-        #self.user_pitch_rates = self.other_frame.pitch_rates_var.get()
 
         # display error messagebox if Cytoid level is invalid
         if self.level_validity == False:
@@ -1361,7 +1242,7 @@ class App(tk.Tk):
 
         return confirm
 
-    def ar_error(self, index, message):
+    def ar_error_msg(self, index, message):
         '''Displays error message for an AR option in the first
            available text widget'''
 
@@ -1417,6 +1298,51 @@ class App(tk.Tk):
 
             # prevent text from being edited
             self.ar_frame.error_text3.configure(state='disabled')
+
+    def ar_error_combo(self, index):
+        '''Updates style of combobox borders if user inputs
+        invalid data.'''
+
+        if index == 1:
+            self.style.configure(
+                'ARCombo1.WidgetBorder.TFrame',
+                background='#ee9f9f',
+                relief='flat')
+
+        elif index == 2:
+            self.style.configure(
+                'ARCombo2.WidgetBorder.TFrame',
+                background='#ee9f9f',
+                relief='flat')
+
+        else:
+            self.style.configure(
+                'ARCombo3.WidgetBorder.TFrame',
+                background='#ee9f9f',
+                relief='flat')
+
+    def ar_error_entry(self, index):
+        '''Updates style of entry field borders if user inputs
+        invalid data.'''
+
+        if index == 1:
+            self.style.configure(
+                'AREntry1.WidgetBorder.TFrame',
+                background='#ee9f9f',
+                relief='flat')
+
+        elif index == 2:
+            self.style.configure(
+                'AREntry2.WidgetBorder.TFrame',
+                background='#ee9f9f',
+                relief='flat')
+
+        else:
+            self.style.configure(
+                'AREntry3.WidgetBorder.TFrame',
+                background='#ee9f9f',
+                relief='flat')
+            
 
     def work_with_files(self):
         '''This function starts working with files and creating
@@ -2921,59 +2847,6 @@ class AROptionsFrame(ttk.Frame):
             sticky=tk.EW
             )
 
-
-class OtherFrame(ttk.Frame):
-    '''Visible frame for difficulty selection checkboxes
-    to be displayed.
-
-    NOTE: Not currently used, modules did not work for nopitch audio
-    rates. Audio pitch rates are on by default.'''
-
-    def __init__(self, container):
-        super().__init__(container)
-
-        # call method to create widgets
-        self.__create_widgets()
-
-    def __create_widgets(self):
-        '''Create necessary widgets within frame'''
-
-        # label
-        self.heading_label = ttk.Label(
-            self,
-            text='OTHER',
-            style='Heading.TLabel')
-        self.heading_label.grid(
-            row=0,
-            column=0,
-            padx=(5,0), # left padding
-            pady=(5,0), # top padding
-            sticky=tk.W
-            )
-
-        # create variables to store state of "pitch rates" checkbox
-        self.pitch_rates_var = tk.StringVar()
-
-        # set default value of pitch rates variable to 1 (on)
-        self.pitch_rates_var.set(1)
-        
-        # checkbox
-        self.check = tk.Checkbutton(
-            self,
-            text='Change audio pitch with rate',
-            variable=self.pitch_rates_var)
-        self.check.configure(
-            font=tk_check_font,
-            background=tk_check_bg,
-            activebackground=tk_check_activebg,
-            foreground=tk_check_fg,
-            activeforeground=tk_check_activefg,
-            selectcolor=tk_check_selectcolor)
-        self.check.grid(
-            row=2,
-            column=0,
-            padx=(5,5), # left/right padding
-            )
 
 if __name__ == "__main__":
     app = App()
