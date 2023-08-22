@@ -13,6 +13,7 @@ import zipfile
 
 # add modules folder to system path
 sys.path.append(str(Path(os.getcwd()) / 'modules'))
+sys.path.append(str(Path(os.getcwd()) / 'modules' / 'ffmpeg'))
 
 # import third party modules
 from pydub import AudioSegment
@@ -1022,154 +1023,22 @@ class App(tk.Tk):
         else:
             self.user_rate_inc = float(self.rate_inc_frame.var.get())
 
+        # loop through comboboxes and entry fields from AR options frame
+        for i in range(0, len(self.ar_frame.user_input_list)):
         
-        # AR Option #1:
-        # if type and/or value are inputted, perform validity checks
-        if (self.ar_frame.type1.get() != '' or
-            self.ar_frame.value1.get() != ''):
+            # if type and/or value are inputted, perform validity checks
+            if (self.ar_frame.user_input_list[i][0].get() != '' or # type
+                self.ar_frame.user_input_list[i][1].get() != ''): # value
 
-            # get AR type
-            self.user_ar_type1 = self.ar_frame.type1.get()
+                # get AR type
+                self.user_ar_type = self.ar_frame.user_input_list[i][0].get()
 
-            # if AR type is not filled out (invalid)
-            if self.user_ar_type1 == '':
-                
-                # display error message
-                    self.ar_error(
-                        1,
-                        'Both AR type and value must be filled in')
-
-                    # configure styles
-                    self.style.configure(
-                        'AR.NormalBorder.TFrame',
-                        background='#ee9f9f')
-
-                    self.style.configure(
-                        'ARCombo1.WidgetBorder.TFrame',
-                        background='#ee9f9f',
-                        relief='flat')
-
-                    # indicate that user input is invalid
-                    self.user_validity = False
-
-            # if AR type is filled, check value
-            else:
-                try:
-                    # get AR value
-                    self.user_ar_value1 = float(self.ar_frame.value1.get())
+                # if AR type is not filled out (invalid)
+                if self.user_ar_type == '':
                     
-                    # if value zero or negative (invalid)
-                    if self.user_ar_value1 <= 0:
-
-                        # display error message
+                    # display error message
                         self.ar_error(
-                            1,
-                            'AR values cannot be zero or negative')
-
-                        # configure styles
-                        self.style.configure(
-                            'AR.NormalBorder.TFrame',
-                            background='#ee9f9f')
-
-                        self.style.configure(
-                            'AREntry1.WidgetBorder.TFrame',
-                            background='#ee9f9f',
-                            relief='flat')
-
-                        # indicate that user input is invalid
-                        self.user_validity = False
-                    
-                    # xmod value must be between 0.001 and 4 (inclusive)
-                    elif (self.user_ar_type1 == 'x' and
-                        (self.user_ar_value1 < 0.001 or
-                        self.user_ar_value1 > 4)):
-
-                        # display error message
-                        self.ar_error(
-                            1,
-                            'xmod value must be between ' \
-                            '0.001 and 4 (inclusive)')
-
-                        # configure styles
-                        self.style.configure(
-                            'AR.NormalBorder.TFrame',
-                            background='#ee9f9f')
-
-                        self.style.configure(
-                            'AREntry1.WidgetBorder.TFrame',
-                            background='#ee9f9f',
-                            relief='flat')
-
-                        # indicate that user input is invalid
-                        self.user_validity = False
-
-                    # cmod value must be between 120 and 500 (inclusive)
-                    # for all rates (lowercase c scales with rates)
-                    elif (self.user_ar_type1 == 'c' and
-                        (self.user_min * self.user_ar_value1 < 120 or
-                        self.user_max * self.user_ar_value1 > 500)):
-
-                        # display error message
-                        self.ar_error(
-                            1,
-                            'cmod value must be between 120 and 500 ' \
-                            '(inclusive) for all rates')
-
-                        # configure styles
-                        self.style.configure(
-                            'AR.NormalBorder.TFrame',
-                            background='#ee9f9f')
-
-                        self.style.configure(
-                            'AREntry1.WidgetBorder.TFrame',
-                            background='#ee9f9f',
-                            relief='flat')
-
-                        # indicate that user input is invalid
-                        self.user_validity = False
-
-                    # Cmod value must be between 120 and 500
-                    elif (self.user_ar_type1 == 'C' and
-                        (self.user_ar_value1 < 120 or
-                        self.user_ar_value1 > 500)):
-
-                        # display error message
-                        self.ar_error(
-                            1,
-                            'Cmod value must be between ' \
-                            '120 and 500 (inclusive)')
-
-                        # configure styles
-                        self.style.configure(
-                            'AR.NormalBorder.TFrame',
-                            background='#ee9f9f')
-
-                        self.style.configure(
-                            'AREntry1.WidgetBorder.TFrame',
-                            background='#ee9f9f',
-                            relief='flat')
-
-                        # indicate that user input is invalid
-                        self.user_validity = False
-
-                    # if value passed all validity checks
-                    else:
-
-                        # append AR option to list
-                        self.user_ar_options.append(
-                            [self.user_ar_type1,
-                             self.user_ar_value1]
-                            )
-
-                # if value is not valid number (invalid)
-                except ValueError:
-
-                    # if value is completely empty
-                    if self.ar_frame.value1.get() == '':
-
-                        # display error message
-                        self.ar_error(
-                            1,
+                            i+1,
                             'Both AR type and value must be filled in')
 
                         # configure styles
@@ -1177,427 +1046,267 @@ class App(tk.Tk):
                             'AR.NormalBorder.TFrame',
                             background='#ee9f9f')
 
-                        self.style.configure(
-                            'AREntry1.WidgetBorder.TFrame',
-                            background='#ee9f9f',
-                            relief='flat')
+                        if i == 0:
+                            self.style.configure(
+                                'ARCombo1.WidgetBorder.TFrame',
+                                background='#ee9f9f',
+                                relief='flat')
+
+                        elif i == 1:
+                            self.style.configure(
+                                'ARCombo2.WidgetBorder.TFrame',
+                                background='#ee9f9f',
+                                relief='flat')
+
+                        else:
+                            self.style.configure(
+                                'ARCombo3.WidgetBorder.TFrame',
+                                background='#ee9f9f',
+                                relief='flat')
 
                         # indicate that user input is invalid
                         self.user_validity = False
 
-                    # if value is not empty,
-                    # but still an invalid number
-                    else:
-
-                        # display error message
-                        self.ar_error(
-                            1,
-                            'AR value must be a valid number')
-
-                        # configure styles
-                        self.style.configure(
-                            'AR.NormalBorder.TFrame',
-                            background='#ee9f9f')
-
-                        self.style.configure(
-                            'AREntry1.WidgetBorder.TFrame',
-                            background='#ee9f9f',
-                            relief='flat')
-
-                        # indicate that user input is invalid
-                        self.user_validity = False
-
-                # TypeError occurs when cmod is selected
-                # and rates aren't filled out
-
-                # rates have validity check anyway,
-                # so no action needed
-                except TypeError:
-                    pass
-
-        # AR Option #2:
-        # if type and/or value are inputted, perform validity checks
-        if (self.ar_frame.type2.get() != '' or
-            self.ar_frame.value2.get() != ''):
-
-            # get AR type
-            self.user_ar_type2 = self.ar_frame.type2.get()
-
-            # if AR type is not filled out (invalid)
-            if self.user_ar_type2 == '':
-                
-                # display error message
-                    self.ar_error(
-                        2,
-                        'Both AR type and value must be filled in')
-
-                    # configure styles
-                    self.style.configure(
-                        'AR.NormalBorder.TFrame',
-                        background='#ee9f9f')
-
-                    self.style.configure(
-                        'ARCombo2.WidgetBorder.TFrame',
-                        background='#ee9f9f',
-                        relief='flat')
-
-                    # indicate that user input is invalid
-                    self.user_validity = False
-
-            # if AR type is filled, check value
-            else:
-                try:
-                    # get AR value
-                    self.user_ar_value2 = float(self.ar_frame.value2.get())
-                    
-                    # if value zero or negative (invalid)
-                    if self.user_ar_value2 <= 0:
-
-                        # display error message
-                        self.ar_error(
-                            2,
-                            'AR values cannot be zero or negative')
-
-                        # configure styles
-                        self.style.configure(
-                            'AR.NormalBorder.TFrame',
-                            background='#ee9f9f')
-
-                        self.style.configure(
-                            'AREntry2.WidgetBorder.TFrame',
-                            background='#ee9f9f',
-                            relief='flat')
-
-                        # indicate that user input is invalid
-                        self.user_validity = False
-                    
-                    # xmod value must be between 0.001 and 4 (inclusive)
-                    elif (self.user_ar_type2 == 'x' and
-                        (self.user_ar_value2 < 0.001 or
-                        self.user_ar_value2 > 4)):
-
-                        # display error message
-                        self.ar_error(
-                            2,
-                            'xmod value must be between ' \
-                            '0.001 and 4 (inclusive)')
-
-                        # configure styles
-                        self.style.configure(
-                            'AR.NormalBorder.TFrame',
-                            background='#ee9f9f')
-
-                        self.style.configure(
-                            'AREntry2.WidgetBorder.TFrame',
-                            background='#ee9f9f',
-                            relief='flat')
-
-                        # indicate that user input is invalid
-                        self.user_validity = False
-
-                    # cmod value must be between 120 and 500 (inclusive)
-                    # for all rates (lowercase c scales with rates)
-                    elif (self.user_ar_type2 == 'c' and
-                        (self.user_min * self.user_ar_value2 < 120 or
-                        self.user_max * self.user_ar_value2 > 500)):
-
-                        # display error message
-                        self.ar_error(
-                            2,
-                            'cmod value must be between 120 and 500 ' \
-                            '(inclusive) for all rates')
-
-                        # configure styles
-                        self.style.configure(
-                            'AR.NormalBorder.TFrame',
-                            background='#ee9f9f')
-
-                        self.style.configure(
-                            'AREntry2.WidgetBorder.TFrame',
-                            background='#ee9f9f',
-                            relief='flat')
-
-                        # indicate that user input is invalid
-                        self.user_validity = False
-
-                    # Cmod value must be between 120 and 500
-                    elif (self.user_ar_type2 == 'C' and
-                        (self.user_ar_value2 < 120 or
-                        self.user_ar_value2 > 500)):
-
-                        # display error message
-                        self.ar_error(
-                            2,
-                            'Cmod value must be between ' \
-                            '120 and 500 (inclusive)')
-
-                        # configure styles
-                        self.style.configure(
-                            'AR.NormalBorder.TFrame',
-                            background='#ee9f9f')
-
-                        self.style.configure(
-                            'AREntry2.WidgetBorder.TFrame',
-                            background='#ee9f9f',
-                            relief='flat')
-
-                        # indicate that user input is invalid
-                        self.user_validity = False
-
-                    # if value passed all validity checks
-                    else:
-
-                        # append AR option to list
-                        self.user_ar_options.append(
-                            [self.user_ar_type2,
-                             self.user_ar_value2]
-                            )
-
-                # if value is not valid number (invalid)
-                except ValueError:
-
-                    # if value is completely empty
-                    if self.ar_frame.value2.get() == '':
-
-                        # display error message
-                        self.ar_error(
-                            2,
-                            'Both AR type and value must be filled in')
-
-                        # configure styles
-                        self.style.configure(
-                            'AR.NormalBorder.TFrame',
-                            background='#ee9f9f')
-
-                        self.style.configure(
-                            'AREntry2.WidgetBorder.TFrame',
-                            background='#ee9f9f',
-                            relief='flat')
-
-                        # indicate that user input is invalid
-                        self.user_validity = False
-
-                    # if value is not empty,
-                    # but still an invalid number
-                    else:
-
-                        # display error message
-                        self.ar_error(
-                            2,
-                            'AR value must be a valid number')
-
-                        # configure styles
-                        self.style.configure(
-                            'AR.NormalBorder.TFrame',
-                            background='#ee9f9f')
-
-                        self.style.configure(
-                            'AREntry2.WidgetBorder.TFrame',
-                            background='#ee9f9f',
-                            relief='flat')
-
-                        # indicate that user input is invalid
-                        self.user_validity = False
-
-                # TypeError occurs when cmod is selected
-                # and rates aren't filled out
-
-                # rates have validity check anyway,
-                # so no action needed
-                except TypeError:
-                    pass
-                    
-        # AR Option #3:
-        # if type and/or value are inputted, perform validity checks
-        if (self.ar_frame.type3.get() != '' or
-            self.ar_frame.value3.get() != ''):
-
-            # get AR type
-            self.user_ar_type3 = self.ar_frame.type3.get()
-
-            # if AR type is not filled out (invalid)
-            if self.user_ar_type3 == '':
-                
-                # display error message
-                    self.ar_error(
-                        3,
-                        'Both AR type and value must be filled in')
-
-                    # configure styles
-                    self.style.configure(
-                        'AR.NormalBorder.TFrame',
-                        background='#ee9f9f')
-
-                    self.style.configure(
-                        'ARCombo3.WidgetBorder.TFrame',
-                        background='#ee9f9f',
-                        relief='flat')
-
-                    # indicate that user input is invalid
-                    self.user_validity = False
-
-            # if AR type is filled, check value
-            else:
-                try:
-                    # get AR value
-                    self.user_ar_value3 = float(self.ar_frame.value3.get())
-                    
-                    # if value zero or negative (invalid)
-                    if self.user_ar_value3 <= 0:
-
-                        # display error message
-                        self.ar_error(
-                            3,
-                            'AR values cannot be zero or negative')
-
-                        # configure styles
-                        self.style.configure(
-                            'AR.NormalBorder.TFrame',
-                            background='#ee9f9f')
-
-                        self.style.configure(
-                            'AREntry3.WidgetBorder.TFrame',
-                            background='#ee9f9f',
-                            relief='flat')
-
-                        # indicate that user input is invalid
-                        self.user_validity = False
-                    
-                    # xmod value must be between 0.001 and 4 (inclusive)
-                    elif (self.user_ar_type3 == 'x' and
-                        (self.user_ar_value3 < 0.001 or
-                        self.user_ar_value3 > 4)):
-
-                        # display error message
-                        self.ar_error(
-                            3,
-                            'xmod value must be between ' \
-                            '0.001 and 4 (inclusive)')
-
-                        # configure styles
-                        self.style.configure(
-                            'AR.NormalBorder.TFrame',
-                            background='#ee9f9f')
-
-                        self.style.configure(
-                            'AREntry3.WidgetBorder.TFrame',
-                            background='#ee9f9f',
-                            relief='flat')
-
-                        # indicate that user input is invalid
-                        self.user_validity = False
-
-                    # cmod value must be between 120 and 500 (inclusive)
-                    # for all rates (lowercase c scales with rates)
-                    elif (self.user_ar_type3 == 'c' and
-                        (self.user_min * self.user_ar_value3 < 120 or
-                        self.user_max * self.user_ar_value3 > 500)):
-
-                        # display error message
-                        self.ar_error(
-                            3,
-                            'cmod value must be between 120 and 500 ' \
-                            '(inclusive) for all rates')
-
-                        # configure styles
-                        self.style.configure(
-                            'AR.NormalBorder.TFrame',
-                            background='#ee9f9f')
-
-                        self.style.configure(
-                            'AREntry3.WidgetBorder.TFrame',
-                            background='#ee9f9f',
-                            relief='flat')
-
-                        # indicate that user input is invalid
-                        self.user_validity = False
-
-                    # Cmod value must be between 120 and 500
-                    elif (self.user_ar_type3 == 'C' and
-                        (self.user_ar_value3 < 120 or
-                        self.user_ar_value3 > 500)):
-
-                        # display error message
-                        self.ar_error(
-                            3,
-                            'Cmod value must be between ' \
-                            '120 and 500 (inclusive)')
-
-                        # configure styles
-                        self.style.configure(
-                            'AR.NormalBorder.TFrame',
-                            background='#ee9f9f')
-
-                        self.style.configure(
-                            'AREntry3.WidgetBorder.TFrame',
-                            background='#ee9f9f',
-                            relief='flat')
-
-                        # indicate that user input is invalid
-                        self.user_validity = False
-
-                    # if value passed all validity checks
-                    else:
-
-                        # append AR option to list
-                        self.user_ar_options.append(
-                            [self.user_ar_type3,
-                             self.user_ar_value3]
-                            )
-
-                # if value is not valid number (invalid)
-                except ValueError:
-
-                    # if value is completely empty
-                    if self.ar_frame.value3.get() == '':
-
-                        # display error message
-                        self.ar_error(
-                            3,
-                            'Both AR type and value must be filled in')
-
-                        # configure styles
-                        self.style.configure(
-                            'AR.NormalBorder.TFrame',
-                            background='#ee9f9f')
-
-                        self.style.configure(
-                            'AREntry3.WidgetBorder.TFrame',
-                            background='#ee9f9f',
-                            relief='flat')
-
-                        # indicate that user input is invalid
-                        self.user_validity = False
-
-                    # if value is not empty,
-                    # but still an invalid number
-                    else:
-
-                        # display error message
-                        self.ar_error(
-                            3,
-                            'AR value must be a valid number')
-
-                        # configure styles
-                        self.style.configure(
-                            'AR.NormalBorder.TFrame',
-                            background='#ee9f9f')
-
-                        self.style.configure(
-                            'AREntry3.WidgetBorder.TFrame',
-                            background='#ee9f9f',
-                            relief='flat')
-
-                        # indicate that user input is invalid
-                        self.user_validity = False
-
-                # TypeError occurs when cmod is selected
-                # and rates aren't filled out
-
-                # rates have validity check anyway,
-                # so no action needed
-                except TypeError:
-                    pass
+                # if AR type is filled, check value
+                else:
+                    try:
+                        # get AR value
+                        self.user_ar_value = float(self.ar_frame.user_input_list[i][1].get())
+                        
+                        # if value zero or negative (invalid)
+                        if self.user_ar_value <= 0:
+
+                            # display error message
+                            self.ar_error(
+                                i+1,
+                                'AR values cannot be zero or negative')
+
+                            # configure styles
+                            self.style.configure(
+                                'AR.NormalBorder.TFrame',
+                                background='#ee9f9f')
+
+                            if i == 0:
+                                self.style.configure(
+                                    'AREntry1.WidgetBorder.TFrame',
+                                    background='#ee9f9f',
+                                    relief='flat')
+
+                            elif i == 1:
+                                self.style.configure(
+                                    'AREntry2.WidgetBorder.TFrame',
+                                    background='#ee9f9f',
+                                    relief='flat')
+
+                            else:
+                                self.style.configure(
+                                    'AREntry3.WidgetBorder.TFrame',
+                                    background='#ee9f9f',
+                                    relief='flat')
+
+                            # indicate that user input is invalid
+                            self.user_validity = False
+                        
+                        # xmod value must be between 0.001 and 4 (inclusive)
+                        elif (self.user_ar_type == 'x' and
+                            (self.user_ar_value < 0.001 or
+                            self.user_ar_value > 4)):
+
+                            # display error message
+                            self.ar_error(
+                                i+1,
+                                'xmod value must be between ' \
+                                '0.001 and 4 (inclusive)')
+
+                            # configure styles
+                            self.style.configure(
+                                'AR.NormalBorder.TFrame',
+                                background='#ee9f9f')
+
+                            if i == 0:
+                                self.style.configure(
+                                    'AREntry1.WidgetBorder.TFrame',
+                                    background='#ee9f9f',
+                                    relief='flat')
+
+                            elif i == 1:
+                                self.style.configure(
+                                    'AREntry2.WidgetBorder.TFrame',
+                                    background='#ee9f9f',
+                                    relief='flat')
+
+                            else:
+                                self.style.configure(
+                                    'AREntry3.WidgetBorder.TFrame',
+                                    background='#ee9f9f',
+                                    relief='flat')
+
+                            # indicate that user input is invalid
+                            self.user_validity = False
+
+                        # cmod value must be between 120 and 500 (inclusive)
+                        # for all rates (lowercase c scales with rates)
+                        elif (self.user_ar_type == 'c' and
+                            (self.user_min * self.user_ar_value < 120 or
+                            self.user_max * self.user_ar_value > 500)):
+
+                            # display error message
+                            self.ar_error(
+                                i+1,
+                                'cmod value must be between 120 and 500 ' \
+                                '(inclusive) for all rates')
+
+                            # configure styles
+                            self.style.configure(
+                                'AR.NormalBorder.TFrame',
+                                background='#ee9f9f')
+
+                            if i == 0:
+                                self.style.configure(
+                                    'AREntry1.WidgetBorder.TFrame',
+                                    background='#ee9f9f',
+                                    relief='flat')
+
+                            elif i == 1:
+                                self.style.configure(
+                                    'AREntry2.WidgetBorder.TFrame',
+                                    background='#ee9f9f',
+                                    relief='flat')
+
+                            else:
+                                self.style.configure(
+                                    'AREntry3.WidgetBorder.TFrame',
+                                    background='#ee9f9f',
+                                    relief='flat')
+
+                            # indicate that user input is invalid
+                            self.user_validity = False
+
+                        # Cmod value must be between 120 and 500
+                        elif (self.user_ar_type == 'C' and
+                            (self.user_ar_value < 120 or
+                            self.user_ar_value > 500)):
+
+                            # display error message
+                            self.ar_error(
+                                i+1,
+                                'Cmod value must be between ' \
+                                '120 and 500 (inclusive)')
+
+                            # configure styles
+                            self.style.configure(
+                                'AR.NormalBorder.TFrame',
+                                background='#ee9f9f')
+
+                            if i == 0:
+                                self.style.configure(
+                                    'AREntry1.WidgetBorder.TFrame',
+                                    background='#ee9f9f',
+                                    relief='flat')
+
+                            elif i == 1:
+                                self.style.configure(
+                                    'AREntry2.WidgetBorder.TFrame',
+                                    background='#ee9f9f',
+                                    relief='flat')
+
+                            else:
+                                self.style.configure(
+                                    'AREntry3.WidgetBorder.TFrame',
+                                    background='#ee9f9f',
+                                    relief='flat')
+
+                            # indicate that user input is invalid
+                            self.user_validity = False
+
+                        # if value passed all validity checks
+                        else:
+
+                            # append AR option to list
+                            self.user_ar_options.append(
+                                [self.user_ar_type,
+                                 self.user_ar_value]
+                                )
+
+                    # if value is not valid number (invalid)
+                    except ValueError:
+
+                        # if value is completely empty
+                        if self.ar_frame.user_input_list[i][1].get() == '':
+
+                            # display error message
+                            self.ar_error(
+                                i+1,
+                                'Both AR type and value must be filled in')
+
+                            # configure styles
+                            self.style.configure(
+                                'AR.NormalBorder.TFrame',
+                                background='#ee9f9f')
+
+                            if i == 0:
+                                self.style.configure(
+                                    'AREntry1.WidgetBorder.TFrame',
+                                    background='#ee9f9f',
+                                    relief='flat')
+
+                            elif i == 1:
+                                self.style.configure(
+                                    'AREntry2.WidgetBorder.TFrame',
+                                    background='#ee9f9f',
+                                    relief='flat')
+
+                            else:
+                                self.style.configure(
+                                    'AREntry3.WidgetBorder.TFrame',
+                                    background='#ee9f9f',
+                                    relief='flat')
+
+                            # indicate that user input is invalid
+                            self.user_validity = False
+
+                        # if value is not empty,
+                        # but still an invalid number
+                        else:
+
+                            # display error message
+                            self.ar_error(
+                                i+1,
+                                'AR value must be a valid number')
+
+                            # configure styles
+                            self.style.configure(
+                                'AR.NormalBorder.TFrame',
+                                background='#ee9f9f')
+
+                            if i == 0:
+                                self.style.configure(
+                                    'AREntry1.WidgetBorder.TFrame',
+                                    background='#ee9f9f',
+                                    relief='flat')
+
+                            elif i == 1:
+                                self.style.configure(
+                                    'AREntry2.WidgetBorder.TFrame',
+                                    background='#ee9f9f',
+                                    relief='flat')
+
+                            else:
+                                self.style.configure(
+                                    'AREntry3.WidgetBorder.TFrame',
+                                    background='#ee9f9f',
+                                    relief='flat')
+
+                            # indicate that user input is invalid
+                            self.user_validity = False
+
+                    # TypeError occurs when cmod is selected
+                    # and rates aren't filled out
+
+                    # rates have validity check anyway,
+                    # so no action needed
+                    except TypeError:
+                        pass
 
         # get status of "pitch rates" checkbutton
         #self.user_pitch_rates = self.other_frame.pitch_rates_var.get()
@@ -1616,6 +1325,7 @@ class App(tk.Tk):
               and self.user_validity == True
               and self.unexpected_files() == True
               and self.output_num_check() == True):
+            print(self.user_ar_options)
             self.work_with_files()
 
     def output_num_check(self):
@@ -3144,6 +2854,12 @@ class AROptionsFrame(ttk.Frame):
         self.entry1.pack(padx=1, pady=1, fill=tk.X)
         self.entry2.pack(padx=1, pady=1, fill=tk.X)
         self.entry3.pack(padx=1, pady=1, fill=tk.X)
+
+        # add comboboxes and entries to a list to be looped through
+        # when getting user input
+        self.user_input_list = [[self.combo1, self.entry1],
+                                [self.combo2, self.entry2],
+                                [self.combo3, self.entry3]]
 
         # text boxes to display error messages
         self.error_text1 = tk.Text(
