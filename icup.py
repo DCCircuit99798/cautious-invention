@@ -28,6 +28,17 @@ import icup_xmod
 class App(tk.Tk):
     '''Create the main window of the program'''
 
+    # constants for user input boundaries
+    RATES_LOWER = 0.1
+    RATES_UPPER = 10
+    RATE_INC_LOWER = 0.01
+    RATE_INC_UPPER = 0.25
+    XMOD_LOWER = 0.001
+    XMOD_UPPER = 4
+    CMOD_LOWER = 120
+    CMOD_UPPER = 500
+    OUTPUT_NUM_UPPER = 20
+
     def __init__(self):
         super().__init__()
 
@@ -892,8 +903,11 @@ class App(tk.Tk):
             self.user_min = float(self.rates_frame.min_var.get())
             self.user_max = float(self.rates_frame.max_var.get())
 
-            # if minimum rate is zero or negative (invalid)
-            if self.user_min <= 0:
+            # if rates are less than 0.1 or more than 10 (invalid)
+            if (self.user_min < self.RATES_LOWER or
+                self.user_min > self.RATES_UPPER or
+                self.user_max < self.RATES_LOWER or
+                self.user_max > self.RATES_UPPER):
 
                 # allow text inside error widget to be edited
                 self.rates_frame.error_text.configure(state='normal')
@@ -904,7 +918,8 @@ class App(tk.Tk):
                 # insert error message (line 1, character 0)
                 self.rates_frame.error_text.insert(
                     '1.0',
-                    'Rates cannot be zero or negative')
+                    'Rates must be between {} and {} ' \
+                    '(inclusive)'.format(self.RATES_LOWER, self.RATES_UPPER))
 
                 # prevent text from being edited
                 self.rates_frame.error_text.configure(state='disabled')
@@ -922,6 +937,7 @@ class App(tk.Tk):
 
                 # indicated that user input is invalid
                 self.user_validity = False
+                
 
             # if maximum rate less than minimum rate (invalid)
             elif self.user_max < self.user_min:
@@ -991,8 +1007,10 @@ class App(tk.Tk):
             try:
                 self.user_rate_inc = float(self.rate_inc_frame.custom_var.get())
 
-                # if rate increment zero or negative (invalid)
-                if self.user_rate_inc <= 0:
+                # if rate increment less than 0.01 or more than 0.25
+                # (invalid)
+                if (self.user_rate_inc < self.RATE_INC_LOWER or
+                    self.user_rate_inc > self.RATE_INC_UPPER):
 
                     # allow text inside error widget to be edited
                     self.rate_inc_frame.error_text.configure(state='normal')
@@ -1003,7 +1021,8 @@ class App(tk.Tk):
                     # insert error message (line 1, character 0)
                     self.rate_inc_frame.error_text.insert(
                         '1.0',
-                        'Rate increment cannot be zero or negative')
+                        'Rate increment must be between ' \
+                        '{} and {}'.format(self.RATE_INC_LOWER, self.RATE_INC_UPPER))
 
                     # prevent text from being edited
                     self.rate_inc_frame.error_text.configure(state='disabled')
@@ -1081,34 +1100,17 @@ class App(tk.Tk):
                         # get AR value
                         self.user_ar_value = float(self.ar_frame.user_input_list[i][1].get())
                         
-                        # if value zero or negative (invalid)
-                        if self.user_ar_value <= 0:
-
-                            # display error message
-                            self.ar_error_msg(
-                                i+1,
-                                'AR values cannot be zero or negative')
-
-                            # configure styles
-                            self.style.configure(
-                                'AR.NormalBorder.TFrame',
-                                background='#ee9f9f')
-
-                            self.ar_error_entry(i+1)
-
-                            # indicate that user input is invalid
-                            self.user_validity = False
-                        
                         # xmod value must be between 0.001 and 4 (inclusive)
-                        elif (self.user_ar_type == 'x' and
-                            (self.user_ar_value < 0.001 or
-                            self.user_ar_value > 4)):
+                        if (self.user_ar_type == 'x' and
+                            (self.user_ar_value < self.XMOD_LOWER or
+                            self.user_ar_value > self.XMOD_UPPER)):
 
                             # display error message
                             self.ar_error_msg(
                                 i+1,
                                 'xmod value must be between ' \
-                                '0.001 and 4 (inclusive)')
+                                '{} and {} ' \
+                                '(inclusive)'.format(self.XMOD_LOWER, self.XMOD_UPPER))
 
                             # configure styles
                             self.style.configure(
@@ -1123,14 +1125,15 @@ class App(tk.Tk):
                         # cmod value must be between 120 and 500 (inclusive)
                         # for all rates (lowercase c scales with rates)
                         elif (self.user_ar_type == 'c' and
-                            (self.user_min * self.user_ar_value < 120 or
-                            self.user_max * self.user_ar_value > 500)):
+                            (self.user_min * self.user_ar_value < self.CMOD_LOWER or
+                            self.user_max * self.user_ar_value > self.CMOD_UPPER)):
 
                             # display error message
                             self.ar_error_msg(
                                 i+1,
-                                'cmod value must be between 120 and 500 ' \
-                                '(inclusive) for all rates')
+                                'cmod value must be between ' \
+                                '{} and {} ' \
+                                '(inclusive) for all rates'.format(self.CMOD_LOWER, self.CMOD_UPPER))
 
                             # configure styles
                             self.style.configure(
@@ -1144,14 +1147,14 @@ class App(tk.Tk):
 
                         # Cmod value must be between 120 and 500
                         elif (self.user_ar_type == 'C' and
-                            (self.user_ar_value < 120 or
-                            self.user_ar_value > 500)):
+                            (self.user_ar_value < self.CMOD_LOWER or
+                            self.user_ar_value > self.CMOD_UPPER)):
 
                             # display error message
                             self.ar_error_msg(
                                 i+1,
                                 'Cmod value must be between ' \
-                                '120 and 500 (inclusive)')
+                                '{} and {} (inclusive)'.format(self.CMOD_LOWER, self.CMOD_UPPER))
 
                             # configure styles
                             self.style.configure(
@@ -1258,7 +1261,7 @@ class App(tk.Tk):
         confirm = True
 
         # if more than 20 levels will be created
-        if total_levels > 20:
+        if total_levels > self.OUTPUT_NUM_UPPER:
 
             # display messagebox to confirm to the user if they want
             # to continue
