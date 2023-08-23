@@ -487,12 +487,40 @@ class App(tk.Tk):
             with open('level.json', 'r', encoding='utf-8') as outfile:
                 self.user_json = json.load(outfile)
 
+                # check if level.json has id and title
+                # (required to be able to play in-game)
+                self.user_json['id']
+                self.user_json['title']
+
         # if level.json file is invalid JSON, display error messagebox
         # and mark Cytoid level as invalid
         except json.JSONDecodeError:
             messagebox.showerror(
                 'Error',
                 'level.json file within Cytoid level file is invalid'
+            )
+
+            self.level_validity = False
+
+            # configure 'choose file' button border to red
+            self.style.configure(
+                'ChooseFile.WidgetBorder.TFrame',
+                background='#ee9f9f')
+
+            # remove the extracted level.json file
+            os.remove('level.json')
+
+            # prevent the rest of the level validity checks
+            # from running
+            return
+
+        # if level.json does not have id or title, display error
+        # messagebox and mark Cytoid level as invalid
+        except KeyError:
+            messagebox.showerror(
+                'Error',
+                'level.json file within Cytoid level file is missing ' \
+                'required keys (id, title)'
             )
 
             self.level_validity = False
