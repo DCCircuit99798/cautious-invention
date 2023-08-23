@@ -1360,6 +1360,7 @@ class App(tk.Tk):
                         'Do you wish to continue?'.format(total_levels))
 
         return confirm
+    
 
     def ar_error(self, index, message):
         '''Displays error message for an AR option in the first
@@ -1417,6 +1418,7 @@ class App(tk.Tk):
 
             # prevent text from being edited
             self.ar_frame.error_text3.configure(state='disabled')
+            
 
     def work_with_files(self):
         '''This function starts working with files and creating
