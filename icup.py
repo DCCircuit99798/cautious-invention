@@ -30,7 +30,7 @@ class App(tk.Tk):
 
     # constants for user input boundaries
     RATES_LOWER = 0.1
-    RATES_UPPER = 10
+    RATES_UPPER = 3
     RATE_INC_LOWER = 0.01
     RATE_INC_UPPER = 0.25
     XMOD_LOWER = 0.001
