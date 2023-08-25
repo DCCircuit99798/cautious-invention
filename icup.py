@@ -869,34 +869,13 @@ class App(tk.Tk):
 
         # if no difficulties are selected (invalid)
         if self.user_diffs == []:
-            
-            # allow text inside error widget to be edited
-            self.diffs_frame.error_text.configure(state='normal')
 
-            # clear any text inside error widget
-            self.diffs_frame.error_text.delete('1.0', tk.END)
-
-            # insert error message (line 1, character 0)
-            self.diffs_frame.error_text.insert(
-                '1.0',
-                'At least one difficulty must be selected')
-
-            # prevent text from being edited
-            self.diffs_frame.error_text.configure(state='disabled')
-
-            # configure styles
-            self.style.configure(
-                'Diffs.NormalBorder.TFrame',
-                background='#ee9f9f')
-
-            self.style.configure(
-                'Diffs.Required.TLabel',
-                foreground='#ee9f9f',
-                font=('Tahoma', 8, 'bold'))
-
-            # indicate that user input is invalid
-            self.user_validity = False
-            
+            # display error message
+            # configure diffs frame styles
+            # mark user input as invalid
+            self.diffs_error(
+                'At least one difficulty must be selected'
+                )
 
         # get value of minimum and maximum rates
         try:
@@ -909,98 +888,31 @@ class App(tk.Tk):
                 self.user_max < self.RATES_LOWER or
                 self.user_max > self.RATES_UPPER):
 
-                # allow text inside error widget to be edited
-                self.rates_frame.error_text.configure(state='normal')
-
-                # clear any text inside error widget
-                self.rates_frame.error_text.delete('1.0', tk.END)
-
-                # insert error message (line 1, character 0)
-                self.rates_frame.error_text.insert(
-                    '1.0',
+                # display error message
+                # configure rates frame styles
+                # mark user input as invalid
+                self.rates_error(
                     'Rates must be between {} and {} ' \
-                    '(inclusive)'.format(self.RATES_LOWER, self.RATES_UPPER))
-
-                # prevent text from being edited
-                self.rates_frame.error_text.configure(state='disabled')
-
-                # configure styles
-                self.style.configure(
-                    'Rates.NormalBorder.TFrame',
-                    background='#ee9f9f',
-                    font=('Tahoma', 8, 'bold'))
-
-                self.style.configure(
-                    'Rates.Required.TLabel',
-                    foreground='#ee9f9f',
-                    font=('Tahoma', 8, 'bold'))
-
-                # indicated that user input is invalid
-                self.user_validity = False
-                
+                    '(inclusive)'.format(self.RATES_LOWER, self.RATES_UPPER)
+                    )
 
             # if maximum rate less than minimum rate (invalid)
             elif self.user_max < self.user_min:
 
-                # allow text inside error widget to be edited
-                self.rates_frame.error_text.configure(state='normal')
-
-                # clear any text inside error widget
-                self.rates_frame.error_text.delete('1.0', tk.END)
-
-                # insert error message (line 1, character 0)
-                self.rates_frame.error_text.insert(
-                    '1.0',
-                    'Maximum rate cannot be less than minimum')
-
-                # prevent text from being edited
-                self.rates_frame.error_text.configure(state='disabled')
-
-                # configure styles
-                self.style.configure(
-                    'Rates.NormalBorder.TFrame',
-                    background='#ee9f9f',
-                    font=('Tahoma', 8, 'bold'))
-
-                self.style.configure(
-                    'Rates.Required.TLabel',
-                    foreground='#ee9f9f',
-                    font=('Tahoma', 8, 'bold'))
-
-                # indicated that user input is invalid
-                self.user_validity = False
-                
+                # display error message
+                # configure rates frame styles
+                # mark user input as invalid
+                self.rates_error(
+                    'Maximum rate cannot be less than minimum'
+                    )
 
         # if entry fields are empty (invalid)
         except ValueError:
 
-            # allow text inside error widget to be edited
-                self.rates_frame.error_text.configure(state='normal')
-
-                # clear any text inside error widget
-                self.rates_frame.error_text.delete('1.0', tk.END)
-
-                # insert error message (line 1, character 0)
-                self.rates_frame.error_text.insert(
-                    '1.0',
-                    'Rates must be valid numbers')
-
-                # prevent text from being edited
-                self.rates_frame.error_text.configure(state='disabled')
-
-                # configure styles
-                self.style.configure(
-                    'Rates.NormalBorder.TFrame',
-                    background='#ee9f9f',
-                    font=('Tahoma', 8, 'bold'))
-
-                self.style.configure(
-                    'Rates.Required.TLabel',
-                    foreground='#ee9f9f',
-                    font=('Tahoma', 8, 'bold'))
-
-                # indicated that user input is invalid
-                self.user_validity = False
+            # display error message
+            # configure rates frame styles
+            # mark user input as invalid
+            self.rates_error('Rates must be valid numbers')
 
         # if custom increment is selected, get value from entry field
         if self.rate_inc_frame.var.get() == 'Custom':
@@ -1012,55 +924,23 @@ class App(tk.Tk):
                 if (self.user_rate_inc < self.RATE_INC_LOWER or
                     self.user_rate_inc > self.RATE_INC_UPPER):
 
-                    # allow text inside error widget to be edited
-                    self.rate_inc_frame.error_text.configure(state='normal')
-
-                    # clear any text inside error widget
-                    self.rate_inc_frame.error_text.delete('1.0', tk.END)
-
-                    # insert error message (line 1, character 0)
-                    self.rate_inc_frame.error_text.insert(
-                        '1.0',
+                    # display error message
+                    # configure rate inc frame style
+                    # mark user input as invalid
+                    self.rate_inc_error(
                         'Rate increment must be between ' \
-                        '{} and {}'.format(self.RATE_INC_LOWER, self.RATE_INC_UPPER))
-
-                    # prevent text from being edited
-                    self.rate_inc_frame.error_text.configure(state='disabled')
-
-                    # configure styles
-                    self.style.configure(
-                        'RateInc.NormalBorder.TFrame',
-                        background='#ee9f9f',
-                        font=('Tahoma', 8, 'bold'))
-
-                    # indicate that user input is invalid
-                    self.user_validity = False
+                        '{} and {}'.format(self.RATE_INC_LOWER, self.RATE_INC_UPPER)
+                        )
 
             # if input is not valid number (invalid)
             except ValueError:
-                
-                # allow text inside error widget to be edited
-                    self.rate_inc_frame.error_text.configure(state='normal')
 
-                    # clear any text inside error widget
-                    self.rate_inc_frame.error_text.delete('1.0', tk.END)
-
-                    # insert error message (line 1, character 0)
-                    self.rate_inc_frame.error_text.insert(
-                        '1.0',
-                        'Rate increment must be a valid number')
-
-                    # prevent text from being edited
-                    self.rate_inc_frame.error_text.configure(state='disabled')
-
-                    # configure styles
-                    self.style.configure(
-                        'RateInc.NormalBorder.TFrame',
-                        background='#ee9f9f',
-                        font=('Tahoma', 8, 'bold'))
-
-                    # indicated that user input is invalid
-                    self.user_validity = False
+                # display error message
+                # configure rate inc frame style
+                # mark user input as invalid
+                self.rate_inc_error(
+                    'Rate increment must be a valid number'
+                    )
 
         # otherwise get rate increment from radio buttons
         else:
@@ -1080,19 +960,15 @@ class App(tk.Tk):
                 if self.user_ar_type == '':
                     
                     # display error message
-                        self.ar_error_msg(
-                            i+1,
-                            'Both AR type and value must be filled in')
+                    # configure AR border frame colour
+                    # mark user input as invalid
+                    self.ar_error(
+                        i+1,
+                        'Both AR type and value must be filled in')
 
-                        # configure styles
-                        self.style.configure(
-                            'AR.NormalBorder.TFrame',
-                            background='#ee9f9f')
-
-                        self.ar_error_combo(i+1)
-
-                        # indicate that user input is invalid
-                        self.user_validity = False
+                    # configure the combobox that corresponds to the
+                    # invalid AR option
+                    self.ar_error_combo(i+1)
 
                 # if AR type is filled, check value
                 else:
@@ -1106,21 +982,17 @@ class App(tk.Tk):
                             self.user_ar_value > self.XMOD_UPPER)):
 
                             # display error message
-                            self.ar_error_msg(
+                            # configure AR border frame colour
+                            # mark user input as invalid
+                            self.ar_error(
                                 i+1,
                                 'xmod value must be between ' \
                                 '{} and {} ' \
                                 '(inclusive)'.format(self.XMOD_LOWER, self.XMOD_UPPER))
-
-                            # configure styles
-                            self.style.configure(
-                                'AR.NormalBorder.TFrame',
-                                background='#ee9f9f')
-
+                        
+                            # configure entry that corresponds to the
+                            # invalid AR option
                             self.ar_error_entry(i+1)
-
-                            # indicate that user input is invalid
-                            self.user_validity = False
 
                         # cmod value must be between 120 and 500 (inclusive)
                         # for all rates (lowercase c scales with rates)
@@ -1129,21 +1001,17 @@ class App(tk.Tk):
                             self.user_max * self.user_ar_value > self.CMOD_UPPER)):
 
                             # display error message
-                            self.ar_error_msg(
+                            # configure AR border frame colour
+                            # mark user input as invalid
+                            self.ar_error(
                                 i+1,
                                 'cmod value must be between ' \
                                 '{} and {} ' \
                                 '(inclusive) for all rates'.format(self.CMOD_LOWER, self.CMOD_UPPER))
 
-                            # configure styles
-                            self.style.configure(
-                                'AR.NormalBorder.TFrame',
-                                background='#ee9f9f')
-
+                            # configure entry that corresponds to the
+                            # invalid AR option
                             self.ar_error_entry(i+1)
-
-                            # indicate that user input is invalid
-                            self.user_validity = False
 
                         # Cmod value must be between 120 and 500
                         elif (self.user_ar_type == 'C' and
@@ -1151,20 +1019,16 @@ class App(tk.Tk):
                             self.user_ar_value > self.CMOD_UPPER)):
 
                             # display error message
-                            self.ar_error_msg(
+                            # configure AR border frame colour
+                            # mark user input as invalid
+                            self.ar_error(
                                 i+1,
                                 'Cmod value must be between ' \
                                 '{} and {} (inclusive)'.format(self.CMOD_LOWER, self.CMOD_UPPER))
 
-                            # configure styles
-                            self.style.configure(
-                                'AR.NormalBorder.TFrame',
-                                background='#ee9f9f')
-
+                            # configure entry that corresponds to the
+                            # invalid AR option
                             self.ar_error_entry(i+1)
-
-                            # indicate that user input is invalid
-                            self.user_validity = False
 
                         # if value passed all validity checks
                         else:
@@ -1182,38 +1046,30 @@ class App(tk.Tk):
                         if self.ar_frame.user_input_list[i][1].get() == '':
 
                             # display error message
-                            self.ar_error_msg(
+                            # configure AR border frame colour
+                            # mark user input as invalid
+                            self.ar_error(
                                 i+1,
                                 'Both AR type and value must be filled in')
 
-                            # configure styles
-                            self.style.configure(
-                                'AR.NormalBorder.TFrame',
-                                background='#ee9f9f')
-
+                            # configure entry that corresponds to the
+                            # invalid AR option
                             self.ar_error_entry(i+1)
-
-                            # indicate that user input is invalid
-                            self.user_validity = False
 
                         # if value is not empty,
                         # but still an invalid number
                         else:
 
                             # display error message
-                            self.ar_error_msg(
+                            # configure AR border frame colour
+                            # mark user input as invalid
+                            self.ar_error(
                                 i+1,
                                 'AR value must be a valid number')
 
-                            # configure styles
-                            self.style.configure(
-                                'AR.NormalBorder.TFrame',
-                                background='#ee9f9f')
-
+                            # configure entry that corresponds to the
+                            # invalid AR option
                             self.ar_error_entry(i+1)
-
-                            # indicate that user input is invalid
-                            self.user_validity = False
 
                     # TypeError occurs when cmod is selected
                     # and rates aren't filled out
@@ -1271,11 +1127,110 @@ class App(tk.Tk):
                         'Do you wish to continue?'.format(total_levels))
 
         return confirm
-    
 
-    def ar_error_msg(self, index, message):
-        '''Displays error message for an AR option in the first
-           available text widget'''
+
+    def diffs_error(self, message):
+        '''Updates styles of difficulties frame (border and
+        "required" label), displays error message in text widget,
+        and marks user input as invalid.'''
+        
+        # allow text inside error widget to be edited
+        self.diffs_frame.error_text.configure(state='normal')
+
+        # clear any text inside error widget
+        self.diffs_frame.error_text.delete('1.0', tk.END)
+
+        # insert error message (line 1, character 0)
+        self.diffs_frame.error_text.insert(
+            '1.0', message)
+
+        # prevent text from being edited
+        self.diffs_frame.error_text.configure(state='disabled')
+
+        # configure styles
+        self.style.configure(
+            'Diffs.NormalBorder.TFrame',
+            background='#ee9f9f')
+
+        self.style.configure(
+            'Diffs.Required.TLabel',
+            foreground='#ee9f9f',
+            font=('Tahoma', 8, 'bold'))
+
+        # indicate that user input is invalid
+        self.user_validity = False
+
+
+    def rates_error(self, message):
+        '''Updates styles of rates frame (border and
+        "required" label), displays error message in text widget,
+        and marks user input as invalid.'''
+
+        # allow text inside error widget to be edited
+        self.rates_frame.error_text.configure(state='normal')
+
+        # clear any text inside error widget
+        self.rates_frame.error_text.delete('1.0', tk.END)
+
+        # insert error message (line 1, character 0)
+        self.rates_frame.error_text.insert(
+            '1.0', message)
+
+        # prevent text from being edited
+        self.rates_frame.error_text.configure(state='disabled')
+
+        # configure styles
+        self.style.configure(
+            'Rates.NormalBorder.TFrame',
+            background='#ee9f9f',
+            font=('Tahoma', 8, 'bold'))
+
+        self.style.configure(
+            'Rates.Required.TLabel',
+            foreground='#ee9f9f',
+            font=('Tahoma', 8, 'bold'))
+
+        # indicated that user input is invalid
+        self.user_validity = False
+
+
+    def rate_inc_error(self, message):
+        '''Updates styles of rate increment frame,
+        displays error message in text widget,
+        and marks user input as invalid.'''
+        
+        # allow text inside error widget to be edited
+        self.rate_inc_frame.error_text.configure(state='normal')
+
+        # clear any text inside error widget
+        self.rate_inc_frame.error_text.delete('1.0', tk.END)
+
+        # insert error message (line 1, character 0)
+        self.rate_inc_frame.error_text.insert(
+            '1.0', message)
+
+        # prevent text from being edited
+        self.rate_inc_frame.error_text.configure(state='disabled')
+
+        # configure styles
+        self.style.configure(
+            'RateInc.NormalBorder.TFrame',
+            background='#ee9f9f',
+            font=('Tahoma', 8, 'bold'))
+
+        # indicate that user input is invalid
+        self.user_validity = False
+        
+
+    def ar_error(self, index, message):
+        '''Updates border colour of AR options frame,
+        displays error message for an AR option in the first
+        available text widget, and marks user input as invalid.'''
+        
+        # configure styles
+        self.style.configure(
+            'AR.NormalBorder.TFrame',
+            background='#ee9f9f')
 
         # display error message in first text widget if it is empty
         if self.ar_frame.error_text1.get('1.0', 'end-1c') == '':
@@ -1329,6 +1284,9 @@ class App(tk.Tk):
 
             # prevent text from being edited
             self.ar_frame.error_text3.configure(state='disabled')
+
+        # indicate that user input is invalid
+        self.user_validity = False
             
 
     def ar_error_combo(self, index):
@@ -2828,7 +2786,7 @@ class AROptionsFrame(ttk.Frame):
             borderwidth=tk_error_borderwidth,
             state='disabled',
             wrap=tk_error_wrap,
-            height=2,
+            height=3,
             width=tk_error_width
             )
         self.error_text2 = tk.Text(
@@ -2839,7 +2797,7 @@ class AROptionsFrame(ttk.Frame):
             borderwidth=tk_error_borderwidth,
             state='disabled',
             wrap=tk_error_wrap,
-            height=2,
+            height=3,
             width=tk_error_width
             )
         self.error_text3 = tk.Text(
@@ -2850,7 +2808,7 @@ class AROptionsFrame(ttk.Frame):
             borderwidth=tk_error_borderwidth,
             state='disabled',
             wrap=tk_error_wrap,
-            height=2,
+            height=3,
             width=tk_error_width
             )
         
