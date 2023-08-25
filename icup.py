@@ -1237,7 +1237,6 @@ class App(tk.Tk):
               and self.user_validity == True
               and self.unexpected_files() == True
               and self.output_num_check() == True):
-            print(self.user_ar_options)
             self.work_with_files()
 
     def output_num_check(self):
