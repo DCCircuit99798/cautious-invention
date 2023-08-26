@@ -1547,6 +1547,58 @@ class App(tk.Tk):
                  + str(self.current_rate)
                  + 'x')
 
+                # add rate to title inside existing square brackets 
+                if self.square_brackets(self.output_json['title']) == True:
+                    self.output_json['title'] \
+                    = \
+                    (self.output_json['title'][:-1]
+                     + ': '
+                     + diff.capitalize()
+                     + ' '
+                     + str(self.current_rate)
+                     + 'x]')
+
+                # add rate to title in new square brackets
+                # (if title doesn't have them)
+                else:
+                    self.output_json['title'] \
+                    = \
+                    (self.output_json['title']
+                     + ' ['
+                     + diff.capitalize()
+                     + ' '
+                     + str(self.current_rate)
+                     + 'x]')
+
+                # add rate to title_localized inside existing square brackets
+                try: 
+                    if self.square_brackets(self.output_json['title_localized']) == True:
+                        self.output_json['title_localized'] \
+                        = \
+                        (self.output_json['title_localized'][:-1]
+                         + ': '
+                         + diff.capitalize()
+                         + ' '
+                         + str(self.current_rate)
+                         + 'x]')
+
+                    # add rate to title_localized in new square brackets
+                    # (if title_localized doesn't have them)
+                    else:
+                        self.output_json['title_localized'] \
+                         = \
+                         (self.output_json['title_localized']
+                          + ' ['
+                          + diff.capitalize()
+                          + ' '
+                          + str(self.current_rate)
+                          + 'x]')
+
+                # if the chart has no title_localized or
+                # title_localized is set to null, skip this step
+                except (KeyError, TypeError) as e:
+                    pass
+
                 # delete all chart objects in output json file
                 # (chart objects will be created with updated metadata
                 # after files have been worked with)
@@ -1555,49 +1607,6 @@ class App(tk.Tk):
                 
                 # if easy diff is chosen
                 if diff == 'easy':
-
-                    # add rate to title inside existing square brackets 
-                    if self.square_brackets(self.output_json['title']) == True:
-                        self.output_json['title'] \
-                        = \
-                        (self.output_json['title'][:-1]
-                         + ': Easy '
-                         + str(self.current_rate)
-                         + 'x]')
-
-                    # add rate to title in new square brackets
-                    # (if title doesn't have them)
-                    else:
-                        self.output_json['title'] \
-                        = \
-                        (self.output_json['title']
-                         + ' [Easy '
-                         + str(self.current_rate)
-                         + 'x]')
-
-                    # add rate to title_localized inside existing square brackets
-                    try: 
-                        if self.square_brackets(self.output_json['title_localized']) == True:
-                            self.output_json['title_localized'] \
-                            = \
-                            (self.output_json['title_localized'][:-1]
-                             + ': Easy '
-                             + str(self.current_rate)
-                             + 'x]')
-
-                        # add rate to title_localized in new square brackets    
-                        else:
-                            self.output_json['title_localized'] \
-                             = \
-                             (self.output_json['title_localized']
-                              + ' [Easy '
-                              + str(self.current_rate)
-                              + 'x]')
-
-                    # if the chart has no title_localized or
-                    # title_localized is set to null, skip this step
-                    except (KeyError, TypeError) as e:
-                        pass
 
                     if self.easy_music_path != None:
 
@@ -1692,49 +1701,6 @@ class App(tk.Tk):
                 # if hard diff is chosen
                 if diff == 'hard':
 
-                    # add rate to title inside existing square brackets 
-                    if self.square_brackets(self.output_json['title']) == True:
-                        self.output_json['title'] \
-                        = \
-                        (self.output_json['title'][:-1]
-                         + ': Hard '
-                         + str(self.current_rate)
-                         + 'x]')
-
-                    # add rate to title in new square brackets
-                    # (if title doesn't have them)
-                    else:
-                        self.output_json['title'] \
-                        = \
-                        (self.output_json['title']
-                         + ' [Hard '
-                         + str(self.current_rate)
-                         + 'x]')
-
-                    # add rate to title_localized inside existing square brackets
-                    try: 
-                        if self.square_brackets(self.output_json['title_localized']) == True:
-                            self.output_json['title_localized'] \
-                            = \
-                            (self.output_json['title_localized'][:-1]
-                             + ': Hard '
-                             + str(self.current_rate)
-                             + 'x]')
-
-                        # add rate to title_localized in new square brackets    
-                        else:
-                            self.output_json['title_localized'] \
-                             = \
-                             (self.output_json['title_localized']
-                              + ' [Hard '
-                              + str(self.current_rate)
-                              + 'x]')
-
-                    # if the chart has no title_localized or
-                    # title_localized is set to null, skip this step
-                    except (KeyError, TypeError) as e:
-                        pass
-
                     if self.hard_music_path != None:
 
                         # work with music_override file (if it exists)
@@ -1827,49 +1793,6 @@ class App(tk.Tk):
 
                 # if extreme diff is chosen
                 if diff == 'extreme':
-
-                    # add rate to title inside existing square brackets 
-                    if self.square_brackets(self.output_json['title']) == True:
-                        self.output_json['title'] \
-                        = \
-                        (self.output_json['title'][:-1]
-                         + ': Extreme '
-                         + str(self.current_rate)
-                         + 'x]')
-
-                    # add rate to title in new square brackets
-                    # (if title doesn't have them)
-                    else:
-                        self.output_json['title'] \
-                        = \
-                        (self.output_json['title']
-                         + ' [Extreme '
-                         + str(self.current_rate)
-                         + 'x]')
-
-                    # add rate to title_localized inside existing square brackets
-                    try: 
-                        if self.square_brackets(self.output_json['title_localized']) == True:
-                            self.output_json['title_localized'] \
-                            = \
-                            (self.output_json['title_localized'][:-1]
-                             + ': Extreme '
-                             + str(self.current_rate)
-                             + 'x]')
-
-                        # add rate to title_localized in new square brackets    
-                        else:
-                            self.output_json['title_localized'] \
-                             = \
-                             (self.output_json['title_localized']
-                              + ' [Extreme '
-                              + str(self.current_rate)
-                              + 'x]')
-
-                    # if the chart has no title_localized or
-                    # title_localized is set to null, skip this step
-                    except (KeyError, TypeError) as e:
-                        pass
 
                     if self.ex_music_path != None:
 
