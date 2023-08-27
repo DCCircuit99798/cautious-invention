@@ -1366,6 +1366,13 @@ class App(tk.Tk):
         with ZipFile(self.user_level_path, 'r') as level:
             level.extract('level.json')
 
+        # delete beta.level.json if it exists
+        try:
+            os.remove('beta.level.json')
+
+        except FileNotFoundError:
+            pass
+
         # rename level.json file
         os.rename('level.json', 'beta.level.json')
 
