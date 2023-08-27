@@ -44,7 +44,7 @@ class App(tk.Tk):
 
         # configure window
         self.title("Idiot Caleb's Uprating Project")
-        self.geometry('485x325')
+        self.geometry('485x338')
         self.configure(bg='#1e2129')
         self.resizable(False, False)
 
@@ -500,8 +500,27 @@ class App(tk.Tk):
 
                 # check if level.json has id and title
                 # (required to be able to play in-game)
-                self.user_json['id']
-                self.user_json['title']
+                if (self.user_json['id'] == None or
+                    self.user_json['title'] == None):
+                    messagebox.showerror(
+                        'Error',
+                        'level.json file within Cytoid level file is missing ' \
+                        'required keys (id, title)'
+                        )
+
+                    self.level_validity = False
+
+                    # configure 'choose file' button border to red
+                    self.style.configure(
+                        'ChooseFile.WidgetBorder.TFrame',
+                        background='#ee9f9f')
+
+                    # remove the extracted level.json file
+                    os.remove('level.json')
+
+                    # prevent the rest of the level validity checks
+                    # from running
+                    return
 
         # if level.json file is invalid JSON, display error messagebox
         # and mark Cytoid level as invalid
@@ -869,34 +888,13 @@ class App(tk.Tk):
 
         # if no difficulties are selected (invalid)
         if self.user_diffs == []:
-            
-            # allow text inside error widget to be edited
-            self.diffs_frame.error_text.configure(state='normal')
 
-            # clear any text inside error widget
-            self.diffs_frame.error_text.delete('1.0', tk.END)
-
-            # insert error message (line 1, character 0)
-            self.diffs_frame.error_text.insert(
-                '1.0',
-                'At least one difficulty must be selected')
-
-            # prevent text from being edited
-            self.diffs_frame.error_text.configure(state='disabled')
-
-            # configure styles
-            self.style.configure(
-                'Diffs.NormalBorder.TFrame',
-                background='#ee9f9f')
-
-            self.style.configure(
-                'Diffs.Required.TLabel',
-                foreground='#ee9f9f',
-                font=('Tahoma', 8, 'bold'))
-
-            # indicate that user input is invalid
-            self.user_validity = False
-            
+            # display error message
+            # configure diffs frame styles
+            # mark user input as invalid
+            self.diffs_error(
+                'At least one difficulty must be selected'
+                )
 
         # get value of minimum and maximum rates
         try:
@@ -909,98 +907,31 @@ class App(tk.Tk):
                 self.user_max < self.RATES_LOWER or
                 self.user_max > self.RATES_UPPER):
 
-                # allow text inside error widget to be edited
-                self.rates_frame.error_text.configure(state='normal')
-
-                # clear any text inside error widget
-                self.rates_frame.error_text.delete('1.0', tk.END)
-
-                # insert error message (line 1, character 0)
-                self.rates_frame.error_text.insert(
-                    '1.0',
+                # display error message
+                # configure rates frame styles
+                # mark user input as invalid
+                self.rates_error(
                     'Rates must be between {} and {} ' \
-                    '(inclusive)'.format(self.RATES_LOWER, self.RATES_UPPER))
-
-                # prevent text from being edited
-                self.rates_frame.error_text.configure(state='disabled')
-
-                # configure styles
-                self.style.configure(
-                    'Rates.NormalBorder.TFrame',
-                    background='#ee9f9f',
-                    font=('Tahoma', 8, 'bold'))
-
-                self.style.configure(
-                    'Rates.Required.TLabel',
-                    foreground='#ee9f9f',
-                    font=('Tahoma', 8, 'bold'))
-
-                # indicated that user input is invalid
-                self.user_validity = False
-                
+                    '(inclusive)'.format(self.RATES_LOWER, self.RATES_UPPER)
+                    )
 
             # if maximum rate less than minimum rate (invalid)
             elif self.user_max < self.user_min:
 
-                # allow text inside error widget to be edited
-                self.rates_frame.error_text.configure(state='normal')
-
-                # clear any text inside error widget
-                self.rates_frame.error_text.delete('1.0', tk.END)
-
-                # insert error message (line 1, character 0)
-                self.rates_frame.error_text.insert(
-                    '1.0',
-                    'Maximum rate cannot be less than minimum')
-
-                # prevent text from being edited
-                self.rates_frame.error_text.configure(state='disabled')
-
-                # configure styles
-                self.style.configure(
-                    'Rates.NormalBorder.TFrame',
-                    background='#ee9f9f',
-                    font=('Tahoma', 8, 'bold'))
-
-                self.style.configure(
-                    'Rates.Required.TLabel',
-                    foreground='#ee9f9f',
-                    font=('Tahoma', 8, 'bold'))
-
-                # indicated that user input is invalid
-                self.user_validity = False
-                
+                # display error message
+                # configure rates frame styles
+                # mark user input as invalid
+                self.rates_error(
+                    'Maximum rate cannot be less than minimum'
+                    )
 
         # if entry fields are empty (invalid)
         except ValueError:
 
-            # allow text inside error widget to be edited
-                self.rates_frame.error_text.configure(state='normal')
-
-                # clear any text inside error widget
-                self.rates_frame.error_text.delete('1.0', tk.END)
-
-                # insert error message (line 1, character 0)
-                self.rates_frame.error_text.insert(
-                    '1.0',
-                    'Rates must be valid numbers')
-
-                # prevent text from being edited
-                self.rates_frame.error_text.configure(state='disabled')
-
-                # configure styles
-                self.style.configure(
-                    'Rates.NormalBorder.TFrame',
-                    background='#ee9f9f',
-                    font=('Tahoma', 8, 'bold'))
-
-                self.style.configure(
-                    'Rates.Required.TLabel',
-                    foreground='#ee9f9f',
-                    font=('Tahoma', 8, 'bold'))
-
-                # indicated that user input is invalid
-                self.user_validity = False
+            # display error message
+            # configure rates frame styles
+            # mark user input as invalid
+            self.rates_error('Rates must be valid numbers')
 
         # if custom increment is selected, get value from entry field
         if self.rate_inc_frame.var.get() == 'Custom':
@@ -1012,55 +943,23 @@ class App(tk.Tk):
                 if (self.user_rate_inc < self.RATE_INC_LOWER or
                     self.user_rate_inc > self.RATE_INC_UPPER):
 
-                    # allow text inside error widget to be edited
-                    self.rate_inc_frame.error_text.configure(state='normal')
-
-                    # clear any text inside error widget
-                    self.rate_inc_frame.error_text.delete('1.0', tk.END)
-
-                    # insert error message (line 1, character 0)
-                    self.rate_inc_frame.error_text.insert(
-                        '1.0',
-                        'Rate increment must be between ' \
-                        '{} and {}'.format(self.RATE_INC_LOWER, self.RATE_INC_UPPER))
-
-                    # prevent text from being edited
-                    self.rate_inc_frame.error_text.configure(state='disabled')
-
-                    # configure styles
-                    self.style.configure(
-                        'RateInc.NormalBorder.TFrame',
-                        background='#ee9f9f',
-                        font=('Tahoma', 8, 'bold'))
-
-                    # indicate that user input is invalid
-                    self.user_validity = False
+                    # display error message
+                    # configure rate inc frame style
+                    # mark user input as invalid
+                    self.rate_inc_error(
+                        'Rate increment must be between {} and {} ' \
+                        '(inclusive)'.format(self.RATE_INC_LOWER, self.RATE_INC_UPPER)
+                        )
 
             # if input is not valid number (invalid)
             except ValueError:
-                
-                # allow text inside error widget to be edited
-                    self.rate_inc_frame.error_text.configure(state='normal')
 
-                    # clear any text inside error widget
-                    self.rate_inc_frame.error_text.delete('1.0', tk.END)
-
-                    # insert error message (line 1, character 0)
-                    self.rate_inc_frame.error_text.insert(
-                        '1.0',
-                        'Rate increment must be a valid number')
-
-                    # prevent text from being edited
-                    self.rate_inc_frame.error_text.configure(state='disabled')
-
-                    # configure styles
-                    self.style.configure(
-                        'RateInc.NormalBorder.TFrame',
-                        background='#ee9f9f',
-                        font=('Tahoma', 8, 'bold'))
-
-                    # indicated that user input is invalid
-                    self.user_validity = False
+                # display error message
+                # configure rate inc frame style
+                # mark user input as invalid
+                self.rate_inc_error(
+                    'Rate increment must be a valid number'
+                    )
 
         # otherwise get rate increment from radio buttons
         else:
@@ -1080,19 +979,15 @@ class App(tk.Tk):
                 if self.user_ar_type == '':
                     
                     # display error message
-                        self.ar_error_msg(
-                            i+1,
-                            'Both AR type and value must be filled in')
+                    # configure AR border frame colour
+                    # mark user input as invalid
+                    self.ar_error(
+                        i+1,
+                        'Both AR type and value must be filled in')
 
-                        # configure styles
-                        self.style.configure(
-                            'AR.NormalBorder.TFrame',
-                            background='#ee9f9f')
-
-                        self.ar_error_combo(i+1)
-
-                        # indicate that user input is invalid
-                        self.user_validity = False
+                    # configure the combobox that corresponds to the
+                    # invalid AR option
+                    self.ar_error_combo(i+1)
 
                 # if AR type is filled, check value
                 else:
@@ -1106,21 +1001,17 @@ class App(tk.Tk):
                             self.user_ar_value > self.XMOD_UPPER)):
 
                             # display error message
-                            self.ar_error_msg(
+                            # configure AR border frame colour
+                            # mark user input as invalid
+                            self.ar_error(
                                 i+1,
                                 'xmod value must be between ' \
                                 '{} and {} ' \
                                 '(inclusive)'.format(self.XMOD_LOWER, self.XMOD_UPPER))
-
-                            # configure styles
-                            self.style.configure(
-                                'AR.NormalBorder.TFrame',
-                                background='#ee9f9f')
-
+                        
+                            # configure entry that corresponds to the
+                            # invalid AR option
                             self.ar_error_entry(i+1)
-
-                            # indicate that user input is invalid
-                            self.user_validity = False
 
                         # cmod value must be between 120 and 500 (inclusive)
                         # for all rates (lowercase c scales with rates)
@@ -1129,21 +1020,17 @@ class App(tk.Tk):
                             self.user_max * self.user_ar_value > self.CMOD_UPPER)):
 
                             # display error message
-                            self.ar_error_msg(
+                            # configure AR border frame colour
+                            # mark user input as invalid
+                            self.ar_error(
                                 i+1,
                                 'cmod value must be between ' \
                                 '{} and {} ' \
                                 '(inclusive) for all rates'.format(self.CMOD_LOWER, self.CMOD_UPPER))
 
-                            # configure styles
-                            self.style.configure(
-                                'AR.NormalBorder.TFrame',
-                                background='#ee9f9f')
-
+                            # configure entry that corresponds to the
+                            # invalid AR option
                             self.ar_error_entry(i+1)
-
-                            # indicate that user input is invalid
-                            self.user_validity = False
 
                         # Cmod value must be between 120 and 500
                         elif (self.user_ar_type == 'C' and
@@ -1151,20 +1038,16 @@ class App(tk.Tk):
                             self.user_ar_value > self.CMOD_UPPER)):
 
                             # display error message
-                            self.ar_error_msg(
+                            # configure AR border frame colour
+                            # mark user input as invalid
+                            self.ar_error(
                                 i+1,
                                 'Cmod value must be between ' \
                                 '{} and {} (inclusive)'.format(self.CMOD_LOWER, self.CMOD_UPPER))
 
-                            # configure styles
-                            self.style.configure(
-                                'AR.NormalBorder.TFrame',
-                                background='#ee9f9f')
-
+                            # configure entry that corresponds to the
+                            # invalid AR option
                             self.ar_error_entry(i+1)
-
-                            # indicate that user input is invalid
-                            self.user_validity = False
 
                         # if value passed all validity checks
                         else:
@@ -1182,38 +1065,30 @@ class App(tk.Tk):
                         if self.ar_frame.user_input_list[i][1].get() == '':
 
                             # display error message
-                            self.ar_error_msg(
+                            # configure AR border frame colour
+                            # mark user input as invalid
+                            self.ar_error(
                                 i+1,
                                 'Both AR type and value must be filled in')
 
-                            # configure styles
-                            self.style.configure(
-                                'AR.NormalBorder.TFrame',
-                                background='#ee9f9f')
-
+                            # configure entry that corresponds to the
+                            # invalid AR option
                             self.ar_error_entry(i+1)
-
-                            # indicate that user input is invalid
-                            self.user_validity = False
 
                         # if value is not empty,
                         # but still an invalid number
                         else:
 
                             # display error message
-                            self.ar_error_msg(
+                            # configure AR border frame colour
+                            # mark user input as invalid
+                            self.ar_error(
                                 i+1,
                                 'AR value must be a valid number')
 
-                            # configure styles
-                            self.style.configure(
-                                'AR.NormalBorder.TFrame',
-                                background='#ee9f9f')
-
+                            # configure entry that corresponds to the
+                            # invalid AR option
                             self.ar_error_entry(i+1)
-
-                            # indicate that user input is invalid
-                            self.user_validity = False
 
                     # TypeError occurs when cmod is selected
                     # and rates aren't filled out
@@ -1237,7 +1112,6 @@ class App(tk.Tk):
               and self.user_validity == True
               and self.unexpected_files() == True
               and self.output_num_check() == True):
-            print(self.user_ar_options)
             self.work_with_files()
 
     def output_num_check(self):
@@ -1272,11 +1146,110 @@ class App(tk.Tk):
                         'Do you wish to continue?'.format(total_levels))
 
         return confirm
-    
 
-    def ar_error_msg(self, index, message):
-        '''Displays error message for an AR option in the first
-           available text widget'''
+
+    def diffs_error(self, message):
+        '''Updates styles of difficulties frame (border and
+        "required" label), displays error message in text widget,
+        and marks user input as invalid.'''
+        
+        # allow text inside error widget to be edited
+        self.diffs_frame.error_text.configure(state='normal')
+
+        # clear any text inside error widget
+        self.diffs_frame.error_text.delete('1.0', tk.END)
+
+        # insert error message (line 1, character 0)
+        self.diffs_frame.error_text.insert(
+            '1.0', message)
+
+        # prevent text from being edited
+        self.diffs_frame.error_text.configure(state='disabled')
+
+        # configure styles
+        self.style.configure(
+            'Diffs.NormalBorder.TFrame',
+            background='#ee9f9f')
+
+        self.style.configure(
+            'Diffs.Required.TLabel',
+            foreground='#ee9f9f',
+            font=('Tahoma', 8, 'bold'))
+
+        # indicate that user input is invalid
+        self.user_validity = False
+
+
+    def rates_error(self, message):
+        '''Updates styles of rates frame (border and
+        "required" label), displays error message in text widget,
+        and marks user input as invalid.'''
+
+        # allow text inside error widget to be edited
+        self.rates_frame.error_text.configure(state='normal')
+
+        # clear any text inside error widget
+        self.rates_frame.error_text.delete('1.0', tk.END)
+
+        # insert error message (line 1, character 0)
+        self.rates_frame.error_text.insert(
+            '1.0', message)
+
+        # prevent text from being edited
+        self.rates_frame.error_text.configure(state='disabled')
+
+        # configure styles
+        self.style.configure(
+            'Rates.NormalBorder.TFrame',
+            background='#ee9f9f',
+            font=('Tahoma', 8, 'bold'))
+
+        self.style.configure(
+            'Rates.Required.TLabel',
+            foreground='#ee9f9f',
+            font=('Tahoma', 8, 'bold'))
+
+        # indicated that user input is invalid
+        self.user_validity = False
+
+
+    def rate_inc_error(self, message):
+        '''Updates styles of rate increment frame,
+        displays error message in text widget,
+        and marks user input as invalid.'''
+        
+        # allow text inside error widget to be edited
+        self.rate_inc_frame.error_text.configure(state='normal')
+
+        # clear any text inside error widget
+        self.rate_inc_frame.error_text.delete('1.0', tk.END)
+
+        # insert error message (line 1, character 0)
+        self.rate_inc_frame.error_text.insert(
+            '1.0', message)
+
+        # prevent text from being edited
+        self.rate_inc_frame.error_text.configure(state='disabled')
+
+        # configure styles
+        self.style.configure(
+            'RateInc.NormalBorder.TFrame',
+            background='#ee9f9f',
+            font=('Tahoma', 8, 'bold'))
+
+        # indicate that user input is invalid
+        self.user_validity = False
+        
+
+    def ar_error(self, index, message):
+        '''Updates border colour of AR options frame,
+        displays error message for an AR option in the first
+        available text widget, and marks user input as invalid.'''
+        
+        # configure styles
+        self.style.configure(
+            'AR.NormalBorder.TFrame',
+            background='#ee9f9f')
 
         # display error message in first text widget if it is empty
         if self.ar_frame.error_text1.get('1.0', 'end-1c') == '':
@@ -1330,6 +1303,9 @@ class App(tk.Tk):
 
             # prevent text from being edited
             self.ar_frame.error_text3.configure(state='disabled')
+
+        # indicate that user input is invalid
+        self.user_validity = False
             
 
     def ar_error_combo(self, index):
@@ -1386,11 +1362,16 @@ class App(tk.Tk):
         # been created
         self.files_to_delete = []
 
-        # opens the Cytoid level file in read mode
+        # extract level.json file from Cytoid level file
         with ZipFile(self.user_level_path, 'r') as level:
-
-            # extract level.json file from Cytoid level file
             level.extract('level.json')
+
+        # delete beta.level.json if it exists
+        try:
+            os.remove('beta.level.json')
+
+        except FileNotFoundError:
+            pass
 
         # rename level.json file
         os.rename('level.json', 'beta.level.json')
@@ -1405,140 +1386,56 @@ class App(tk.Tk):
             encoding='utf-8')
             )
 
-        # opens the Cytoid level file in read mode
-        with ZipFile(self.user_level_path, 'r') as level:
-
-            try:
-                
-                # try to extract music file
+        try:
+            
+            # try to extract music file
+            with ZipFile(self.user_level_path, 'r') as level:
                 level.extract(self.user_json['music']['path'])
 
-                # store path of file
-                self.music_path = self.user_json['music']['path']
+            # store path of file
+            self.music_path = self.user_json['music']['path']
 
-                # add file path to list of files to delete
-                self.files_to_delete.append(self.user_json['music']['path'])
+            # add file path to list of files to delete
+            self.files_to_delete.append(self.user_json['music']['path'])
 
-            # if no key in level.json or file doesn't exist,
-            # skip this step and extract music_override instead
-            except (KeyError, FileNotFoundError) as e:
-                self.music_path = None
+        # if no key in level.json or file doesn't exist,
+        # skip this step and extract music_override instead
+        except (KeyError, FileNotFoundError) as e:
+            self.music_path = None
 
-            try:
-                
-                # try to extract music preview file
+        try:
+            
+            # try to extract music preview file
+            with ZipFile(self.user_level_path, 'r') as level:
                 level.extract(self.user_json['music_preview']['path'])
 
-                # store path of file
-                self.preview_path = self.user_json['music_preview']['path']
+            # store path of file
+            self.preview_path = self.user_json['music_preview']['path']
 
-                # add file path to list of files to delete
-                self.files_to_delete.append(self.user_json['music_preview']['path'])
+            # add file path to list of files to delete
+            self.files_to_delete.append(self.user_json['music_preview']['path'])
 
-            # if no key in level.json or file doesn't exist,
-            # skip this step and extract music_override instead
-            except (KeyError, FileNotFoundError) as e:
-                self.preview_path = None
+        # if no key in level.json or file doesn't exist,
+        # skip this step and extract music_override instead
+        except (KeyError, FileNotFoundError) as e:
+            self.preview_path = None
 
-            try:
+        try:
 
-                # try to extract background file
+            # try to extract background file
+            with ZipFile(self.user_level_path, 'r') as level:
                 level.extract(self.user_json['background']['path'])
 
-                # store path of file
-                self.background_path = self.user_json['background']['path']
+            # store path of file
+            self.background_path = self.user_json['background']['path']
 
-                # add file path to list of files to delete
-                self.files_to_delete.append(self.user_json['background']['path'])
+            # add file path to list of files to delete
+            self.files_to_delete.append(self.user_json['background']['path'])
 
-            # if no key in level.json or file doesn't exist,
-            # skip this step
-            except (KeyError, FileNotFoundError) as e:
-                self.background_path = None
-
-            # extract chart files of chosen difficulties
-            for chart in self.user_json['charts']:
-
-                if chart['type'] == 'easy' and 'easy' in self.user_diffs:
-
-                    # extract chart file
-                    level.extract(chart['path'])
-
-                    # store path of file
-                    self.easy_chart_path = chart['path']
-
-                    # add chart path to list of files to delete
-                    self.files_to_delete.append(chart['path'])
-
-                    try:
-
-                        # try to extract music_override file
-                        level.extract(chart['music_override']['path'])
-
-                        # store path of file
-                        self.easy_music_path = chart['music_override']['path']
-
-                        # add file path to list of files to delete
-                        self.files_to_delete.append(chart['music_override']['path'])
-
-                    # if no key in level.json or file doesn't exist,
-                    # skip this step
-                    except (KeyError, FileNotFoundError) as e:
-                        self.easy_music_path = None
-
-                if chart['type'] == 'hard' and 'hard' in self.user_diffs:
-
-                    # extract chart file
-                    level.extract(chart['path'])
-
-                    # store path of file
-                    self.hard_chart_path = chart['path']
-
-                    # add chart path to list of files to delete
-                    self.files_to_delete.append(chart['path'])
-
-                    try:
-
-                        # try to extract music_override file
-                        level.extract(chart['music_override']['path'])
-
-                        # store path of file
-                        self.hard_music_path = chart['music_override']['path']
-
-                        # add file path to list of files to delete
-                        self.files_to_delete.append(chart['music_override']['path'])
-
-                    # if no key in level.json or file doesn't exist,
-                    # skip this step
-                    except (KeyError, FileNotFoundError) as e:
-                        self.hard_music_path = None
-
-                if chart['type'] == 'extreme' and 'extreme' in self.user_diffs:
-
-                    # extract chart file
-                    level.extract(chart['path'])
-
-                    # store path of file
-                    self.ex_chart_path = chart['path']
-
-                    # add chart path to list of files to delete
-                    self.files_to_delete.append(chart['path'])
-
-                    try:
-
-                        # try to extract music_override file
-                        level.extract(chart['music_override']['path'])
-
-                        # store path of file
-                        self.ex_music_path = chart['music_override']['path']
-
-                        # add file path to list of files to delete
-                        self.files_to_delete.append(chart['music_override']['path'])
-
-                    # if no key in level.json or file doesn't exist,
-                    # skip this step
-                    except (KeyError, FileNotFoundError) as e:
-                        self.ex_music_path = None
+        # if no key in level.json or file doesn't exist,
+        # skip this step
+        except (KeyError, FileNotFoundError) as e:
+            self.background_path = None
 
         # loop through each difficulty selected by the user
         for diff in self.user_diffs:
@@ -1571,417 +1468,184 @@ class App(tk.Tk):
                  + str(self.current_rate)
                  + 'x')
 
+                # add rate to title inside existing square brackets 
+                if self.square_brackets(self.output_json['title']) == True:
+                    self.output_json['title'] \
+                    = \
+                    (self.output_json['title'][:-1]
+                     + ': '
+                     + diff.capitalize()
+                     + ' '
+                     + str(self.current_rate)
+                     + 'x]')
+
+                # add rate to title in new square brackets
+                # (if title doesn't have them)
+                else:
+                    self.output_json['title'] \
+                    = \
+                    (self.output_json['title']
+                     + ' ['
+                     + diff.capitalize()
+                     + ' '
+                     + str(self.current_rate)
+                     + 'x]')
+
+                # add rate to title_localized inside existing square brackets
+                try: 
+                    if self.square_brackets(self.output_json['title_localized']) == True:
+                        self.output_json['title_localized'] \
+                        = \
+                        (self.output_json['title_localized'][:-1]
+                         + ': '
+                         + diff.capitalize()
+                         + ' '
+                         + str(self.current_rate)
+                         + 'x]')
+
+                    # add rate to title_localized in new square brackets
+                    # (if title_localized doesn't have them)
+                    else:
+                        self.output_json['title_localized'] \
+                         = \
+                         (self.output_json['title_localized']
+                          + ' ['
+                          + diff.capitalize()
+                          + ' '
+                          + str(self.current_rate)
+                          + 'x]')
+
+                # if the chart has no title_localized or
+                # title_localized is set to null, skip this step
+                except (KeyError, TypeError) as e:
+                    pass
+
                 # delete all chart objects in output json file
                 # (chart objects will be created with updated metadata
                 # after files have been worked with)
                 for i in range(0, len(self.output_json['charts'])):
                     del self.output_json['charts'][0]
-                
-                # if easy diff is chosen
-                if diff == 'easy':
 
-                    # add rate to title inside existing square brackets 
-                    if self.square_brackets(self.output_json['title']) == True:
-                        self.output_json['title'] \
-                        = \
-                        (self.output_json['title'][:-1]
-                         + ': Easy '
-                         + str(self.current_rate)
-                         + 'x]')
+                # loop through charts in level.json to find and
+                # work with chart and music override files for a
+                # specific difficulty
+                for chart in self.user_json['charts']:
 
-                    # add rate to title in new square brackets
-                    # (if title doesn't have them)
-                    else:
-                        self.output_json['title'] \
-                        = \
-                        (self.output_json['title']
-                         + ' [Easy '
-                         + str(self.current_rate)
-                         + 'x]')
+                    if chart['type'] == diff:
 
-                    # add rate to title_localized inside existing square brackets
-                    try: 
-                        if self.square_brackets(self.output_json['title_localized']) == True:
-                            self.output_json['title_localized'] \
+                        # extract chart file
+                        with ZipFile(self.user_level_path, 'r') as level:
+                            level.extract(chart['path'])
+
+                        # store path of file
+                        self.chart_path = chart['path']
+
+                        # add chart path to list of files to delete
+                        self.files_to_delete.append(chart['path'])
+
+                        # work with chart file
+                        icup_chart.create_file(
+                            self.chart_path,
+                            self.current_rate
+                            ) # when is this being deleted?
+
+                        # store output name of new chart file
+                        # (file is worked with further if user has
+                        # selected AR options)
+                        self.rate_chart_path = icup_chart.get_output_name(
+                            self.chart_path,
+                            self.current_rate
+                            )
+
+                        # try working with music_override file
+                        try:
+
+                            # try to extract music_override file
+                            with ZipFile(self.user_level_path, 'r') as level:
+                                level.extract(chart['music_override']['path'])
+
+                            # store path of file
+                            self.override_path = chart['music_override']['path']
+
+                            # add file path to list of files to delete
+                            self.files_to_delete.append(chart['music_override']['path'])
+
+                            # work with music_override file (if it exists)
+                            icup_audio_pitch.create_file(
+                                self.override_path,
+                                self.current_rate
+                                )
+
+                            # add the output file to list of files to
+                            # delete after level is created
+                            self.output_level_files.append(
+                                icup_audio_pitch.get_output_name(
+                                    self.override_path,
+                                    self.current_rate
+                                    ))
+
+                            # add path of new music_override file
+                            # to level.json
+                            self.output_json['music']['path'] \
                             = \
-                            (self.output_json['title_localized'][:-1]
-                             + ': Easy '
-                             + str(self.current_rate)
-                             + 'x]')
-
-                        # add rate to title_localized in new square brackets    
-                        else:
-                            self.output_json['title_localized'] \
-                             = \
-                             (self.output_json['title_localized']
-                              + ' [Easy '
-                              + str(self.current_rate)
-                              + 'x]')
-
-                    # if the chart has no title_localized, skip this step
-                    except KeyError:
-                        pass
-
-                    if self.easy_music_path != None:
-
-                        # work with music_override file (if it exists)
-                        icup_audio_pitch.create_file(
-                            self.easy_music_path,
-                            self.current_rate
-                            )
-
-                        # add the output file to list of files to
-                        # delete after level is created
-                        self.output_level_files.append(
                             icup_audio_pitch.get_output_name(
-                                self.easy_music_path,
-                                self.current_rate
-                                ))
+                                    self.override_path,
+                                    self.current_rate
+                                    )
 
-                        # add path of new music_override file
-                        # to level.json
-                        self.output_json['music']['path'] \
-                        = \
-                        icup_audio_pitch.get_output_name(
-                                self.easy_music_path,
-                                self.current_rate
-                                )
-                            
-                    else:
-
-                        # if no music_override file,
+                        # if no key in level.json or file doesn't exist,
                         # work with music file
-                        icup_audio_pitch.create_file(
-                            self.music_path,
-                            self.current_rate
-                            )
-
-                        # add the output file to list of files to
-                        # delete after level is created
-                        self.output_level_files.append(
-                            icup_audio_pitch.get_output_name(
-                                self.music_path,
-                                self.current_rate
-                                ))
-
-                        # add path of new music file
-                        # to level.json
-                        self.output_json['music']['path'] \
-                        = \
-                        icup_audio_pitch.get_output_name(
-                                self.music_path,
-                                self.current_rate
-                                )
-
-                    if self.preview_path != None:
+                        except (KeyError, FileNotFoundError) as e:
                             
-                        # work with music_preview file (if it exists)
-                        icup_audio_pitch.create_file(
-                            self.preview_path,
-                            self.current_rate
-                            )
-
-                        # add the output file to list of files to
-                        # delete after level is created
-                        self.output_level_files.append(
-                            icup_audio_pitch.get_output_name(
-                                self.preview_path,
-                                self.current_rate
-                                ))
-
-                        # add path of new music_preview file
-                        # to level.json
-                        self.output_json['music_preview']['path'] \
-                        = \
-                        icup_audio_pitch.get_output_name(
-                                self.preview_path,
+                            # work with music file
+                            icup_audio_pitch.create_file(
+                                self.music_path,
                                 self.current_rate
                                 )
 
-                    # work with chart file
-                    icup_chart.create_file(
-                        self.easy_chart_path,
-                        self.current_rate
-                        )
+                            # add the output file to list of files to
+                            # delete after level is created
+                            self.output_level_files.append(
+                                icup_audio_pitch.get_output_name(
+                                    self.music_path,
+                                    self.current_rate
+                                    ))
 
-                    # store output name of new chart file
-                    # (file is worked with further if user has
-                    # selected AR options)
-                    self.rate_chart_path = icup_chart.get_output_name(
-                        self.easy_chart_path,
-                        self.current_rate
-                        )
-
-                # if hard diff is chosen
-                if diff == 'hard':
-
-                    # add rate to title inside existing square brackets 
-                    if self.square_brackets(self.output_json['title']) == True:
-                        self.output_json['title'] \
-                        = \
-                        (self.output_json['title'][:-1]
-                         + ': Hard '
-                         + str(self.current_rate)
-                         + 'x]')
-
-                    # add rate to title in new square brackets
-                    # (if title doesn't have them)
-                    else:
-                        self.output_json['title'] \
-                        = \
-                        (self.output_json['title']
-                         + ' [Hard '
-                         + str(self.current_rate)
-                         + 'x]')
-
-                    # add rate to title_localized inside existing square brackets
-                    try: 
-                        if self.square_brackets(self.output_json['title_localized']) == True:
-                            self.output_json['title_localized'] \
+                            # add path of new music file
+                            # to level.json
+                            self.output_json['music']['path'] \
                             = \
-                            (self.output_json['title_localized'][:-1]
-                             + ': Hard '
-                             + str(self.current_rate)
-                             + 'x]')
-
-                        # add rate to title_localized in new square brackets    
-                        else:
-                            self.output_json['title_localized'] \
-                             = \
-                             (self.output_json['title_localized']
-                              + ' [Hard '
-                              + str(self.current_rate)
-                              + 'x]')
-
-                    # if the chart has no title_localized, skip this step
-                    except KeyError:
-                        pass
-
-                    if self.hard_music_path != None:
-
-                        # work with music_override file (if it exists)
-                        icup_audio_pitch.create_file(
-                            self.hard_music_path,
-                            self.current_rate
-                            )
-
-                        # add the output file to list of files to
-                        # delete after level is created
-                        self.output_level_files.append(
                             icup_audio_pitch.get_output_name(
-                                self.hard_music_path,
-                                self.current_rate
-                                ))
+                                    self.music_path,
+                                    self.current_rate
+                                    )
 
-                        # add path of new music_override file
-                        # to level.json
-                        self.output_json['music']['path'] \
-                        = \
-                        icup_audio_pitch.get_output_name(
-                                self.hard_music_path,
-                                self.current_rate
-                                )
-                            
-                    else:
+                        # work with music_preview file if it exists
+                        if self.preview_path != None:
 
-                        # if no music_override file,
-                        # work with music file
-                        icup_audio_pitch.create_file(
-                            self.music_path,
-                            self.current_rate
-                            )
-
-                        # add the output file to list of files to
-                        # delete after level is created
-                        self.output_level_files.append(
-                            icup_audio_pitch.get_output_name(
-                                self.music_path,
-                                self.current_rate
-                                ))
-
-                        # add path of new music file
-                        # to level.json
-                        self.output_json['music']['path'] \
-                        = \
-                        icup_audio_pitch.get_output_name(
-                                self.music_path,
-                                self.current_rate
-                                )
-
-                    if self.preview_path != None:
-                            
-                        # work with music_preview file (if it exists)
-                        icup_audio_pitch.create_file(
-                            self.preview_path,
-                            self.current_rate
-                            )
-
-                        # add the output file to list of files to
-                        # delete after level is created
-                        self.output_level_files.append(
-                            icup_audio_pitch.get_output_name(
-                                self.preview_path,
-                                self.current_rate
-                                ))
-
-                        # add path of new music_preview file
-                        # to level.json
-                        self.output_json['music_preview']['path'] \
-                        = \
-                        icup_audio_pitch.get_output_name(
+                            # work with music_preview file
+                            icup_audio_pitch.create_file(
                                 self.preview_path,
                                 self.current_rate
                                 )
 
-                    # work with chart file
-                    icup_chart.create_file(
-                        self.hard_chart_path,
-                        self.current_rate
-                        )
+                            # add the output file to list of files to
+                            # delete after level is created
+                            self.output_level_files.append(
+                                icup_audio_pitch.get_output_name(
+                                    self.preview_path,
+                                    self.current_rate
+                                    ))
 
-                    # store output name of new chart file
-                    # (file is worked with further if user has
-                    # selected AR options)
-                    self.rate_chart_path = icup_chart.get_output_name(
-                        self.hard_chart_path,
-                        self.current_rate
-                        )
-
-                # if extreme diff is chosen
-                if diff == 'extreme':
-
-                    # add rate to title inside existing square brackets 
-                    if self.square_brackets(self.output_json['title']) == True:
-                        self.output_json['title'] \
-                        = \
-                        (self.output_json['title'][:-1]
-                         + ': Extreme '
-                         + str(self.current_rate)
-                         + 'x]')
-
-                    # add rate to title in new square brackets
-                    # (if title doesn't have them)
-                    else:
-                        self.output_json['title'] \
-                        = \
-                        (self.output_json['title']
-                         + ' [Extreme '
-                         + str(self.current_rate)
-                         + 'x]')
-
-                    # add rate to title_localized inside existing square brackets
-                    try: 
-                        if self.square_brackets(self.output_json['title_localized']) == True:
-                            self.output_json['title_localized'] \
+                            # add path of new music file
+                            # to level.json
+                            self.output_json['music_preview']['path'] \
                             = \
-                            (self.output_json['title_localized'][:-1]
-                             + ': Extreme '
-                             + str(self.current_rate)
-                             + 'x]')
-
-                        # add rate to title_localized in new square brackets    
-                        else:
-                            self.output_json['title_localized'] \
-                             = \
-                             (self.output_json['title_localized']
-                              + ' [Extreme '
-                              + str(self.current_rate)
-                              + 'x]')
-
-                    # if the chart has no title_localized, skip this step
-                    except KeyError:
-                        pass
-
-                    if self.ex_music_path != None:
-
-                        # work with music_override file (if it exists)
-                        icup_audio_pitch.create_file(
-                            self.ex_music_path,
-                            self.current_rate
-                            )
-
-                        # add the output file to list of files to
-                        # delete after level is created
-                        self.output_level_files.append(
                             icup_audio_pitch.get_output_name(
-                                self.ex_music_path,
-                                self.current_rate
-                                ))
-
-                        # add path of new music_override file
-                        # to level.json
-                        self.output_json['music']['path'] \
-                        = \
-                        icup_audio_pitch.get_output_name(
-                                self.ex_music_path,
-                                self.current_rate
-                                )
-                            
-                    else:
-
-                        # if no music_override file,
-                        # work with music file
-                        icup_audio_pitch.create_file(
-                            self.music_path,
-                            self.current_rate
-                            )
-
-                        # add the output file to list of files to
-                        # delete after level is created
-                        self.output_level_files.append(
-                            icup_audio_pitch.get_output_name(
-                                self.music_path,
-                                self.current_rate
-                                ))
-
-                        # add path of new music file
-                        # to level.json
-                        self.output_json['music']['path'] \
-                        = \
-                        icup_audio_pitch.get_output_name(
-                                self.music_path,
-                                self.current_rate
-                                )
-
-                    if self.preview_path != None:
-                            
-                        # work with music_preview file (if it exists)
-                        icup_audio_pitch.create_file(
-                            self.preview_path,
-                            self.current_rate
-                            )
-
-                        # add the output file to list of files to
-                        # delete after level is created
-                        self.output_level_files.append(
-                            icup_audio_pitch.get_output_name(
-                                self.preview_path,
-                                self.current_rate
-                                ))
-
-                        # add path of new music_preview file
-                        # to level.json
-                        self.output_json['music_preview']['path'] \
-                        = \
-                        icup_audio_pitch.get_output_name(
-                                self.preview_path,
-                                self.current_rate
-                                )
-
-                    # work with chart file
-                    icup_chart.create_file(
-                        self.ex_chart_path,
-                        self.current_rate
-                        )
-
-                    # store output name of new chart file
-                    # (file is worked with further if user has
-                    # selected AR options)
-                    self.rate_chart_path = icup_chart.get_output_name(
-                        self.ex_chart_path,
-                        self.current_rate
-                        )
-
+                                    self.preview_path,
+                                    self.current_rate
+                                    )
+                        
                 # if user has not selected any AR options
                 if self.user_ar_options == []:
                     
@@ -2206,6 +1870,7 @@ class App(tk.Tk):
             except FileNotFoundError:
                 pass
 
+
     def square_brackets(self, string):
         '''The function checks if the title or title_localized fields
         in a level.json file have square brackets. Square brackets are
@@ -2220,6 +1885,7 @@ class App(tk.Tk):
             return True
         else:
             return False
+
 
     def add_ar_chart(self, index):
         '''This function adds a chart object with the path of the
@@ -2603,7 +2269,7 @@ class RateIncrementFrame(ttk.Frame):
             borderwidth=tk_error_borderwidth,
             state='disabled',
             wrap=tk_error_wrap,
-            height=2,
+            height=3,
             width=tk_error_width
             )
         self.error_text.grid(
@@ -2829,7 +2495,7 @@ class AROptionsFrame(ttk.Frame):
             borderwidth=tk_error_borderwidth,
             state='disabled',
             wrap=tk_error_wrap,
-            height=2,
+            height=3,
             width=tk_error_width
             )
         self.error_text2 = tk.Text(
@@ -2840,7 +2506,7 @@ class AROptionsFrame(ttk.Frame):
             borderwidth=tk_error_borderwidth,
             state='disabled',
             wrap=tk_error_wrap,
-            height=2,
+            height=3,
             width=tk_error_width
             )
         self.error_text3 = tk.Text(
@@ -2851,7 +2517,7 @@ class AROptionsFrame(ttk.Frame):
             borderwidth=tk_error_borderwidth,
             state='disabled',
             wrap=tk_error_wrap,
-            height=2,
+            height=3,
             width=tk_error_width
             )
         

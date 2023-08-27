@@ -47,7 +47,6 @@ if sys.version_info >= (3, 0):
     xrange = range
     StringIO = BytesIO
 
-
 class ClassPropertyDescriptor(object):
 
     def __init__(self, fget, fset=None):
