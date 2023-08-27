@@ -44,7 +44,7 @@ class App(tk.Tk):
 
         # configure window
         self.title("Idiot Caleb's Uprating Project")
-        self.geometry('485x325')
+        self.geometry('485x338')
         self.configure(bg='#1e2129')
         self.resizable(False, False)
 
@@ -947,8 +947,8 @@ class App(tk.Tk):
                     # configure rate inc frame style
                     # mark user input as invalid
                     self.rate_inc_error(
-                        'Rate increment must be between ' \
-                        '{} and {}'.format(self.RATE_INC_LOWER, self.RATE_INC_UPPER)
+                        'Rate increment must be between {} and {} ' \
+                        '(inclusive)'.format(self.RATE_INC_LOWER, self.RATE_INC_UPPER)
                         )
 
             # if input is not valid number (invalid)
@@ -2269,7 +2269,7 @@ class RateIncrementFrame(ttk.Frame):
             borderwidth=tk_error_borderwidth,
             state='disabled',
             wrap=tk_error_wrap,
-            height=2,
+            height=3,
             width=tk_error_width
             )
         self.error_text.grid(
