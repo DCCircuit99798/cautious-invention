@@ -672,8 +672,8 @@ class App(tk.Tk):
             messagebox.showerror(
                 'Error',
                 'No valid diffs within Cytoid level file - ' \
-                'Try checking if your chart files are in c1 format ' \
-                'or if your audio files are invalid'
+                'Your chart or audio files may be invalid. ' \
+                'Are your charts in c1 format?' # speaking from epxerience...
                 )
 
             self.level_validity = False
@@ -2520,7 +2520,7 @@ class AROptionsFrame(ttk.Frame):
             height=3,
             width=tk_error_width
             )
-        
+
         self.error_text1.grid(
             row=4,
             column=0,
