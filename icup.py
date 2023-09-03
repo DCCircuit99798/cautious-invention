@@ -584,7 +584,7 @@ class App(tk.Tk):
 
             # if key or audio file does not exist, or audio file is
             # invalid, then level file does not contain music file
-            except (KeyError, FileNotFoundError, IndexError) as e:
+            except (KeyError, IndexError) as e:
                 self.has_music = False
             
             # attempt to iterate through each diff in level.json
@@ -602,8 +602,26 @@ class App(tk.Tk):
                     # chart file does not exist or
                     # chart file is not valid json,
                     # check next diff in level.json (this diff is invalid)
-                    except (KeyError, FileNotFoundError, json.JSONDecodeError) as e:
+                    except (KeyError, json.JSONDecodeError) as e:
                         continue
+
+                    # check if music_override path key exists
+                    try:
+                        chart['music_override']['path']
+
+                    # if music_override path key does not exist
+                    except KeyError:
+
+                        # if there is no music,
+                        # check next diff (this diff is invalid,
+                        # an audio file is required)
+                        if self.has_music == False:
+                            continue
+
+                        # if there is a music file and no music_override,
+                        # this diff is valid
+                        else:
+                            self.diffs_available.append(chart['type'])
 
                     # get music_override
                     try:
@@ -615,21 +633,10 @@ class App(tk.Tk):
                         # this diff is valid
                         self.diffs_available.append(chart['type'])
 
-                    # if key or audio file does not exist, or audio
-                    # file is invalid, then level file does not
-                    # contain music override file
-                    except (KeyError, FileNotFoundError, IndexError) as e:
-                        
-                        # if there is no music or music_override file,
-                        # check next diff (this diff is invalid,
-                        # an audio file is required)
-                        if self.has_music == False:
-                            continue
-
-                        # if there is a music file and no music_override,
-                        # this diff is valid
-                        else:
-                            self.diffs_available.append(chart['type'])
+                    # if audio file is missing or invalid,
+                    # check next diff in level.json (this diff is invalid)
+                    except (KeyError, IndexError) as e:
+                        continue
 
             # if "charts" key isn't in level.json
             except KeyError:
@@ -1400,7 +1407,7 @@ class App(tk.Tk):
 
         # if no key in level.json or file doesn't exist,
         # skip this step and extract music_override instead
-        except (KeyError, FileNotFoundError) as e:
+        except KeyError:
             self.music_path = None
 
         try:
@@ -1417,7 +1424,7 @@ class App(tk.Tk):
 
         # if no key in level.json or file doesn't exist,
         # skip this step and extract music_override instead
-        except (KeyError, FileNotFoundError) as e:
+        except KeyError:
             self.preview_path = None
 
         try:
@@ -1434,7 +1441,7 @@ class App(tk.Tk):
 
         # if no key in level.json or file doesn't exist,
         # skip this step
-        except (KeyError, FileNotFoundError) as e:
+        except KeyError:
             self.background_path = None
 
         # loop through each difficulty selected by the user
