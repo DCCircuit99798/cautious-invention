@@ -29,7 +29,7 @@ class App(tk.Tk):
     '''Create the main window of the program'''
 
     # constants for user input boundaries
-    RATES_LOWER = 0.1
+    RATES_LOWER = 0.5
     RATES_UPPER = 3
     RATE_INC_LOWER = 0.01
     RATE_INC_UPPER = 0.25
