@@ -29,7 +29,7 @@ class App(tk.Tk):
     '''Create the main window of the program'''
 
     # constants for user input boundaries
-    RATES_LOWER = 0.1
+    RATES_LOWER = 0.5
     RATES_UPPER = 3
     RATE_INC_LOWER = 0.01
     RATE_INC_UPPER = 0.25
@@ -498,29 +498,29 @@ class App(tk.Tk):
             with open('level.json', 'r', encoding='utf-8') as outfile:
                 self.user_json = json.load(outfile)
 
-                # check if level.json has id and title
-                # (required to be able to play in-game)
-                if (self.user_json['id'] == None or
-                    self.user_json['title'] == None):
-                    messagebox.showerror(
-                        'Error',
-                        'level.json file within Cytoid level file is missing ' \
-                        'required keys (id, title)'
-                        )
+            # check if level.json has id and title
+            # (required to be able to play in-game)
+            if (self.user_json['id'] in (None, '') or
+                self.user_json['title'] in (None, '')):
+                messagebox.showerror(
+                    'Error',
+                    'level.json file within Cytoid level file is missing ' \
+                    'required keys (id, title)'
+                    )
 
-                    self.level_validity = False
+                self.level_validity = False
 
-                    # configure 'choose file' button border to red
-                    self.style.configure(
-                        'ChooseFile.WidgetBorder.TFrame',
-                        background='#ee9f9f')
+                # configure 'choose file' button border to red
+                self.style.configure(
+                    'ChooseFile.WidgetBorder.TFrame',
+                    background='#ee9f9f')
 
-                    # remove the extracted level.json file
-                    os.remove('level.json')
+                # remove the extracted level.json file
+                os.remove('level.json')
 
-                    # prevent the rest of the level validity checks
-                    # from running
-                    return
+                # prevent the rest of the level validity checks
+                # from running
+                return
 
         # if level.json file is invalid JSON, display error messagebox
         # and mark Cytoid level as invalid
@@ -1423,7 +1423,7 @@ class App(tk.Tk):
             self.files_to_delete.append(self.user_json['music_preview']['path'])
 
         # if no key in level.json or file doesn't exist,
-        # skip this step and extract music_override instead
+        # skip this step
         except KeyError:
             self.preview_path = None
 
@@ -1509,10 +1509,13 @@ class App(tk.Tk):
                          + ' '
                          + str(self.current_rate)
                          + 'x]')
-
+                        
                     # add rate to title_localized in new square brackets
-                    # (if title_localized doesn't have them)
-                    else:
+                    # if title_localized doesn't have them
+                    
+                    # (skip this step if title_localized
+                    # is an empty string)
+                    elif self.output_json['title_localized'] != '':
                         self.output_json['title_localized'] \
                          = \
                          (self.output_json['title_localized']
@@ -1554,7 +1557,7 @@ class App(tk.Tk):
                         icup_chart.create_file(
                             self.chart_path,
                             self.current_rate
-                            ) # when is this being deleted?
+                            )
 
                         # store output name of new chart file
                         # (file is worked with further if user has
