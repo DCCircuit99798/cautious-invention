@@ -33,7 +33,7 @@ class App(tk.Tk):
     RATES_UPPER = 3
     RATE_INC_LOWER = 0.01
     RATE_INC_UPPER = 0.25
-    XMOD_LOWER = 0.001
+    XMOD_LOWER = 0.01
     XMOD_UPPER = 4
     CMOD_LOWER = 120
     CMOD_UPPER = 500
