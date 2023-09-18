@@ -795,7 +795,6 @@ class App(tk.Tk):
         self.user_max = None
         self.user_rate_inc = None
         self.user_ar_options = []
-        #self.user_pitch_rates = 1
 
         # variable to keep track of validity of user input
         self.user_validity = True
