@@ -33,7 +33,7 @@ class App(tk.Tk):
     RATES_UPPER = 3
     RATE_INC_LOWER = 0.01
     RATE_INC_UPPER = 0.25
-    XMOD_LOWER = 0.001
+    XMOD_LOWER = 0.01
     XMOD_UPPER = 4
     CMOD_LOWER = 120
     CMOD_UPPER = 500
@@ -1109,12 +1109,12 @@ class App(tk.Tk):
         if self.level_validity == False:
             messagebox.showerror(
                 'Error',
-                'Chosen Cytoid level file is not valid'
+                'Please select a valid Cytoid level file'
                 )
 
-        # call function to work with necessary files if
-        # both user input and Cytoid level file are valid and
-        # unexpected_files returns True
+        # call function to work with necessary files if both
+        # user input and Cytoid level file are valid and
+        # unexpected_files and output_num_check functions return True
         elif (self.level_validity == True
               and self.user_validity == True
               and self.unexpected_files() == True
