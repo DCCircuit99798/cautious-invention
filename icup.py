@@ -472,6 +472,15 @@ class App(tk.Tk):
 
                     self.level_validity = False
 
+                    # configure 'choose file' button border to red
+                    self.style.configure(
+                        'ChooseFile.WidgetBorder.TFrame',
+                        background='#ee9f9f')
+
+                    # prevent the rest of the level validity checks
+                    # from running
+                    return
+
         # if selected file is not a .zip file, display error
         # message and mark Cytoid level file as invalid
         except zipfile.BadZipFile:
@@ -1596,6 +1605,8 @@ class App(tk.Tk):
 
                             # add path of new music_override file
                             # to level.json
+                            self.output_json['music'] = {}
+                            
                             self.output_json['music']['path'] \
                             = \
                             icup_audio_pitch.get_output_name(
