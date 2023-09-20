@@ -804,7 +804,6 @@ class App(tk.Tk):
         self.user_max = None
         self.user_rate_inc = None
         self.user_ar_options = []
-        #self.user_pitch_rates = 1
 
         # variable to keep track of validity of user input
         self.user_validity = True
@@ -917,7 +916,7 @@ class App(tk.Tk):
             self.user_min = float(self.rates_frame.min_var.get())
             self.user_max = float(self.rates_frame.max_var.get())
 
-            # if rates are less than 0.1 or more than 10 (invalid)
+            # if rates are less than 0.1 or more than 3 (invalid)
             if (self.user_min < self.RATES_LOWER or
                 self.user_min > self.RATES_UPPER or
                 self.user_max < self.RATES_LOWER or
