@@ -16,6 +16,7 @@ sys.path.append(str(Path(os.getcwd()) / 'modules'))
 sys.path.append(str(Path(os.getcwd()) / 'modules' / 'ffmpeg'))
 
 # import third party modules
+import pydub
 from pydub import AudioSegment
 import ffmpeg
 
@@ -513,8 +514,8 @@ class App(tk.Tk):
                 self.user_json['title'] in (None, '')):
                 messagebox.showerror(
                     'Error',
-                    'level.json file within Cytoid level file is missing ' \
-                    'required keys (id, title)'
+                    'level.json is missing required keys ' \
+                    '(id, title)'
                     )
 
                 self.level_validity = False
@@ -553,13 +554,13 @@ class App(tk.Tk):
             # from running
             return
 
-        # if level.json does not have id or title, display error
-        # messagebox and mark Cytoid level as invalid
+        # if level.json does not have id, title, or charts;
+        # display error messagebox and mark Cytoid level as invalid
         except KeyError:
             messagebox.showerror(
                 'Error',
-                'level.json file within Cytoid level file is missing ' \
-                'required keys (id, title)'
+                'level.json is missing required keys ' \
+                '(id, title)'
             )
 
             self.level_validity = False
@@ -591,11 +592,12 @@ class App(tk.Tk):
                 self.files_to_delete.append(self.user_json['music']['path'])
                 AudioSegment.from_file(self.user_json['music']['path'])
 
-            # if key or audio file does not exist, or audio file is
-            # invalid, then level file does not contain music file
-            except (KeyError, IndexError) as e:
+            # if key or audio file does not exist,
+            # or audio file is invalid
+            # then level file does not contain music file
+            except (KeyError, IndexError, pydub.exceptions.CouldntDecodeError) as e:
                 self.has_music = False
-            
+
             # attempt to iterate through each diff in level.json
             try:
                 for chart in self.user_json['charts']:
@@ -644,7 +646,7 @@ class App(tk.Tk):
 
                     # if audio file is missing or invalid,
                     # check next diff in level.json (this diff is invalid)
-                    except (KeyError, IndexError) as e:
+                    except (KeyError, IndexError, pydub.exceptions.CouldntDecodeError) as e:
                         continue
 
             # if "charts" key isn't in level.json
@@ -1533,9 +1535,9 @@ class App(tk.Tk):
                           + str(self.current_rate)
                           + 'x]')
 
-                # if the chart has no title_localized or
-                # title_localized is set to null, skip this step
-                except (KeyError, TypeError) as e:
+                # if the chart has no title_localized,
+                # skip this step
+                except KeyError:
                     pass
 
                 # delete all chart objects in output json file
@@ -1602,10 +1604,12 @@ class App(tk.Tk):
                                     self.current_rate
                                     ))
 
-                            # add path of new music_override file
-                            # to level.json
+                            # music key may need to be created
+                            # (not required if music_override is valid)
                             self.output_json['music'] = {}
                             
+                            # add path of new music_override file
+                            # to level.json
                             self.output_json['music']['path'] \
                             = \
                             icup_audio_pitch.get_output_name(
@@ -1642,29 +1646,38 @@ class App(tk.Tk):
 
                         # work with music_preview file if it exists
                         if self.preview_path != None:
+                            
+                            # try working with music_preview file
+                            try:
 
-                            # work with music_preview file
-                            icup_audio_pitch.create_file(
-                                self.preview_path,
-                                self.current_rate
-                                )
-
-                            # add the output file to list of files to
-                            # delete after level is created
-                            self.output_level_files.append(
-                                icup_audio_pitch.get_output_name(
-                                    self.preview_path,
-                                    self.current_rate
-                                    ))
-
-                            # add path of new music file
-                            # to level.json
-                            self.output_json['music_preview']['path'] \
-                            = \
-                            icup_audio_pitch.get_output_name(
+                                # work with music_preview file
+                                icup_audio_pitch.create_file(
                                     self.preview_path,
                                     self.current_rate
                                     )
+
+                                # add the output file to list of files to
+                                # delete after level is created
+                                self.output_level_files.append(
+                                    icup_audio_pitch.get_output_name(
+                                        self.preview_path,
+                                        self.current_rate
+                                        ))
+
+                                # add path of new music file
+                                # to level.json
+                                self.output_json['music_preview']['path'] \
+                                = \
+                                icup_audio_pitch.get_output_name(
+                                        self.preview_path,
+                                        self.current_rate
+                                        )
+
+                            # if music_preview file is an invalid
+                            # audio file, the key must
+                            # be deleted from level.json
+                            except (IndexError, pydub.exceptions.CouldntDecodeError) as e:
+                                del self.output_json['music_preview']
                         
                 # if user has not selected any AR options
                 if self.user_ar_options == []:
