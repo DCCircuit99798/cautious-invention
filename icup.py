@@ -1535,9 +1535,9 @@ class App(tk.Tk):
                           + str(self.current_rate)
                           + 'x]')
 
-                # if the chart has no title_localized,
-                # skip this step
-                except KeyError:
+                # if the chart has no title_localized or
+                # title_localized is set to null, skip this step
+                except (KeyError, TypeError) as e:
                     pass
 
                 # delete all chart objects in output json file
