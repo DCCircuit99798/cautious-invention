@@ -1,5 +1,7 @@
-# NOTE: had to comment target_BPM assignment for ICUP. (line 92)
-# to get this program to work on its own, uncomment line 92
+# NOTE: had to comment target_BPM assignment for ICUP. (line 94)
+# to get this program to work on its own, uncomment line 94
+
+# Original author: dendroarboritree
 
 import tkinter as tk
 from tkinter import filedialog
